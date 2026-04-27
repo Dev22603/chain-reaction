@@ -8,8 +8,6 @@ Real-time multiplayer Chain Reaction. Classic pass-and-play, online, server-auth
 
 **Layout:** flat repo. `backend/` and `frontend/` are independent npm projects with their own `package.json`. Layered TS structure inside each, modeled on a known-good reference (zod validators, named Winston loggers, `ApiError` class, snake_case on the wire / camelCase internally).
 
-> Note: PLAN.md and TODO.md describe a flat 2-file backend (`index.mjs` + `gameLogic.mjs`). The actual layout is layered TS as shown below; behavior is the same, just split across more files. CONVENTIONS.md explains the layering.
-
 ## Read first, always
 
 > **[RULES.md](./RULES.md) is mandatory.** Non-negotiables: server-authoritative state, no business logic in the message router, pure game logic, validated messages at the boundary, repository-layer DB access only.
