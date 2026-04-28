@@ -19,7 +19,7 @@ Real-time multiplayer Chain Reaction. Classic pass-and-play, online, server-auth
 ├── backend/
 │   ├── src/
 │   │   ├── index.ts                  # entry: starts the server
-│   │   ├── server.ts                 # WS server + connection lifecycle
+│   │   ├── app.ts                    # HTTP + WS app + connection lifecycle
 │   │   ├── router.ts                 # JSON parse + dispatch by type
 │   │   ├── handlers/
 │   │   │   ├── queue.handlers.ts     # join_queue, leave_queue

@@ -9,8 +9,8 @@ You're editing anything under `backend/`, adding a message handler, touching the
 ```
 backend/
 ├── src/
-│   ├── index.ts                   # entry; imports server, calls listen()
-│   ├── server.ts                  # WS server creation, connection lifecycle
+│   ├── index.ts                   # entry; imports app server, calls listen()
+│   ├── app.ts                     # HTTP + WS app creation, connection lifecycle
 │   ├── router.ts                  # JSON parse + dispatch by message.type
 │   ├── handlers/
 │   │   ├── queue.handlers.ts      # handleJoinQueue, handleLeaveQueue
@@ -43,7 +43,7 @@ backend/
 ## Reading order (top down)
 
 1. `index.ts`: imports, calls `server.listen(config.PORT)`.
-2. `server.ts`: creates `WebSocketServer`, on `connection` assigns UUID, registers `players`, calls into `router` on `message`, runs cleanup on `close`.
+2. `app.ts`: creates the HTTP server and `WebSocketServer`, on `connection` assigns UUID, registers `players`, calls into `router` on `message`, runs cleanup on `close`.
 3. `router.ts`: `JSON.parse` in try/catch, validates with Zod, switches on `message.type`, calls a handler.
 4. `handlers/`: business logic. Read state, mutate it, broadcast.
 5. `game/gameLogic.ts`: pure helpers (no imports from sibling backend files).
@@ -51,7 +51,7 @@ backend/
 ## State flow: connection to game
 
 ```
-WS connection (server.ts)
+WS connection (app.ts)
     │
     ├─ players.set(id, socket)
     ├─ send connected
@@ -125,7 +125,7 @@ Set it at room creation time in `queue.handlers.ts`, alongside `board`, `current
 
 ### New background cleanup
 
-Run it from `server.ts`'s `close` handler, after `handleLeaveQueue` and `handleLeaveGame` and before `players.delete(id)`. The close handler is the one place that always fires regardless of game state.
+Run it from `app.ts`'s `close` handler, after `handleLeaveQueue` and `handleLeaveGame` and before `players.delete(id)`. The close handler is the one place that always fires regardless of game state.
 
 ## Critical invariants
 

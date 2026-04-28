@@ -45,7 +45,7 @@ Three pieces. One backend process. No database until post-M7.
 - Renders whatever `game_state` broadcasts arrive. Never computes the next board itself.
 
 ### Backend (`backend/`)
-- `server.ts`: accepts WS connections, assigns each a UUID, tracks the socket in the `players` Map.
+- `app.ts`: creates the HTTP + WS app, accepts WS connections, assigns each a UUID, tracks the socket in the `players` Map.
 - `router.ts`: parses incoming frames, dispatches by `type` to the correct handler in `handlers/`.
 - `handlers/`: per-message-type validation (via Zod schemas in `schemas/`), state mutation, broadcast emission.
 - `state/memory.ts`: the four module-level Maps that hold all live state.
@@ -98,11 +98,11 @@ A `Room` (defined in `types/game.ts`) holds `{ id, players: Player[], gridRows, 
 
 ## Lifecycle: connection to cleanup
 
-1. Client opens WS. `server.ts` generates `uuidv4`, sends `{ type: 'connected', playerId }`.
+1. Client opens WS. `app.ts` generates `uuidv4`, sends `{ type: 'connected', playerId }`.
 2. Client sends `join_queue`. `queue.handlers.ts` buckets, sends `queued`. If the bucket fills, `game_start` to all members and a room is created.
 3. Clients alternate `make_move`. `game.handlers.ts` validates, runs `applyMove`, broadcasts `game_state`.
 4. When only one player remains alive, server sends `game_over` and deletes the room.
-5. On disconnect: `server.ts` runs leave-queue + leave-game cleanup, then `players.delete`.
+5. On disconnect: `app.ts` runs leave-queue + leave-game cleanup, then `players.delete`.
 
 ## Deployment (Fly.io)
 
