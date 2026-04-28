@@ -1,75 +1,188 @@
 "use client";
 
-import { LogOut } from "lucide-react";
-import type { CSSProperties } from "react";
+import { LogOut, Volume2, VolumeX } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Cell } from "@/components/game/Cell";
+import { PlayerPanel } from "@/components/game/PlayerPanel";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  capacityFor,
+  cellKey,
+  diffBoards,
+  tallyOrbs,
+  type BoardCellEffect
+} from "@/lib/board";
 import { PLAYER_COLORS } from "@/lib/colors";
-import type { GameState } from "@/lib/types";
+import type { Board, GameState } from "@/lib/types";
 
 interface GameBoardProps {
   gameState: GameState;
   playerId: string | null;
   onMove: (row: number, col: number) => void;
   onLeaveGame: () => void;
+  onPlace?: (intensity: number) => void;
+  onExplode?: (intensity: number) => void;
+  onChain?: (intensity: number) => void;
+  muted?: boolean;
+  onToggleMute?: () => void;
 }
 
-export function GameBoard({ gameState, playerId, onMove, onLeaveGame }: GameBoardProps) {
+const EFFECT_DURATION_MS = 650;
+const CHAIN_THRESHOLD = 2;
+
+export function GameBoard({
+  gameState,
+  playerId,
+  onMove,
+  onLeaveGame,
+  onPlace,
+  onExplode,
+  onChain,
+  muted,
+  onToggleMute
+}: GameBoardProps) {
   const myIndex = gameState.players.findIndex((player) => player.id === playerId);
   const isMyTurn = myIndex === gameState.currentTurn;
   const currentPlayer = gameState.players[gameState.currentTurn];
+  const turnColor = PLAYER_COLORS[gameState.currentTurn] ?? "#ffffff";
+  const rows = gameState.board.length;
+  const cols = gameState.board[0]?.length ?? 0;
+
+  const effects = useBoardEffects(gameState.board, {
+    onPlace,
+    onExplode,
+    onChain
+  });
+
+  const orbCounts = useMemo(
+    () => tallyOrbs(gameState.board, gameState.players.length),
+    [gameState.board, gameState.players.length]
+  );
 
   return (
-    <section className="game-layout">
-      <div className="game-header">
-        <div>
-          <p className="eyebrow">Current turn</p>
-          <h1>{currentPlayer?.name ?? "Waiting"}</h1>
+    <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <header className="flex flex-wrap items-center justify-between gap-4 lg:col-span-2">
+        <div className="flex items-center gap-4">
+          <Badge>
+            <span
+              className="h-2 w-2 rounded-full"
+              style={{ background: turnColor, boxShadow: `0 0 8px ${turnColor}` }}
+            />
+            {isMyTurn ? "your turn" : "current turn"}
+          </Badge>
+          <h1
+            className="font-display text-2xl uppercase tracking-[0.05em] text-fg sm:text-3xl"
+            style={{ textShadow: isMyTurn ? `0 0 20px ${turnColor}66` : undefined }}
+          >
+            {currentPlayer?.name ?? "Awaiting"}
+          </h1>
         </div>
-        <button className="secondary-button" type="button" onClick={onLeaveGame}>
-          <LogOut size={18} aria-hidden="true" />
-          Leave
-        </button>
-      </div>
+        <div className="flex items-center gap-2">
+          {onToggleMute ? (
+            <Button variant="ghost" size="sm" onClick={onToggleMute} aria-label={muted ? "Unmute" : "Mute"}>
+              {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+              {muted ? "muted" : "audio"}
+            </Button>
+          ) : null}
+          <Button variant="danger" size="sm" onClick={onLeaveGame}>
+            <LogOut size={14} aria-hidden="true" />
+            Abort
+          </Button>
+        </div>
+      </header>
 
-      <div className="board-wrap">
+      <div className="overflow-hidden">
         <div
-          className="board"
-          style={{
-            gridTemplateColumns: `repeat(${gameState.board[0]?.length ?? 1}, minmax(0, 1fr))`
-          }}
+          className="mx-auto grid w-full max-w-[760px] gap-1.5"
+          style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
         >
           {gameState.board.map((row, rowIndex) =>
             row.map((cell, colIndex) => {
-              const isLegal =
+              const ownerColor = cell.owner === null ? "#3a3f55" : PLAYER_COLORS[cell.owner];
+              const legal =
                 isMyTurn && (cell.owner === null || cell.owner === myIndex) && !currentPlayer?.eliminated;
-              const color = cell.owner === null ? "transparent" : PLAYER_COLORS[cell.owner];
+              const key = cellKey(rowIndex, colIndex);
 
               return (
-                <button
-                  key={`${rowIndex}-${colIndex}`}
-                  className="cell"
-                  type="button"
-                  disabled={!isLegal}
-                  onClick={() => onMove(rowIndex, colIndex)}
-                  style={{ "--cell-color": color } as CSSProperties & Record<"--cell-color", string>}
-                  aria-label={`Row ${rowIndex + 1}, column ${colIndex + 1}, ${cell.count} orbs`}
-                >
-                  {cell.count > 0 ? <span>{cell.count}</span> : null}
-                </button>
+                <Cell
+                  key={key}
+                  cell={cell}
+                  capacity={capacityFor(rowIndex, colIndex, rows, cols)}
+                  color={ownerColor}
+                  legal={legal}
+                  highlight={legal && cell.count > 0}
+                  effect={effects.get(key) ?? null}
+                  onPlay={() => onMove(rowIndex, colIndex)}
+                  ariaLabel={`Row ${rowIndex + 1}, column ${colIndex + 1}, ${cell.count} orbs`}
+                />
               );
             })
           )}
         </div>
       </div>
 
-      <aside className="player-list" aria-label="Players">
-        {gameState.players.map((player, index) => (
-          <div className="player-row" key={player.id}>
-            <span className="player-swatch" style={{ background: PLAYER_COLORS[index] }} />
-            <span>{player.name}</span>
-            <strong>{player.eliminated ? "Out" : index === gameState.currentTurn ? "Turn" : ""}</strong>
-          </div>
-        ))}
-      </aside>
+      <PlayerPanel
+        players={gameState.players}
+        currentTurn={gameState.currentTurn}
+        selfId={playerId}
+        orbCounts={orbCounts}
+      />
     </section>
   );
+}
+
+interface BoardEffectCallbacks {
+  onPlace?: (intensity: number) => void;
+  onExplode?: (intensity: number) => void;
+  onChain?: (intensity: number) => void;
+}
+
+function useBoardEffects(board: Board, callbacks: BoardEffectCallbacks) {
+  const { onPlace, onExplode, onChain } = callbacks;
+  const [effects, setEffects] = useState<Map<string, BoardCellEffect>>(new Map());
+  const previousBoard = useRef<Board | null>(null);
+  const effectIdRef = useRef(0);
+
+  useEffect(() => {
+    const diff = diffBoards(previousBoard.current, board, () => {
+      effectIdRef.current += 1;
+      return effectIdRef.current;
+    });
+
+    const hadPrior = previousBoard.current !== null;
+    previousBoard.current = board;
+
+    if (hadPrior) {
+      if (diff.explodedCount === 0 && diff.totalDelta === 1) {
+        onPlace?.(0);
+      } else if (diff.explodedCount > 0) {
+        onExplode?.(Math.min(1, diff.explodedCount / 6));
+        if (diff.explodedCount + diff.takeoverCount >= CHAIN_THRESHOLD) {
+          onChain?.(Math.min(1, (diff.explodedCount + diff.takeoverCount) / 8));
+        }
+      }
+    }
+
+    if (diff.effects.size === 0) return;
+
+    setEffects((prev) => {
+      const merged = new Map(prev);
+      diff.effects.forEach((effect, key) => merged.set(key, effect));
+      return merged;
+    });
+
+    const timeout = window.setTimeout(() => {
+      setEffects((prev) => {
+        if (prev.size === 0) return prev;
+        const next = new Map(prev);
+        diff.effects.forEach((_, key) => next.delete(key));
+        return next;
+      });
+    }, EFFECT_DURATION_MS);
+
+    return () => window.clearTimeout(timeout);
+  }, [board, onPlace, onExplode, onChain]);
+
+  return effects;
 }

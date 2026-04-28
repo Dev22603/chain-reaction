@@ -1,28 +1,18 @@
-# PROTOCOL.md
+# Protocol
 
-## When to read this
+The WebSocket message contract between client and server.
 
-You're adding, renaming, or changing any WebSocket message in either direction. You must update this file in the same commit as `backend/src/types/protocol.ts` and `frontend/src/lib/types.ts` (RULES.md: "no silent protocol changes").
-
-## Single source of truth
-
-Three files describe the protocol; they must agree:
-
-- **This file:** human-readable spec, examples, constraints.
-- **`backend/src/types/protocol.ts`:** TS unions for `ClientMessage` and `ServerMessage`.
-- **`frontend/src/lib/types.ts`:** mirrored TS unions on the client side.
-
-If they drift, this file wins as the spec, but commit a fix to whichever is wrong.
+> When you add or rename any frame, update this file, `backend/src/types/protocol.ts`, and `frontend/src/lib/types.ts` in the same commit. See [../backend/RULES.md](../backend/RULES.md).
 
 ## Transport
 
-- WebSocket. Plain `ws://` locally, `wss://` in production.
-- Every frame is JSON, one object per frame.
-- Every frame has a `type` field; the rest of the object is type-specific.
-- Malformed frames are dropped silently on the server (wrapped in try/catch).
-- All message-type strings are snake_case. All field names are snake_case (see `CONVENTIONS.md` on wire format).
+- WebSocket. `ws://` locally, `wss://` in production.
+- Every frame is a single JSON object.
+- Every frame has a `type` field; the rest is type-specific.
+- Malformed frames are dropped silently on the server.
+- All new field names are `snake_case` to align with the database. Existing camelCase fields (`gridRows`, `playerName`) remain as-is.
 
-## Client to server
+## Client → server
 
 ### `join_queue`
 
@@ -38,8 +28,8 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
 
 - `gridRows`, `gridCols`: integers 3 to 20.
 - `maxPlayers`: integer 2 to 4.
-- `playerName`: non-empty string, trimmed.
-- Server responds with `queued`, then eventually `game_start` when the bucket fills.
+- `playerName`: non-empty string, trimmed server-side.
+- Server responds with `queued`, then `game_start` once the bucket fills.
 
 ### `leave_queue`
 
@@ -47,7 +37,7 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
 { "type": "leave_queue" }
 ```
 
-- Removes the player from whichever queue bucket they're in. No-op if not queued.
+Removes the player from their current bucket. No-op if not queued.
 
 ### `make_move`
 
@@ -56,7 +46,7 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
 ```
 
 - Valid only during a game and only on the player's turn.
-- Server ignores silently if: wrong turn, out of bounds, or cell owned by another player. (See `ERRORS.md` for when an `error` frame is sent vs silent drop.)
+- Server ignores silently if: wrong turn, out of bounds, or cell owned by another player.
 - On success, server broadcasts `game_state` to the whole room.
 
 ### `leave_game`
@@ -65,10 +55,9 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
 { "type": "leave_game" }
 ```
 
-- Forfeits the current game. Player is marked eliminated, turn advances, win check reruns.
-- Same effect as disconnecting mid-game.
+Forfeits the current game. Player is marked eliminated, turn advances, win check reruns. Same effect as disconnecting mid-game.
 
-## Server to client
+## Server → client
 
 ### `connected`
 
@@ -76,7 +65,7 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
 { "type": "connected", "playerId": "b3c1..." }
 ```
 
-- Sent once, immediately on connection. The client stores `playerId` for the session.
+Sent once on connection. Client stores `playerId` for the session.
 
 ### `queued`
 
@@ -84,7 +73,7 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
 { "type": "queued", "position": 2, "maxPlayers": 2 }
 ```
 
-- Acknowledgement of `join_queue`. `position` is 1-indexed within the bucket.
+Acknowledgement of `join_queue`. `position` is 1-indexed within the bucket.
 
 ### `game_start`
 
@@ -101,15 +90,14 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
 }
 ```
 
-- Sent to every player in the room. The `players` array order defines player index (`0`, `1`, ...) which determines color and turn order.
-- `eliminatedTurn` is `null` until the player is eliminated or forfeits.
+The `players` array order defines player index (0, 1, ...), which determines color and turn order.
 
 ### `game_state`
 
 ```json
 {
   "type": "game_state",
-  "board": [[{ "owner": 0, "count": 1 }, {"owner": null, "count": 0}]],
+  "board": [[{ "owner": 0, "count": 1 }, { "owner": null, "count": 0 }]],
   "currentTurn": 1,
   "players": [
     { "id": "b3c1...", "name": "Alice", "eliminated": false, "eliminatedTurn": null },
@@ -132,26 +120,68 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
 }
 ```
 
-- Sent once. Room is deleted immediately after broadcast; no more frames arrive for that `roomId`.
+Sent once. Room is deleted immediately after broadcast; no more frames arrive for that `roomId`.
 
 ### `error`
 
 ```json
-{ "type": "error", "code": "validation_failed", "message": "gridRows must be between 3 and 20" }
+{
+  "type": "error",
+  "code": "validation_failed",
+  "message": "gridRows must be between 3 and 20",
+  "errors": ["gridRows must be between 3 and 20"]
+}
 ```
 
-- Sent when a request explicitly fails in a way the user should see (bad input, unauthorized action). See `ERRORS.md` for codes and rules on when this is sent vs silently dropped.
+- `code`: machine-readable string from the table below.
+- `message`: human-readable, safe to display.
+- `errors`: optional array. Used for multi-issue validation failures (Zod issue list).
+- An `error` frame is **per-socket**, never broadcast. Only the offending client receives it.
 
-## Adding a new message type
+## Error codes
 
-1. Append it to this file with a JSON example and field constraints.
-2. Add a Zod schema in `backend/src/schemas/messages.schemas.ts`.
-3. Add the type to the union in `backend/src/types/protocol.ts` and `frontend/src/lib/types.ts`.
-4. Add a `case` to the dispatch in `backend/src/router.ts` delegating to a handler.
-5. Add handling to `useGameWebSocket.onmessage` on the frontend if it's server-to-client.
-6. Update `BACKEND.md` or `FRONTEND.md` if the state shape changes.
-7. Commit everything together: `feat(protocol): add <message_type>`.
+| Code | When | Notes |
+|------|------|-------|
+| `validation_failed` | Zod schema rejected the payload | Populate `errors` with issue messages |
+| `not_authenticated` | (post-M7) No token / expired | Frontend should redirect to login |
+| `not_authorized` | (post-M7) Token fine but action is forbidden | |
+| `room_not_found` | Player references a room that no longer exists | Usually a race after `game_over` |
+| `not_in_game` | `make_move` or `leave_game` when the player has no `playerRooms` entry | Send only if the client clearly thinks it's playing |
+| `not_your_turn` | Reserved; we usually drop silently | Send only if a future feature needs explicit feedback |
+| `internal_error` | Anything thrown that wasn't an `ApiError` | Log full error server-side; never leak details |
+
+Codes are defined in `backend/src/constants/app.constants.ts` as `ERROR_CODES`.
+
+## Send `error` vs silently drop
+
+The default is **drop silently**. Send `error` only when the client genuinely needs feedback.
+
+### Send `error`
+
+- Validation failure on a user-initiated action (lobby form). The user typed something invalid.
+- Authorization failure (post-M7).
+- Internal error during a user-initiated action. Generic `internal_error` so the UI can show "something went wrong".
+
+### Drop silently
+
+- Wrong turn / bad coordinates / cell owned by another player on `make_move`. The UI already disables those cells; if the server still receives the click it's either a race or tampering.
+- Unknown message types. Could be a future protocol version or a malicious client.
+- Malformed JSON. Already wrapped in try/catch in the router.
+- `leave_queue` when not queued, `leave_game` when not in a game. Idempotent no-ops.
+
+## Frontend handling
+
+```ts
+case "error": {
+  setLastError({ code: msg.code, message: msg.message });
+  break;
+}
+```
+
+- Don't transition phase based on errors. Phase comes from `queued` / `game_start` / `game_state` / `game_over`.
+- Display `message` to the user. Use `code` for special-case handling.
+- Clear `lastError` on the next successful state transition.
 
 ## Versioning
 
-Not versioned during M1 to M7. If a breaking change is needed post-M7, bump a `protocolVersion` field on `connected` and gate behavior on it. Don't stealth-break.
+Not versioned in M1–M7. If a breaking change is needed post-M7, bump a `protocolVersion` field on `connected` and gate behavior on it. Don't stealth-break.
