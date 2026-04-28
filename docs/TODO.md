@@ -25,8 +25,8 @@
 - [x] Create `backend/`.
 - [x] Create `backend/package.json`.
 - [x] Add backend scripts: `dev`, `build`, `start`, `smoke:logic`, `lint`.
-- [x] Add backend runtime dependencies: `ws`, `uuid`, `zod`, `dotenv`, `winston`.
-- [x] Add backend dev dependencies: `typescript`, `tsx`, `eslint`, TypeScript ESLint packages, `@types/node`, `@types/ws`, `@types/uuid`.
+- [x] Add backend runtime dependencies from the backend setup guide plus project-specific `ws`.
+- [x] Add backend dev dependencies from the backend setup guide plus lint tooling and `@types/ws`.
 - [x] Create `backend/tsconfig.json`.
 - [x] Create `backend/.env.example`.
 - [x] Create `backend/.gitignore`.
@@ -531,13 +531,48 @@
 
 ## Post-M7: Persistence
 
-- [ ] Re-read `docs/DATABASE.md`.
-- [ ] Design finished-match persistence only.
-- [ ] Create `backend/src/db/`.
-- [ ] Add repository interfaces.
-- [ ] Add migrations.
-- [ ] Add provider-specific code only in repo layer.
+- [x] Re-read `docs/DATABASE.md`.
+- [x] Design finished-match persistence only.
+- [x] Create `backend/src/db/`.
+- [x] Create Prisma client singleton in `backend/src/lib/prisma.ts`.
+- [x] Create `backend/src/db/index.ts`.
+- [x] Add repository interfaces.
+- [x] Add Prisma schema for Postgres.
+- [x] Add provider-specific code only in repo layer.
 - [ ] Add finished match write after `game_over`.
+- [x] Add `playersRepo.upsert`.
+- [x] Add `matchesRepo.recordFinished`.
+- [x] Add `match_players` insert path inside finished-match persistence.
+- [ ] Ensure DB failures log and do not block `game_over`.
+
+## Post-M7: Scoring And Leaderboards
+
+- [ ] Confirm the scoring policy before implementation.
+- [ ] Start with baseline policy: winner gets `3`, each non-winner gets `1`.
+- [ ] Record forfeits separately from normal eliminations.
+- [x] Add `player_scores` table.
+- [x] Add `player_id` primary key / foreign key to `players`.
+- [x] Add `score` integer column.
+- [x] Add `wins` integer column.
+- [x] Add `losses` integer column.
+- [x] Add `games_played` integer column.
+- [x] Add `forfeits` integer column.
+- [x] Add `updated_at` timestamp column.
+- [x] Add leaderboard index ordered by score descending.
+- [x] Create `backend/src/db/repos/scores.ts`.
+- [x] Implement `scoresRepo.applyMatchResult`.
+- [x] Implement `scoresRepo.getLeaderboard`.
+- [ ] Ensure score updates happen only after `game_over`.
+- [ ] Ensure score updates never happen per move.
+- [ ] Keep `matches` and `match_players` as the audit log.
+- [ ] Add a recomputation script or query that can rebuild `player_scores` from match history.
+- [ ] Decide whether leaderboard reads are HTTP endpoints or WebSocket request/response messages.
+- [ ] Document leaderboard protocol if WebSocket-based.
+- [ ] Document HTTP route if Express or another HTTP layer is introduced.
+- [ ] Add frontend leaderboard type definitions.
+- [ ] Add frontend leaderboard UI.
+- [ ] Add manual verification for two completed games updating scores correctly.
+- [ ] Add manual verification that a DB outage does not prevent game-over UX.
 
 ## Post-M7: Hardening
 

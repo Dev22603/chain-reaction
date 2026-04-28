@@ -2,9 +2,9 @@
 
 Real-time multiplayer Chain Reaction. Classic pass-and-play, online, server-authoritative.
 
-**Stack:** Node.js + `ws` + TypeScript (backend), Next.js 15 + TypeScript + Tailwind (frontend), Postgres via repository pattern (post-M7), Fly.io hosting.
+**Stack:** Express + Node.js + `ws` + TypeScript (backend), Next.js 15 + TypeScript + Tailwind (frontend), Postgres via Prisma repository pattern, Fly.io hosting.
 
-**Status:** greenfield. Milestones M1 to M7 define build order (see `milestones.md`, `PLAN.md`, `TODO.md`). No DB, auth, reconnect, or ratings until M1 to M7 ships.
+**Status:** greenfield. Milestones M1 to M7 define core realtime gameplay. Prisma/Postgres scoring and leaderboard scaffolding is now part of the backend foundation because the target product is chess.com-style Chain Reaction.
 
 **Layout:** flat repo. `backend/` and `frontend/` are independent npm projects with their own `package.json`. Layered TS structure inside each, modeled on a known-good reference (zod validators, named Winston loggers, `ApiError` class, snake_case on the wire / camelCase internally).
 
@@ -19,7 +19,8 @@ Real-time multiplayer Chain Reaction. Classic pass-and-play, online, server-auth
 ├── backend/
 │   ├── src/
 │   │   ├── index.ts                  # entry: starts the server
-│   │   ├── app.ts                    # HTTP + WS app + connection lifecycle
+│   │   ├── app.ts                    # Express app: middleware + HTTP routes
+│   │   ├── realtime/websocket.ts     # WS app + connection lifecycle
 │   │   ├── router.ts                 # JSON parse + dispatch by type
 │   │   ├── handlers/
 │   │   │   ├── queue.handlers.ts     # join_queue, leave_queue
@@ -31,7 +32,12 @@ Real-time multiplayer Chain Reaction. Classic pass-and-play, online, server-auth
 │   │   ├── lib/logger.ts             # winston getLogger(name)
 │   │   ├── utils/                    # api_error.ts, broadcast.ts
 │   │   ├── types/                    # protocol.ts, game.ts
-│   │   └── db/                       # post-M7: client.ts, repos/, migrations/
+│   │   ├── db/repos/                 # Prisma repository boundary
+│   │   ├── generated/prisma/         # generated, git-ignored Prisma client
+│   │   └── lib/prisma.ts             # Prisma singleton
+│   ├── prisma/
+│   │   └── schema.prisma
+│   ├── prisma.config.ts
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── .env

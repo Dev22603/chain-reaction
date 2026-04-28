@@ -74,7 +74,7 @@ These are the canonical names for things. If a doc, comment, or commit message u
 
 **Schema.** A Zod definition in `schemas/`. Validates a message at the boundary.
 
-**Repository (post-M7).** A module under `db/repos/` that owns SQL for one entity. Handlers call repo methods, never raw SQL.
+**Repository.** A module under `db/repos/` that owns Prisma operations for one entity. Handlers, controllers, and services call repo methods, never Prisma directly.
 
 **Mapper.** A function that translates between DB column names (`snake_case`) and internal property names (`camelCase`). In `utils/mappers.ts`.
 

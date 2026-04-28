@@ -12,6 +12,7 @@ export interface Player {
   id: PlayerId;
   name: string;
   eliminated: boolean;
+  eliminatedTurn: number | null;
 }
 
 export interface Room {
@@ -19,7 +20,10 @@ export interface Room {
   players: Player[];
   gridRows: number;
   gridCols: number;
+  maxPlayers: number;
   board: Board;
   currentTurn: PlayerIndex;
   turnCount: number;
+  startedAt: Date;
+  forfeitedPlayerIds: Set<PlayerId>;
 }

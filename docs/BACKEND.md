@@ -10,8 +10,13 @@ You're editing anything under `backend/`, adding a message handler, touching the
 backend/
 ├── src/
 │   ├── index.ts                   # entry; imports app server, calls listen()
-│   ├── app.ts                     # HTTP + WS app creation, connection lifecycle
+│   ├── app.ts                     # Express app wiring: middleware + routes
+│   ├── realtime/
+│   │   └── websocket.ts           # WS server + connection lifecycle
 │   ├── router.ts                  # JSON parse + dispatch by message.type
+│   ├── routes/                    # HTTP routes
+│   ├── controllers/               # HTTP I/O
+│   ├── services/                  # HTTP business use cases
 │   ├── handlers/
 │   │   ├── queue.handlers.ts      # handleJoinQueue, handleLeaveQueue
 │   │   └── game.handlers.ts       # handleMove, handleLeaveGame, advanceTurn
@@ -33,7 +38,9 @@ backend/
 │   ├── types/
 │   │   ├── protocol.ts            # ClientMessage, ServerMessage unions
 │   │   └── game.ts                # Cell, Board, Player, Room
-│   └── db/                        # post-M7 only
+│   └── db/                        # Prisma repository boundary
+├── prisma/
+│   └── schema.prisma              # Postgres schema
 ├── package.json
 ├── tsconfig.json
 ├── .env
@@ -42,11 +49,13 @@ backend/
 
 ## Reading order (top down)
 
-1. `index.ts`: imports, calls `server.listen(config.PORT)`.
-2. `app.ts`: creates the HTTP server and `WebSocketServer`, on `connection` assigns UUID, registers `players`, calls into `router` on `message`, runs cleanup on `close`.
-3. `router.ts`: `JSON.parse` in try/catch, validates with Zod, switches on `message.type`, calls a handler.
-4. `handlers/`: business logic. Read state, mutate it, broadcast.
-5. `game/gameLogic.ts`: pure helpers (no imports from sibling backend files).
+1. `index.ts`: creates the HTTP server from `app`, attaches WebSocket lifecycle, calls `server.listen(config.PORT)`.
+2. `app.ts`: creates the Express app, registers middleware, mounts HTTP routes, and installs error middleware.
+3. `realtime/websocket.ts`: creates `WebSocketServer`, assigns UUIDs, registers `players`, calls into the WS router on `message`, runs cleanup on `close`.
+4. `router.ts`: `JSON.parse` in try/catch, validates WS messages with Zod, switches on `message.type`, calls a handler.
+5. `handlers/`: WebSocket business logic. Read state, mutate it, broadcast.
+6. `routes/ -> controllers/ -> services/ -> db/repos/`: HTTP business logic for durable resources such as leaderboard/scoring.
+7. `game/gameLogic.ts`: pure helpers (no imports from sibling backend files).
 
 ## State flow: connection to game
 

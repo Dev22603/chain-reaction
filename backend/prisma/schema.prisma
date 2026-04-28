@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Player {
+  id           String        @id @db.Uuid
+  displayName  String        @map("display_name")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  score        PlayerScore?
+  wonMatches   Match[]       @relation("MatchWinner")
+  matchPlayers MatchPlayer[]
+
+  @@index([displayName], map: "idx_players_display_name")
+  @@map("players")
+}
+
+model Match {
+  id           String        @id @db.Uuid
+  gridRows     Int           @map("grid_rows") @db.SmallInt
+  gridCols     Int           @map("grid_cols") @db.SmallInt
+  maxPlayers   Int           @map("max_players") @db.SmallInt
+  startedAt    DateTime      @map("started_at")
+  endedAt      DateTime      @map("ended_at")
+  winnerId     String        @map("winner_id") @db.Uuid
+  turnCount    Int           @map("turn_count")
+  winner       Player        @relation("MatchWinner", fields: [winnerId], references: [id])
+  participants MatchPlayer[]
+
+  @@index([endedAt(sort: Desc)], map: "idx_matches_ended_at")
+  @@index([winnerId], map: "idx_matches_winner")
+  @@map("matches")
+}
+
+model MatchPlayer {
+  matchId        String  @map("match_id") @db.Uuid
+  playerId       String  @map("player_id") @db.Uuid
+  playerIndex    Int     @map("player_index") @db.SmallInt
+  eliminatedTurn Int?    @map("eliminated_turn")
+  forfeited      Boolean @default(false)
+  match          Match   @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  player         Player  @relation(fields: [playerId], references: [id])
+
+  @@id([matchId, playerId])
+  @@index([playerId], map: "idx_match_players_player")
+  @@map("match_players")
+}
+
+model PlayerScore {
+  playerId    String   @id @map("player_id") @db.Uuid
+  score       Int      @default(0)
+  wins        Int      @default(0)
+  losses      Int      @default(0)
+  gamesPlayed Int      @default(0) @map("games_played")
+  forfeits    Int      @default(0)
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  player      Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@index([score(sort: Desc), wins(sort: Desc), gamesPlayed], map: "idx_player_scores_leaderboard")
+  @@map("player_scores")
+}

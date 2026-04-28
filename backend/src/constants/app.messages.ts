@@ -1,6 +1,7 @@
 export const SERVER_MESSAGES = {
   INTERNAL_ERROR: "Something went wrong.",
-  VALIDATION_FAILED: "Validation failed."
+  VALIDATION_FAILED: "Validation failed.",
+  DATABASE_UNAVAILABLE: "Database is not configured."
 } as const;
 
 export const QUEUE_VALIDATION_ERRORS = {

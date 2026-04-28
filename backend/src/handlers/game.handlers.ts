@@ -1,9 +1,13 @@
 import { MESSAGE_TYPES } from "../constants/app.constants.js";
+import { matchesRepo, scoresRepo } from "../db/index.js";
 import { applyMove, isEliminated } from "../game/gameLogic.js";
+import { getLogger } from "../lib/logger.js";
 import { playerRooms, rooms } from "../state/memory.js";
 import type { PlayerIndex, Room } from "../types/game.js";
 import type { MakeMoveMessage } from "../types/protocol.js";
 import { broadcast } from "../utils/broadcast.js";
+
+const logger = getLogger("game.handlers");
 
 export function handleMove(playerId: string, payload: MakeMoveMessage): void {
   const room = getRoomForPlayer(playerId);
@@ -31,7 +35,11 @@ export function handleMove(playerId: string, payload: MakeMoveMessage): void {
 
   if (room.turnCount >= room.players.length) {
     room.players.forEach((player, index) => {
-      player.eliminated = isEliminated(room.board, index);
+      const eliminated = isEliminated(room.board, index);
+      if (eliminated && !player.eliminated) {
+        player.eliminatedTurn = room.turnCount;
+      }
+      player.eliminated = eliminated;
     });
   }
 
@@ -62,6 +70,8 @@ export function handleLeaveGame(playerId: string): void {
   }
 
   leavingPlayer.eliminated = true;
+  leavingPlayer.eliminatedTurn ??= room.turnCount;
+  room.forfeitedPlayerIds.add(leavingPlayer.id);
 
   const winner = getWinner(room);
   if (winner) {
@@ -123,8 +133,45 @@ function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>):
     }
   });
 
+  persistFinishedMatch(room, winner.id).catch((error: unknown) => {
+    logger.error("finished match persistence failed", {
+      roomId: room.id,
+      error: error instanceof Error ? error.message : String(error)
+    });
+  });
+
   rooms.delete(room.id);
   for (const player of room.players) {
     playerRooms.delete(player.id);
   }
+}
+
+async function persistFinishedMatch(room: Room, winnerId: string): Promise<void> {
+  const participants = room.players.map((player, index) => ({
+    playerId: player.id,
+    displayName: player.name,
+    playerIndex: index,
+    eliminatedTurn: player.id === winnerId ? null : player.eliminatedTurn,
+    forfeited: room.forfeitedPlayerIds.has(player.id)
+  }));
+
+  await matchesRepo.recordFinished({
+    id: room.id,
+    gridRows: room.gridRows,
+    gridCols: room.gridCols,
+    maxPlayers: room.maxPlayers,
+    startedAt: room.startedAt,
+    endedAt: new Date(),
+    winnerId,
+    turnCount: room.turnCount,
+    participants
+  });
+
+  await scoresRepo.applyMatchResult({
+    winnerId,
+    participants: participants.map((participant) => ({
+      playerId: participant.playerId,
+      forfeited: participant.forfeited
+    }))
+  });
 }

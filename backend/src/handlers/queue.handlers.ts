@@ -40,7 +40,8 @@ export function handleJoinQueue(playerId: string, payload: JoinQueueMessage): vo
   const player: Player = {
     id: playerId,
     name: payload.playerName,
-    eliminated: false
+    eliminated: false,
+    eliminatedTurn: null
   };
 
   queue.push(player);
@@ -72,9 +73,12 @@ function createRoom(roomPlayers: Player[], gridRows: number, gridCols: number): 
     players: roomPlayers.map((player) => ({ ...player, eliminated: false })),
     gridRows,
     gridCols,
+    maxPlayers: roomPlayers.length,
     board: createBoard(gridRows, gridCols),
     currentTurn: 0,
-    turnCount: 0
+    turnCount: 0,
+    startedAt: new Date(),
+    forfeitedPlayerIds: new Set()
   };
 
   rooms.set(room.id, room);

@@ -27,5 +27,6 @@ export const ERROR_CODES = {
   ROOM_NOT_FOUND: "room_not_found",
   NOT_IN_GAME: "not_in_game",
   NOT_YOUR_TURN: "not_your_turn",
+  DATABASE_UNAVAILABLE: "database_unavailable",
   INTERNAL_ERROR: "internal_error"
 } as const;

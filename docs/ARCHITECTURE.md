@@ -45,21 +45,26 @@ Three pieces. One backend process. No database until post-M7.
 - Renders whatever `game_state` broadcasts arrive. Never computes the next board itself.
 
 ### Backend (`backend/`)
-- `app.ts`: creates the HTTP + WS app, accepts WS connections, assigns each a UUID, tracks the socket in the `players` Map.
-- `router.ts`: parses incoming frames, dispatches by `type` to the correct handler in `handlers/`.
-- `handlers/`: per-message-type validation (via Zod schemas in `schemas/`), state mutation, broadcast emission.
+- `app.ts`: creates the Express app, registers middleware, mounts HTTP routes, and installs error middleware.
+- `index.ts`: creates the HTTP server, attaches WebSocket lifecycle, and starts listening.
+- `realtime/websocket.ts`: accepts WS connections, assigns each a UUID, tracks the socket in the `players` Map.
+- `router.ts`: parses incoming WS frames, dispatches by `type` to the correct handler in `handlers/`.
+- `handlers/`: per-message-type validation (via Zod schemas in `schemas/`), live state mutation, broadcast emission.
+- `routes/`, `controllers/`, `services/`: HTTP route stack for persistent resources such as leaderboards.
 - `state/memory.ts`: the four module-level Maps that hold all live state.
 - `game/gameLogic.ts`: pure rules, no I/O.
-- `db/` (post-M7): repository pattern, the only place SQL lives.
+- `db/`: Prisma-backed repository pattern. Handlers/services import repos from `db/index.ts`, never Prisma directly.
 
 ### Game logic (`backend/src/game/gameLogic.ts`)
 - Pure module, no imports from `ws`, `http`, `fs`, logger, DB, or any sibling backend module.
 - Five exports: `createBoard`, `getCriticalMass`, `getNeighbors`, `applyMove`, `isEliminated`.
 - Runs as a standalone script via the file-bottom `process.argv[1]` guard, executed by `tsx`.
 
-### Database boundary (post-M7)
-- Not active during M1 to M7.
-- When introduced: repository pattern under `backend/src/db/`, called only from handlers, never raw queries elsewhere. See `DATABASE.md`.
+### Database boundary
+- Prisma + Postgres.
+- Live match state stays in memory.
+- Finished-match persistence and score updates happen after `game_over`.
+- Repository pattern under `backend/src/db/`; handlers/services import repos from `db/index.ts`, never Prisma directly. See `DATABASE.md`.
 
 ## Phase machine (frontend)
 
@@ -94,15 +99,15 @@ export const rooms       = new Map<string, Room>();        // roomId    -> room
 export const playerRooms = new Map<string, string>();      // playerId  -> roomId
 ```
 
-A `Room` (defined in `types/game.ts`) holds `{ id, players: Player[], gridRows, gridCols, board, currentTurn, turnCount }`. Rooms are deleted when a game ends. Players are decorated with `eliminated: boolean` for the duration.
+A `Room` (defined in `types/game.ts`) holds `{ id, players: Player[], gridRows, gridCols, maxPlayers, board, currentTurn, turnCount, startedAt, forfeitedPlayerIds }`. Rooms are deleted when a game ends. Players carry `eliminated` and `eliminatedTurn` for the duration.
 
 ## Lifecycle: connection to cleanup
 
-1. Client opens WS. `app.ts` generates `uuidv4`, sends `{ type: 'connected', playerId }`.
+1. Client opens WS. `realtime/websocket.ts` generates `uuidv4`, sends `{ type: 'connected', playerId }`.
 2. Client sends `join_queue`. `queue.handlers.ts` buckets, sends `queued`. If the bucket fills, `game_start` to all members and a room is created.
 3. Clients alternate `make_move`. `game.handlers.ts` validates, runs `applyMove`, broadcasts `game_state`.
 4. When only one player remains alive, server sends `game_over` and deletes the room.
-5. On disconnect: `app.ts` runs leave-queue + leave-game cleanup, then `players.delete`.
+5. On disconnect: `realtime/websocket.ts` runs leave-queue + leave-game cleanup, then `players.delete`.
 
 ## Deployment (Fly.io)
 

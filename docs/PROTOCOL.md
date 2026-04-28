@@ -93,8 +93,8 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
   "type": "game_start",
   "roomId": "a1b2...",
   "players": [
-    { "id": "b3c1...", "name": "Alice", "eliminated": false },
-    { "id": "d4e5...", "name": "Bob",   "eliminated": false }
+    { "id": "b3c1...", "name": "Alice", "eliminated": false, "eliminatedTurn": null },
+    { "id": "d4e5...", "name": "Bob",   "eliminated": false, "eliminatedTurn": null }
   ],
   "gridRows": 6,
   "gridCols": 9
@@ -102,6 +102,7 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
 ```
 
 - Sent to every player in the room. The `players` array order defines player index (`0`, `1`, ...) which determines color and turn order.
+- `eliminatedTurn` is `null` until the player is eliminated or forfeits.
 
 ### `game_state`
 
@@ -111,8 +112,8 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
   "board": [[{ "owner": 0, "count": 1 }, {"owner": null, "count": 0}]],
   "currentTurn": 1,
   "players": [
-    { "id": "b3c1...", "name": "Alice", "eliminated": false },
-    { "id": "d4e5...", "name": "Bob",   "eliminated": false }
+    { "id": "b3c1...", "name": "Alice", "eliminated": false, "eliminatedTurn": null },
+    { "id": "d4e5...", "name": "Bob",   "eliminated": false, "eliminatedTurn": null }
   ]
 }
 ```
@@ -120,6 +121,7 @@ If they drift, this file wins as the spec, but commit a fix to whichever is wron
 - Broadcast after every accepted `make_move` or `leave_game` that doesn't end the match.
 - `currentTurn` is already advanced past eliminated players.
 - `board[row][col].owner` is `null` for empty cells, otherwise a player index.
+- `players[].eliminatedTurn` is the server turn count when that player was eliminated, or `null` for active players and the winner.
 
 ### `game_over`
 

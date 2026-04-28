@@ -37,8 +37,8 @@ Enforced across backend and frontend. Every rule has a reason. If you're about t
 - **Active game state lives in memory (the `rooms` Map in `state/memory.ts`). Only finished matches hit the DB.** No writes per move.
   *Why: move-rate writes destroy both latency and your Postgres bill. Match results are the durable artifact.*
 
-- **No provider-specific SQL or client calls outside `backend/src/db/repos/` (post-M7).** Handlers call repository methods, never raw queries.
-  *Why: we want to swap Postgres providers (Neon, Supabase, Fly Postgres, RDS) without rewriting handlers.*
+- **No Prisma or provider-specific client calls outside `backend/src/db/repos/` and `backend/src/lib/prisma.ts`.** Handlers, controllers, and services call repository methods, never Prisma directly.
+  *Why: persistence must stay swappable and reviewable without leaking database details into gameplay or HTTP code.*
 
 ## Game logic testing
 

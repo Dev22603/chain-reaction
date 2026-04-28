@@ -225,7 +225,8 @@ Exit criteria:
 Deferred:
 
 - Auth.
-- Persistence.
+- Finished-match persistence.
+- Player scoring and leaderboard persistence.
 - Reconnection.
 - Spectators.
 - Private rooms.
@@ -254,6 +255,57 @@ Deferred:
 | Phantom room or queue entries | cleanup handlers | Centralize cleanup through handlers |
 | Stale board rendering | React state updates | Replace `gameState` object from messages |
 | Hidden invalid client payloads | router | Zod at boundary, `ApiError` response |
+
+## Post-M7 Persistence And Scoring Plan
+
+Scoring is part of the product direction, but it is not active during M1 to M7. During live matches, the backend keeps state in memory. At `game_over`, the backend should persist the finished match and update player scores through repository methods.
+
+### M8: Finished Match Persistence
+
+Goal: store a durable record of every completed match without writing per move.
+
+Deliverables:
+
+- `backend/src/lib/prisma.ts`
+- `backend/src/db/index.ts`
+- `backend/src/db/repos/players.ts`
+- `backend/src/db/repos/matches.ts`
+- Prisma schema and migrations for `players`, `matches`, and `match_players`
+- End-of-game persistence call from `game.handlers.ts`
+
+Exit criteria:
+
+- A completed game writes one `matches` row.
+- A completed game writes one `match_players` row per participant.
+- Players are upserted by current player identity.
+- A DB outage logs an error but does not block `game_over`.
+
+### M9: Player Scores And Leaderboard
+
+Goal: keep durable player scores that can drive a leaderboard and future ranking features.
+
+Initial scoring model:
+
+- Winner receives `3` score points.
+- Each non-winning participant receives `1` participation point.
+- A forfeit can be recorded separately so the scoring policy can later penalize it without rewriting match history.
+- `matches` and `match_players` remain the audit trail; aggregate scores are a cached projection for quick reads.
+
+Deliverables:
+
+- Prisma schema and migration for `player_scores`
+- `backend/src/db/repos/scores.ts`
+- `scoresRepo.applyMatchResult(...)`
+- `scoresRepo.getLeaderboard({ limit })`
+- Optional HTTP or WebSocket message for leaderboard reads
+- Frontend leaderboard view once the read endpoint exists
+
+Exit criteria:
+
+- `game_over` persists the match result and updates `player_scores` in one repository-level transaction or one explicitly ordered repository workflow.
+- Leaderboard reads are indexed and ordered by score.
+- Recomputing scores from `match_players` produces the same totals as `player_scores`.
+- Score writes are never performed per move.
 
 ## Verification Commands
 

@@ -14,6 +14,7 @@ docs/      Product plan, TODOs, protocol, rules, and architecture notes
 
 ```bash
 npm install
+npm run db:generate -w backend
 ```
 
 ## Run
@@ -38,6 +39,12 @@ Open `http://localhost:3000` in two browser windows, enter different names with 
 npm run smoke:logic
 npm run build
 npm run lint
+```
+
+When you have a local Postgres database available, copy `backend/.env.example` to `backend/.env`, set `DATABASE_URL`, then run:
+
+```bash
+npm run db:migrate -w backend
 ```
 
 ## Key Docs

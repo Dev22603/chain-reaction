@@ -9,6 +9,7 @@ export interface Player {
   id: string;
   name: string;
   eliminated: boolean;
+  eliminatedTurn: number | null;
 }
 
 export type Phase = "lobby" | "queued" | "playing" | "gameover";
