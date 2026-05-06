@@ -1,6 +1,6 @@
 # Chain Reaction
 
-A real-time multiplayer Chain Reaction game. The backend is the source of truth for game state, turn order, chain reactions, elimination, and game-over cleanup. The frontend renders server broadcasts and sends player intent over WebSockets.
+A real-time multiplayer Chain Reaction game built with Node.js and Next.js. The backend is the source of truth for game state, turn order, chain reactions, elimination, and game-over cleanup. The frontend renders server broadcasts and sends player intent over WebSockets.
 
 ## Project Shape
 
