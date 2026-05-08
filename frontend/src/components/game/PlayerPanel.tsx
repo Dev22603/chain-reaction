@@ -15,7 +15,7 @@ interface PlayerPanelProps {
 
 export function PlayerPanel({ players, currentTurn, selfId, orbCounts }: PlayerPanelProps) {
   return (
-    <Card className="grid gap-3 p-5">
+    <Card className="grid w-full gap-3 p-5 lg:w-[220px]">
       <CardEyebrow>// reactors</CardEyebrow>
       <ul className="grid gap-2">
         {players.map((player, index) => {

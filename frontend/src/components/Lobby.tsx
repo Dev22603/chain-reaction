@@ -5,7 +5,6 @@ import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardCorners, CardEyebrow, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { BOARD_PRESETS } from "@/lib/presets";
 import type { JoinQueueInput } from "@/lib/types";
 
@@ -31,7 +30,7 @@ export function Lobby({ onSubmit, onInteract }: LobbyProps) {
 
   return (
     <Card
-      className="mx-auto mt-[6vh] w-[min(560px,100%)] p-10 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]"
+      className="mx-auto mt-[6vh] w-[min(520px,100%)] p-10 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]"
       aria-labelledby="lobby-title"
     >
       <CardCorners />
@@ -52,7 +51,8 @@ export function Lobby({ onSubmit, onInteract }: LobbyProps) {
           <span className="text-reactor [text-shadow:0_0_24px_rgba(255,91,46,0.55)]">Reaction</span>
         </CardTitle>
         <p className="max-w-md text-xs leading-relaxed text-fg-muted">
-          Stack orbs. Trigger criticality. Saturate the lattice before your rivals do — the last reactor standing wins.
+          Stack orbs. Trigger criticality. Saturate the lattice before your rivals do - the last reactor
+          standing wins.
         </p>
       </header>
 
@@ -63,32 +63,40 @@ export function Lobby({ onSubmit, onInteract }: LobbyProps) {
           value={playerName}
           maxLength={100}
           onChange={(event) => setPlayerName(event.target.value)}
-          placeholder="enter callsign…"
+          placeholder="enter callsign..."
           autoComplete="off"
         />
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <Select
-            name="preset"
-            label="Lattice"
-            value={`${gridRows}x${gridCols}`}
-            onChange={(event) => {
-              const preset = BOARD_PRESETS.find(
-                (item) => `${item.gridRows}x${item.gridCols}` === event.target.value
-              );
-              if (preset) {
-                setGridRows(preset.gridRows);
-                setGridCols(preset.gridCols);
-              }
-            }}
-          >
-            {BOARD_PRESETS.map((preset) => (
-              <option key={preset.label} value={`${preset.gridRows}x${preset.gridCols}`}>
-                {preset.label} · {preset.gridRows}×{preset.gridCols}
-              </option>
-            ))}
-          </Select>
+        <fieldset className="grid gap-3 border-0 p-0">
+          <legend className="font-display text-[10px] uppercase tracking-[0.32em] text-fg-soft">
+            Lattice Preset
+          </legend>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {BOARD_PRESETS.map((preset) => {
+              const active = gridRows === preset.gridRows && gridCols === preset.gridCols;
 
+              return (
+                <Button
+                  key={preset.label}
+                  variant={active ? "segmentActive" : "segment"}
+                  className="h-auto flex-col py-3 text-[10px]"
+                  onClick={() => {
+                    onInteract?.();
+                    setGridRows(preset.gridRows);
+                    setGridCols(preset.gridCols);
+                  }}
+                >
+                  <span>{preset.label}</span>
+                  <span className="font-mono text-[10px] normal-case tracking-[0.12em] opacity-75">
+                    {preset.gridRows} x {preset.gridCols}
+                  </span>
+                </Button>
+              );
+            })}
+          </div>
+        </fieldset>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Input
             name="rows"
             label="Rows"
@@ -138,7 +146,7 @@ export function Lobby({ onSubmit, onInteract }: LobbyProps) {
           className="mt-2"
         >
           <Play size={16} aria-hidden="true" strokeWidth={2.5} />
-          Initiate · Join Queue
+          Initiate / Join Queue
         </Button>
       </form>
     </Card>

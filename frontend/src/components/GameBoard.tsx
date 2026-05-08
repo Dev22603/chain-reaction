@@ -6,13 +6,7 @@ import { Cell } from "@/components/game/Cell";
 import { PlayerPanel } from "@/components/game/PlayerPanel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  capacityFor,
-  cellKey,
-  diffBoards,
-  tallyOrbs,
-  type BoardCellEffect
-} from "@/lib/board";
+import { capacityFor, cellKey, diffBoards, tallyOrbs, type BoardCellEffect } from "@/lib/board";
 import { PLAYER_COLORS } from "@/lib/colors";
 import type { Board, GameState } from "@/lib/types";
 
@@ -61,10 +55,10 @@ export function GameBoard({
   );
 
   return (
-    <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
-      <header className="flex flex-wrap items-center justify-between gap-4 lg:col-span-2">
+    <section className="grid gap-6">
+      <header className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <Badge>
+          <Badge className="border-current/35 bg-current/8" style={{ color: turnColor }}>
             <span
               className="h-2 w-2 rounded-full"
               style={{ background: turnColor, boxShadow: `0 0 8px ${turnColor}` }}
@@ -80,7 +74,12 @@ export function GameBoard({
         </div>
         <div className="flex items-center gap-2">
           {onToggleMute ? (
-            <Button variant="ghost" size="sm" onClick={onToggleMute} aria-label={muted ? "Unmute" : "Mute"}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggleMute}
+              aria-label={muted ? "Unmute" : "Mute"}
+            >
               {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               {muted ? "muted" : "audio"}
             </Button>
@@ -92,42 +91,51 @@ export function GameBoard({
         </div>
       </header>
 
-      <div className="overflow-hidden">
-        <div
-          className="mx-auto grid w-full max-w-[760px] gap-1.5"
-          style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
-        >
-          {gameState.board.map((row, rowIndex) =>
-            row.map((cell, colIndex) => {
-              const ownerColor = cell.owner === null ? "#3a3f55" : PLAYER_COLORS[cell.owner];
-              const legal =
-                isMyTurn && (cell.owner === null || cell.owner === myIndex) && !currentPlayer?.eliminated;
-              const key = cellKey(rowIndex, colIndex);
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+        <div className="w-full lg:flex-1">
+          <div
+            className="mx-auto grid w-full max-w-[760px] overflow-hidden border-[1.5px] bg-black/65 shadow-[0_0_24px_rgba(0,0,0,0.35)]"
+            style={{
+              borderColor: turnColor,
+              gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`
+            }}
+          >
+            {gameState.board.map((row, rowIndex) =>
+              row.map((cell, colIndex) => {
+                const ownerColor = cell.owner === null ? turnColor : PLAYER_COLORS[cell.owner];
+                const legal =
+                  isMyTurn && (cell.owner === null || cell.owner === myIndex) && !currentPlayer?.eliminated;
+                const key = cellKey(rowIndex, colIndex);
 
-              return (
-                <Cell
-                  key={key}
-                  cell={cell}
-                  capacity={capacityFor(rowIndex, colIndex, rows, cols)}
-                  color={ownerColor}
-                  legal={legal}
-                  highlight={legal && cell.count > 0}
-                  effect={effects.get(key) ?? null}
-                  onPlay={() => onMove(rowIndex, colIndex)}
-                  ariaLabel={`Row ${rowIndex + 1}, column ${colIndex + 1}, ${cell.count} orbs`}
-                />
-              );
-            })
-          )}
+                return (
+                  <Cell
+                    key={key}
+                    cell={cell}
+                    capacity={capacityFor(rowIndex, colIndex, rows, cols)}
+                    color={ownerColor}
+                    frameColor={turnColor}
+                    legal={legal}
+                    highlight={legal && cell.count > 0}
+                    effect={effects.get(key) ?? null}
+                    onPlay={() => onMove(rowIndex, colIndex)}
+                    ariaLabel={`Row ${rowIndex + 1}, column ${colIndex + 1}, ${cell.count} orbs`}
+                  />
+                );
+              })
+            )}
+          </div>
+          <div className="mx-auto mt-2 max-w-[760px] font-mono text-[10px] uppercase tracking-[0.2em] text-fg-muted">
+            {rows} x {cols} lattice
+          </div>
         </div>
-      </div>
 
-      <PlayerPanel
-        players={gameState.players}
-        currentTurn={gameState.currentTurn}
-        selfId={playerId}
-        orbCounts={orbCounts}
-      />
+        <PlayerPanel
+          players={gameState.players}
+          currentTurn={gameState.currentTurn}
+          selfId={playerId}
+          orbCounts={orbCounts}
+        />
+      </div>
     </section>
   );
 }

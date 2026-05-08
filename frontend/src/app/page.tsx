@@ -24,6 +24,7 @@ export default function Home() {
 
   return (
     <main className="relative z-10 mx-auto w-full max-w-[1180px] px-4 py-8 sm:px-8">
+      <BackgroundLattice />
       <TopBar />
 
       {game.lastError ? (
@@ -66,15 +67,37 @@ export default function Home() {
           <CardCorners />
           <CardEyebrow>// initializing</CardEyebrow>
           <h1 className="font-display text-3xl uppercase tracking-[0.05em] text-fg">
-            Priming Lattice<span className="ml-1 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-cherenkov">_</span>
+            Priming Lattice
+            <span className="ml-1 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-cherenkov">
+              _
+            </span>
           </h1>
         </Card>
       ) : null}
 
       {game.phase === "gameover" ? (
-        <GameOver winner={game.winner} onPlayAgain={game.reset} />
+        <GameOver
+          winner={game.winner}
+          winnerIndex={game.gameState?.players.findIndex((player) => player.id === game.winner?.id) ?? null}
+          onPlayAgain={game.reset}
+        />
       ) : null}
     </main>
+  );
+}
+
+function BackgroundLattice() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute left-1/2 top-[23vh] h-[460px] w-[820px] -translate-x-1/2 opacity-25 max-lg:hidden"
+      style={{
+        backgroundImage:
+          "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
+        backgroundSize: "48px 48px",
+        maskImage: "radial-gradient(circle at center, black 42%, transparent 80%)"
+      }}
+    />
   );
 }
 
@@ -87,9 +110,7 @@ function TopBar() {
           <span className="relative h-2 w-2 rounded-full bg-bg" />
         </span>
         <div className="grid leading-tight">
-          <span className="font-display text-sm uppercase tracking-[0.32em] text-fg">
-            Chain · Reaction
-          </span>
+          <span className="font-display text-sm uppercase tracking-[0.32em] text-fg">Chain . Reaction</span>
           <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-fg-muted">
             reactor.console
           </span>

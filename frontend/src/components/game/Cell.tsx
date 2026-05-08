@@ -10,6 +10,7 @@ interface CellProps {
   cell: CellModel;
   capacity: number;
   color: string;
+  frameColor: string;
   legal: boolean;
   highlight: boolean;
   effect: BoardCellEffect | null;
@@ -17,7 +18,17 @@ interface CellProps {
   ariaLabel: string;
 }
 
-export function Cell({ cell, capacity, color, legal, highlight, effect, onPlay, ariaLabel }: CellProps) {
+export function Cell({
+  cell,
+  capacity,
+  color,
+  frameColor,
+  legal,
+  highlight,
+  effect,
+  onPlay,
+  ariaLabel
+}: CellProps) {
   const filled = cell.count > 0;
   const critical = filled && cell.count >= capacity - 1;
 
@@ -28,16 +39,15 @@ export function Cell({ cell, capacity, color, legal, highlight, effect, onPlay, 
       onClick={onPlay}
       aria-label={ariaLabel}
       className={cn(
-        "group relative grid aspect-square place-items-center overflow-hidden border bg-bg-soft/40 transition-[border-color,background] duration-200",
-        "border-line/70",
-        legal && "cursor-pointer hover:border-cherenkov hover:bg-cherenkov/5",
-        !legal && "cursor-not-allowed",
-        highlight && "border-cherenkov/60",
-        filled && "border-line-2"
+        "group relative grid aspect-square place-items-center overflow-hidden border bg-black/90 transition-[border-color,background,box-shadow] duration-200",
+        legal ? "cursor-pointer" : "cursor-not-allowed",
+        highlight && "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]"
       )}
       style={
         {
-          "--cell-color": color
+          "--cell-color": color,
+          borderColor: frameColor,
+          boxShadow: legal ? `inset 0 0 0 1px ${frameColor}14` : undefined
         } as CSSProperties & Record<"--cell-color", string>
       }
     >
@@ -84,7 +94,13 @@ export function Cell({ cell, capacity, color, legal, highlight, effect, onPlay, 
 
       {legal && !filled ? (
         <span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cherenkov/60 shadow-[0_0_12px_rgba(37,211,255,0.7)]" />
+          <span
+            className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{
+              background: frameColor,
+              boxShadow: `0 0 14px ${frameColor}`
+            }}
+          />
         </span>
       ) : null}
     </button>
@@ -92,27 +108,37 @@ export function Cell({ cell, capacity, color, legal, highlight, effect, onPlay, 
 }
 
 function CellOrbs({ count, color, critical }: { count: number; color: string; critical: boolean }) {
-  const positions = orbPositions(Math.min(count, 4));
-  const size = count >= 3 ? 12 : 16;
+  const displayCount = Math.min(count, 4);
+  const size = displayCount === 1 ? 24 : displayCount === 2 ? 18 : displayCount === 3 ? 15 : 13;
+  const orbits = orbitConfig(displayCount, critical);
 
   return (
-    <span className="relative grid h-full w-full place-items-center" aria-hidden="true">
-      {positions.map((pos, i) => (
+    <span className="absolute inset-0 grid place-items-center" aria-hidden="true">
+      {orbits.map((orbit, index) => (
         <span
-          key={i}
-          className="absolute"
+          key={index}
+          className="absolute left-1/2 top-1/2"
           style={{
-            left: `${pos.x}%`,
-            top: `${pos.y}%`,
-            transform: "translate(-50%, -50%)"
+            animation: orbit.radius > 0 ? `orbit-spin ${orbit.duration}s linear infinite` : undefined,
+            animationDelay: orbit.radius > 0 ? `-${orbit.duration * orbit.startFraction}s` : undefined
           }}
         >
-          <Orb color={color} size={size} delay={i * 0.08} critical={critical} />
+          <span
+            className="absolute left-0 top-0"
+            style={{
+              transform: `translate(-50%, -50%) translateX(${orbit.radius}px)`,
+              animation:
+                orbit.radius > 0 ? `orbit-spin-reverse ${orbit.duration}s linear infinite` : undefined,
+              animationDelay: orbit.radius > 0 ? `-${orbit.duration * orbit.startFraction}s` : undefined
+            }}
+          >
+            <Orb color={color} size={size} delay={index * 0.08} critical={critical} />
+          </span>
         </span>
       ))}
       {count > 4 ? (
         <span
-          className="absolute right-1.5 top-1.5 font-display text-[10px] uppercase tracking-wider"
+          className="absolute bottom-1 right-1 font-display text-[10px] uppercase tracking-[0.08em]"
           style={{ color }}
         >
           {count}
@@ -122,28 +148,31 @@ function CellOrbs({ count, color, critical }: { count: number; color: string; cr
   );
 }
 
-function orbPositions(count: number): Array<{ x: number; y: number }> {
+function orbitConfig(
+  count: number,
+  critical: boolean
+): Array<{ radius: number; duration: number; startFraction: number }> {
   switch (count) {
     case 1:
-      return [{ x: 50, y: 50 }];
+      return [{ radius: 0, duration: 0, startFraction: 0 }];
     case 2:
       return [
-        { x: 35, y: 50 },
-        { x: 65, y: 50 }
+        { radius: 12, duration: critical ? 1.9 : 3.9, startFraction: 0 },
+        { radius: 12, duration: critical ? 1.9 : 3.9, startFraction: 0.5 }
       ];
     case 3:
       return [
-        { x: 50, y: 32 },
-        { x: 32, y: 65 },
-        { x: 68, y: 65 }
+        { radius: 11, duration: critical ? 1.8 : 3.5, startFraction: 0 },
+        { radius: 11, duration: critical ? 1.8 : 3.5, startFraction: 1 / 3 },
+        { radius: 11, duration: critical ? 1.8 : 3.5, startFraction: 2 / 3 }
       ];
     case 4:
     default:
       return [
-        { x: 32, y: 32 },
-        { x: 68, y: 32 },
-        { x: 32, y: 68 },
-        { x: 68, y: 68 }
+        { radius: 11, duration: critical ? 1.6 : 4.4, startFraction: 0 },
+        { radius: 11, duration: critical ? 1.6 : 4.4, startFraction: 0.25 },
+        { radius: 11, duration: critical ? 1.6 : 4.4, startFraction: 0.5 },
+        { radius: 11, duration: critical ? 1.6 : 4.4, startFraction: 0.75 }
       ];
   }
 }
