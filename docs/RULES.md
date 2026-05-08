@@ -48,7 +48,7 @@ Enforced across backend and frontend. Every rule has a reason. If you're about t
 - **Any bug fix in `gameLogic.ts` adds a reproducing case to the bottom guard.** Append, don't replace.
   *Why: the guard is our regression suite until a framework lands.*
 
-- **No formal test framework is in scope until post-M7.** Don't add Jest or Vitest config silently.
+- Add a formal test framework only as part of the testing milestone, and wire it through CI when introduced.
   *Why: scope creep. Tests come when the surface is stable.*
 
 ## Code quality baseline

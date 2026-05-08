@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ERROR_CODES, LIMITS, MESSAGE_TYPES } from "../constants/app.constants.js";
+import { ERROR_CODES, GAME_MODES, LIMITS, MESSAGE_TYPES } from "../constants/app.constants.js";
 import { QUEUE_VALIDATION_ERRORS, SERVER_MESSAGES } from "../constants/app.messages.js";
 import { ApiError } from "../utils/api_error.js";
 import type { ClientMessage } from "../types/protocol.js";
@@ -8,8 +8,11 @@ const BaseMessageSchema = z.object({
   type: z.string()
 });
 
+const GameModeSchema = z.enum([GAME_MODES.CASUAL, GAME_MODES.RANKED]);
+
 export const JoinQueueSchema = z.object({
   type: z.literal(MESSAGE_TYPES.JOIN_QUEUE),
+  mode: GameModeSchema.default(GAME_MODES.CASUAL),
   gridRows: z
     .number()
     .int()

@@ -37,7 +37,7 @@ Frontend layering is shallower: `useGameWebSocket` owns all WS state and actions
 
 - **Wire (JSON over WS):** `snake_case` for any new field names. The existing protocol mixes camelCase (`gridRows`, `playerName`) and that's fine to leave as-is, but new fields should be snake_case for consistency with the future DB (`player_id`, `match_id`, `eliminated_turn`).
 - **Internal (TS):** `camelCase` for variables and properties. PascalCase for types and classes.
-- **DB columns:** `snake_case` (post-M7). Mappers in `utils/mappers.ts` translate between DB rows and internal objects.
+- **DB columns:** `snake_case`. Prisma maps database names to internal camelCase fields where needed.
 
 The reference repo treats the wire format and DB format as a single snake_case "external" world, with camelCase only inside TypeScript. Adopt that.
 
@@ -119,5 +119,5 @@ If a value appears in two places, it goes in constants.
 ## Comments
 
 - Comment **why**, not **what**. The code shows what.
-- TODOs include a name or ticket: `// TODO(dev): handle reconnect post-M7`.
+- TODOs include a name or ticket: `// TODO(dev): handle reconnect in reconnection milestone`.
 - Don't leave commented-out code. Git remembers.

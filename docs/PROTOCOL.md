@@ -19,6 +19,7 @@ The WebSocket message contract between client and server.
 ```json
 {
   "type": "join_queue",
+  "mode": "casual",
   "gridRows": 6,
   "gridCols": 9,
   "maxPlayers": 2,
@@ -26,10 +27,11 @@ The WebSocket message contract between client and server.
 }
 ```
 
+- `mode`: `"casual"` or `"ranked"`. Missing mode defaults to `"casual"` server-side.
 - `gridRows`, `gridCols`: integers 3 to 20.
 - `maxPlayers`: integer 2 to 4.
 - `playerName`: non-empty string, trimmed server-side.
-- Server responds with `queued`, then `game_start` once the bucket fills.
+- Server responds with `queued`, then `game_start` once the bucket fills. Ranked queue requires an authenticated WebSocket identity.
 
 ### `leave_queue`
 
@@ -62,15 +64,15 @@ Forfeits the current game. Player is marked eliminated, turn advances, win check
 ### `connected`
 
 ```json
-{ "type": "connected", "playerId": "b3c1..." }
+{ "type": "connected", "playerId": "b3c1...", "displayName": "Alice", "isGuest": false }
 ```
 
-Sent once on connection. Client stores `playerId` for the session.
+Sent once on connection. If a valid JWT is supplied on the WebSocket URL, `playerId` is the stable account ID. Otherwise the server creates a guest identity.
 
 ### `queued`
 
 ```json
-{ "type": "queued", "position": 2, "maxPlayers": 2 }
+{ "type": "queued", "mode": "casual", "position": 2, "maxPlayers": 2 }
 ```
 
 Acknowledgement of `join_queue`. `position` is 1-indexed within the bucket.
@@ -81,9 +83,10 @@ Acknowledgement of `join_queue`. `position` is 1-indexed within the bucket.
 {
   "type": "game_start",
   "roomId": "a1b2...",
+  "mode": "casual",
   "players": [
-    { "id": "b3c1...", "name": "Alice", "eliminated": false, "eliminatedTurn": null },
-    { "id": "d4e5...", "name": "Bob",   "eliminated": false, "eliminatedTurn": null }
+    { "id": "b3c1...", "name": "Alice", "isGuest": false, "eliminated": false, "eliminatedTurn": null },
+    { "id": "d4e5...", "name": "Bob",   "isGuest": true,  "eliminated": false, "eliminatedTurn": null }
   ],
   "gridRows": 6,
   "gridCols": 9
@@ -100,8 +103,8 @@ The `players` array order defines player index (0, 1, ...), which determines col
   "board": [[{ "owner": 0, "count": 1 }, { "owner": null, "count": 0 }]],
   "currentTurn": 1,
   "players": [
-    { "id": "b3c1...", "name": "Alice", "eliminated": false, "eliminatedTurn": null },
-    { "id": "d4e5...", "name": "Bob",   "eliminated": false, "eliminatedTurn": null }
+    { "id": "b3c1...", "name": "Alice", "isGuest": false, "eliminated": false, "eliminatedTurn": null },
+    { "id": "d4e5...", "name": "Bob",   "isGuest": true,  "eliminated": false, "eliminatedTurn": null }
   ]
 }
 ```
@@ -116,6 +119,7 @@ The `players` array order defines player index (0, 1, ...), which determines col
 ```json
 {
   "type": "game_over",
+  "mode": "casual",
   "winner": { "id": "b3c1...", "name": "Alice" }
 }
 ```
@@ -143,8 +147,8 @@ Sent once. Room is deleted immediately after broadcast; no more frames arrive fo
 | Code | When | Notes |
 |------|------|-------|
 | `validation_failed` | Zod schema rejected the payload | Populate `errors` with issue messages |
-| `not_authenticated` | (post-M7) No token / expired | Frontend should redirect to login |
-| `not_authorized` | (post-M7) Token fine but action is forbidden | |
+| `not_authenticated` | No token / expired / guest tried ranked | Frontend should prompt login |
+| `not_authorized` | Token fine but action is forbidden | |
 | `room_not_found` | Player references a room that no longer exists | Usually a race after `game_over` |
 | `not_in_game` | `make_move` or `leave_game` when the player has no `playerRooms` entry | Send only if the client clearly thinks it's playing |
 | `not_your_turn` | Reserved; we usually drop silently | Send only if a future feature needs explicit feedback |
@@ -159,7 +163,7 @@ The default is **drop silently**. Send `error` only when the client genuinely ne
 ### Send `error`
 
 - Validation failure on a user-initiated action (lobby form). The user typed something invalid.
-- Authorization failure (post-M7).
+- Authorization failure, such as a guest trying to join ranked queue.
 - Internal error during a user-initiated action. Generic `internal_error` so the UI can show "something went wrong".
 
 ### Drop silently
@@ -184,4 +188,4 @@ case "error": {
 
 ## Versioning
 
-Not versioned in M1–M7. If a breaking change is needed post-M7, bump a `protocolVersion` field on `connected` and gate behavior on it. Don't stealth-break.
+Not versioned yet. If a breaking change is needed, bump a `protocolVersion` field on `connected` and gate behavior on it. Don't stealth-break.

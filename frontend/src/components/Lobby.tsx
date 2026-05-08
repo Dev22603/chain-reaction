@@ -1,31 +1,41 @@
 "use client";
 
 import { Play } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardCorners, CardEyebrow, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { BOARD_PRESETS } from "@/lib/presets";
-import type { JoinQueueInput } from "@/lib/types";
+import type { GameMode, JoinQueueInput } from "@/lib/types";
 
 interface LobbyProps {
   onSubmit: (input: JoinQueueInput) => void;
   onInteract?: () => void;
+  isAuthenticated?: boolean;
+  defaultPlayerName?: string;
 }
 
-export function Lobby({ onSubmit, onInteract }: LobbyProps) {
+export function Lobby({ onSubmit, onInteract, isAuthenticated = false, defaultPlayerName = "" }: LobbyProps) {
   const [playerName, setPlayerName] = useState("");
   const [gridRows, setGridRows] = useState(6);
   const [gridCols, setGridCols] = useState(9);
   const [maxPlayers, setMaxPlayers] = useState(2);
+  const [mode, setMode] = useState<GameMode>("casual");
 
   const trimmedName = playerName.trim();
+  const rankedLocked = mode === "ranked" && !isAuthenticated;
+
+  useEffect(() => {
+    if (defaultPlayerName) {
+      setPlayerName(defaultPlayerName);
+    }
+  }, [defaultPlayerName]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!trimmedName) return;
+    if (!trimmedName || rankedLocked) return;
     onInteract?.();
-    onSubmit({ playerName: trimmedName, gridRows, gridCols, maxPlayers });
+    onSubmit({ mode, playerName: trimmedName, gridRows, gridCols, maxPlayers });
   }
 
   return (
@@ -62,10 +72,37 @@ export function Lobby({ onSubmit, onInteract }: LobbyProps) {
           label="Operator ID"
           value={playerName}
           maxLength={100}
+          disabled={isAuthenticated}
           onChange={(event) => setPlayerName(event.target.value)}
           placeholder="enter callsign..."
-          autoComplete="off"
+          autoComplete="nickname"
+          hint={isAuthenticated ? "Using your account display name." : undefined}
         />
+
+        <fieldset className="grid gap-3 border-0 p-0">
+          <legend className="font-display text-[10px] uppercase tracking-[0.32em] text-fg-soft">
+            Queue
+          </legend>
+          <div className="grid grid-cols-2 gap-2">
+            {(["casual", "ranked"] as const).map((queueMode) => (
+              <Button
+                key={queueMode}
+                variant={mode === queueMode ? "segmentActive" : "segment"}
+                onClick={() => {
+                  onInteract?.();
+                  setMode(queueMode);
+                }}
+              >
+                {queueMode}
+              </Button>
+            ))}
+          </div>
+          {rankedLocked ? (
+            <p className="font-mono text-[11px] leading-relaxed text-p1">
+              Login is required for ranked queue.
+            </p>
+          ) : null}
+        </fieldset>
 
         <fieldset className="grid gap-3 border-0 p-0">
           <legend className="font-display text-[10px] uppercase tracking-[0.32em] text-fg-soft">
@@ -142,7 +179,7 @@ export function Lobby({ onSubmit, onInteract }: LobbyProps) {
           type="submit"
           size="lg"
           variant="primary"
-          disabled={!trimmedName}
+          disabled={!trimmedName || rankedLocked}
           className="mt-2"
         >
           <Play size={16} aria-hidden="true" strokeWidth={2.5} />

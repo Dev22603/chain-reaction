@@ -5,15 +5,16 @@ import { useMemo, type CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardCorners, CardEyebrow } from "@/components/ui/card";
 import { PLAYER_COLORS } from "@/lib/colors";
-import type { Player } from "@/lib/types";
+import type { GameMode, Player } from "@/lib/types";
 
 interface GameOverProps {
   winner: Pick<Player, "id" | "name"> | null;
+  mode: GameMode | null;
   winnerIndex?: number | null;
   onPlayAgain: () => void;
 }
 
-export function GameOver({ winner, winnerIndex = null, onPlayAgain }: GameOverProps) {
+export function GameOver({ winner, mode, winnerIndex = null, onPlayAgain }: GameOverProps) {
   const color = winnerIndex === null ? "#ff5b2e" : PLAYER_COLORS[winnerIndex] ?? "#ff5b2e";
   const confetti = useMemo(
     () =>
@@ -56,6 +57,9 @@ export function GameOver({ winner, winnerIndex = null, onPlayAgain }: GameOverPr
 
       <div className="grid gap-3 text-center">
         <CardEyebrow>// containment breached</CardEyebrow>
+        <span className="mx-auto border border-line bg-bg-soft px-3 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted">
+          {mode ?? "casual"} result
+        </span>
         {winner ? (
           <span
             className="mx-auto block h-14 w-14 rounded-full"
@@ -81,6 +85,12 @@ export function GameOver({ winner, winnerIndex = null, onPlayAgain }: GameOverPr
             "Stalemate"
           )}
         </h1>
+      </div>
+
+      <div className="border border-line bg-bg-soft px-4 py-3 text-center font-mono text-xs leading-relaxed text-fg-muted">
+        {mode === "ranked"
+          ? "Ranked result saved. Leaderboard points update after persistence completes."
+          : "Casual result complete. Leaderboard points are unchanged."}
       </div>
 
       <Button variant="primary" size="lg" onClick={onPlayAgain}>

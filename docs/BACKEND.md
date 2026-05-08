@@ -160,4 +160,4 @@ npm run smoke:logic  # runs tsx src/game/gameLogic.ts
 
 ## Testing
 
-No framework yet. Manual WS testing via the browser console snippets in `TODO.md` (M1 to M5 "TEST" sections). See `RULES.md` on testing expectations.
+No formal framework yet. Use `docs/TODO.md` for the current manual verification checklist until the testing milestone adds automated coverage.

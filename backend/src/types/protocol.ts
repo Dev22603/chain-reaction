@@ -1,7 +1,8 @@
-import type { Board, Player } from "./game.js";
+import type { Board, GameMode, Player } from "./game.js";
 
 export interface JoinQueueMessage {
   type: "join_queue";
+  mode: GameMode;
   gridRows: number;
   gridCols: number;
   maxPlayers: number;
@@ -31,10 +32,13 @@ export type ClientMessage =
 export interface ConnectedMessage {
   type: "connected";
   playerId: string;
+  displayName: string;
+  isGuest: boolean;
 }
 
 export interface QueuedMessage {
   type: "queued";
+  mode: GameMode;
   position: number;
   maxPlayers: number;
 }
@@ -42,6 +46,7 @@ export interface QueuedMessage {
 export interface GameStartMessage {
   type: "game_start";
   roomId: string;
+  mode: GameMode;
   players: Player[];
   gridRows: number;
   gridCols: number;
@@ -56,6 +61,7 @@ export interface GameStateMessage {
 
 export interface GameOverMessage {
   type: "game_over";
+  mode: GameMode;
   winner: Pick<Player, "id" | "name">;
 }
 

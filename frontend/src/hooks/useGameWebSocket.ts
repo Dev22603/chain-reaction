@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   ClientMessage,
   GameState,
+  GameMode,
   JoinQueueInput,
   LastError,
   Phase,
@@ -11,14 +12,26 @@ import type {
   QueuedInfo,
   ServerMessage
 } from "@/lib/types";
+import { getStoredAccessToken } from "@/lib/auth";
 
 const DEFAULT_WS_URL = "ws://localhost:8080";
+
+function buildWebSocketUrl(): string {
+  const url = new URL(process.env.NEXT_PUBLIC_WS_URL ?? DEFAULT_WS_URL);
+  const token = getStoredAccessToken();
+  if (token) {
+    url.searchParams.set("token", token);
+  }
+
+  return url.toString();
+}
 
 export function useGameWebSocket() {
   const socketRef = useRef<WebSocket | null>(null);
   const [phase, setPhase] = useState<Phase>("lobby");
   const [playerId, setPlayerId] = useState<string | null>(null);
   const [gameState, setGameState] = useState<GameState | null>(null);
+  const [gameMode, setGameMode] = useState<GameMode | null>(null);
   const [queuedInfo, setQueuedInfo] = useState<QueuedInfo | null>(null);
   const [winner, setWinner] = useState<Pick<Player, "id" | "name"> | null>(null);
   const [lastError, setLastError] = useState<LastError | null>(null);
@@ -33,7 +46,7 @@ export function useGameWebSocket() {
   }, []);
 
   useEffect(() => {
-    const socket = new WebSocket(process.env.NEXT_PUBLIC_WS_URL ?? DEFAULT_WS_URL);
+    const socket = new WebSocket(buildWebSocketUrl());
     socketRef.current = socket;
 
     socket.onmessage = (event) => {
@@ -44,11 +57,16 @@ export function useGameWebSocket() {
           setPlayerId(message.playerId);
           break;
         case "queued":
-          setQueuedInfo({ position: message.position, maxPlayers: message.maxPlayers });
+          setQueuedInfo({
+            mode: message.mode,
+            position: message.position,
+            maxPlayers: message.maxPlayers
+          });
           setLastError(null);
           setPhase("queued");
           break;
         case "game_start":
+          setGameMode(message.mode);
           setQueuedInfo(null);
           setWinner(null);
           setLastError(null);
@@ -64,6 +82,7 @@ export function useGameWebSocket() {
           setPhase("playing");
           break;
         case "game_over":
+          setGameMode(message.mode);
           setWinner(message.winner);
           setLastError(null);
           setPhase("gameover");
@@ -105,11 +124,13 @@ export function useGameWebSocket() {
   const leaveGame = useCallback(() => {
     sendJSON({ type: "leave_game" });
     setGameState(null);
+    setGameMode(null);
     setPhase("lobby");
   }, [sendJSON]);
 
   const reset = useCallback(() => {
     setGameState(null);
+    setGameMode(null);
     setQueuedInfo(null);
     setWinner(null);
     setLastError(null);
@@ -120,6 +141,7 @@ export function useGameWebSocket() {
     phase,
     playerId,
     gameState,
+    gameMode,
     queuedInfo,
     winner,
     lastError,

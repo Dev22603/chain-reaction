@@ -1,4 +1,4 @@
-import { MESSAGE_TYPES } from "../constants/app.constants.js";
+import { GAME_MODES, MESSAGE_TYPES } from "../constants/app.constants.js";
 import { matchesRepo, scoresRepo } from "../db/index.js";
 import { applyMove, isEliminated } from "../game/gameLogic.js";
 import { getLogger } from "../lib/logger.js";
@@ -127,6 +127,7 @@ function broadcastGameState(room: Room): void {
 function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>): void {
   broadcast(room, {
     type: MESSAGE_TYPES.GAME_OVER,
+    mode: room.mode,
     winner: {
       id: winner.id,
       name: winner.name
@@ -147,6 +148,14 @@ function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>):
 }
 
 async function persistFinishedMatch(room: Room, winnerId: string): Promise<void> {
+  if (room.players.some((player) => player.isGuest)) {
+    logger.info("skipping match persistence for guest room", {
+      roomId: room.id,
+      mode: room.mode
+    });
+    return;
+  }
+
   const participants = room.players.map((player, index) => ({
     playerId: player.id,
     displayName: player.name,
@@ -157,6 +166,7 @@ async function persistFinishedMatch(room: Room, winnerId: string): Promise<void>
 
   await matchesRepo.recordFinished({
     id: room.id,
+    mode: room.mode,
     gridRows: room.gridRows,
     gridCols: room.gridCols,
     maxPlayers: room.maxPlayers,
@@ -166,6 +176,13 @@ async function persistFinishedMatch(room: Room, winnerId: string): Promise<void>
     turnCount: room.turnCount,
     participants
   });
+
+  if (room.mode !== GAME_MODES.RANKED) {
+    logger.info("skipping score update for casual match", {
+      roomId: room.id
+    });
+    return;
+  }
 
   await scoresRepo.applyMatchResult({
     winnerId,

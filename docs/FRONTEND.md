@@ -108,4 +108,4 @@ npm run dev
 
 ## Testing
 
-No framework yet. Manual flow lives in `TODO.md` M6 and M7 "TEST" sections.
+No formal framework yet. Use `docs/TODO.md` for the current manual flow checklist until the testing milestone adds automated coverage.

@@ -40,7 +40,7 @@ These are the canonical names for things. If a doc, comment, or commit message u
 
 **Player.** An identity tied to a socket. `{ id: uuid, name: string, eliminated?: boolean }`.
 
-**Player ID.** A UUID. The server assigns one on `connection`. Stable for the duration of a socket; not stable across reconnects (no reconnect support yet).
+**Player ID.** A UUID. Authenticated sockets use the stable account player ID from JWT. Guest sockets receive a temporary UUID for the duration of the connection.
 
 **Player index.** The position of a player in `room.players`. `0`, `1`, `2`, `3`. Determines color and turn order. Distinct from `playerId` (which is a UUID).
 
@@ -80,7 +80,7 @@ These are the canonical names for things. If a doc, comment, or commit message u
 
 ## Words we deliberately don't use
 
-- **"Match"** for an in-progress game. Use **room**. "Match" is reserved for the persisted record post-M7.
+- **"Match"** for an in-progress game. Use **room**. "Match" is reserved for the persisted record after game over.
 - **"Lobby"** for the queue. Use **queue** or **bucket**. "Lobby" is the frontend phase, not a server-side concept.
 - **"Session"** for a player's connection. Use **socket** or **connection**. We don't have sessions yet.
 - **"Game"** as a noun for the running state. Use **room**. ("Game logic" is fine because it's an adjective.)

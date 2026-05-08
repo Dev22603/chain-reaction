@@ -31,7 +31,7 @@ The default is **drop silently**. We send `error` only when the client genuinely
 ### Send `error`:
 
 - **Validation failure on a user-initiated action.** The user typed something invalid (lobby form, etc.). They need to know.
-- **Authorization failure** (post-M7). The user tried something they're not allowed to do.
+- **Authorization failure.** The user tried something they're not allowed to do, such as joining ranked queue as a guest.
 - **Internal error** during a user-initiated action. Generic `internal_error` so the UI can show "something went wrong".
 
 ### Drop silently (no `error` frame):
@@ -46,8 +46,9 @@ The default is **drop silently**. We send `error` only when the client genuinely
 | Code                  | When                                                                         | Notes                                       |
 |-----------------------|------------------------------------------------------------------------------|---------------------------------------------|
 | `validation_failed`   | Zod schema rejected the payload                                              | Populate `errors` with issue messages       |
-| `not_authenticated`   | (post-M7) No token / expired                                                 | Frontend should redirect to login           |
-| `not_authorized`      | (post-M7) Token is fine but action is forbidden                              |                                             |
+| `not_authenticated`   | No token / expired / guest tried ranked                                      | Frontend should prompt login                |
+| `not_authorized`      | Token is fine but action is forbidden                                        |                                             |
+| `player_not_found`    | Requested player profile does not exist                                      | Show a not-found state                      |
 | `room_not_found`      | Player references a room that no longer exists                               | Usually a race after `game_over`            |
 | `not_in_game`         | `make_move` or `leave_game` when player has no `playerRooms` entry           | Send only if the client clearly thinks it's playing |
 | `not_your_turn`       | Reserved; usually we drop silently                                           | Send if a future feature needs explicit feedback |

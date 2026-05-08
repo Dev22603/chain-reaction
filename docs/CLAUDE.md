@@ -49,8 +49,8 @@ Real-time multiplayer Chain Reaction. Classic pass-and-play, online, server-auth
 ├── docs/context/                     # the files indexed below
 ├── CLAUDE.md                         # (this file)
 ├── RULES.md                          # mandatory read
-├── PLAN.md                           # approved plan (M1 to M7)
-├── TODO.md                           # atomic checklist
+├── docs/PLAN.md                      # current product build plan
+├── docs/TODO.md                      # atomic product checklist
 └── milestones.md
 ```
 

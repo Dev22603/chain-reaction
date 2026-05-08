@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle } from "lucide-react";
+import Link from "next/link";
 import { useEffect } from "react";
 import { GameBoard } from "@/components/GameBoard";
 import { GameOver } from "@/components/GameOver";
@@ -8,10 +9,13 @@ import { Lobby } from "@/components/Lobby";
 import { QueueScreen } from "@/components/QueueScreen";
 import { Card, CardCorners, CardEyebrow } from "@/components/ui/card";
 import { useGameWebSocket } from "@/hooks/useGameWebSocket";
+import { useAuth } from "@/hooks/useAuth";
 import { useSounds } from "@/hooks/useSounds";
+import type { PublicPlayer } from "@/lib/api";
 
 export default function Home() {
   const game = useGameWebSocket();
+  const auth = useAuth();
   const sounds = useSounds();
 
   useEffect(() => {
@@ -25,7 +29,7 @@ export default function Home() {
   return (
     <main className="relative z-10 mx-auto w-full max-w-[1180px] px-4 py-8 sm:px-8">
       <BackgroundLattice />
-      <TopBar />
+      <TopBar player={auth.player} onLogout={auth.logout} />
 
       {game.lastError ? (
         <div
@@ -38,7 +42,12 @@ export default function Home() {
       ) : null}
 
       {game.phase === "lobby" ? (
-        <Lobby onSubmit={game.joinQueue} onInteract={() => sounds.play("click")} />
+        <Lobby
+          onSubmit={game.joinQueue}
+          onInteract={() => sounds.play("click")}
+          isAuthenticated={auth.isAuthenticated}
+          defaultPlayerName={auth.player?.displayName}
+        />
       ) : null}
 
       {game.phase === "queued" ? (
@@ -78,6 +87,7 @@ export default function Home() {
       {game.phase === "gameover" ? (
         <GameOver
           winner={game.winner}
+          mode={game.gameMode}
           winnerIndex={game.gameState?.players.findIndex((player) => player.id === game.winner?.id) ?? null}
           onPlayAgain={game.reset}
         />
@@ -101,7 +111,7 @@ function BackgroundLattice() {
   );
 }
 
-function TopBar() {
+function TopBar({ player, onLogout }: { player: PublicPlayer | null; onLogout: () => void }) {
   return (
     <div className="mb-8 flex items-center justify-between gap-4 border-b border-line pb-4">
       <div className="flex items-center gap-3">
@@ -116,10 +126,31 @@ function TopBar() {
           </span>
         </div>
       </div>
-      <span className="hidden items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-fg-muted sm:flex">
-        <span className="h-px w-12 bg-line" />
-        v1.0
-      </span>
+      {player ? (
+        <div className="hidden items-center gap-3 font-mono text-[10px] uppercase tracking-[0.24em] text-fg-muted sm:flex">
+          <Link href="/leaderboard" className="hover:text-cherenkov">
+            leaderboard
+          </Link>
+          <span className="max-w-[180px] truncate text-cherenkov">{player.displayName}</span>
+          <button type="button" className="hover:text-fg" onClick={onLogout}>
+            logout
+          </button>
+        </div>
+      ) : (
+        <span className="hidden items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-fg-muted sm:flex">
+          <Link href="/login" className="hover:text-cherenkov">
+            login
+          </Link>
+          <span className="h-px w-8 bg-line" />
+          <Link href="/signup" className="hover:text-cherenkov">
+            signup
+          </Link>
+          <span className="h-px w-8 bg-line" />
+          <Link href="/leaderboard" className="hover:text-cherenkov">
+            leaderboard
+          </Link>
+        </span>
+      )}
     </div>
   );
 }

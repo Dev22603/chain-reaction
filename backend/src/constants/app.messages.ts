@@ -4,7 +4,9 @@ export const SERVER_MESSAGES = {
   DATABASE_UNAVAILABLE: "Database is not configured.",
   EMAIL_TAKEN: "Email is already registered.",
   INVALID_CREDENTIALS: "Invalid email or password.",
-  NOT_AUTHENTICATED: "Authentication is required."
+  NOT_AUTHENTICATED: "Authentication is required.",
+  RANKED_REQUIRES_AUTH: "Login is required to join ranked queue.",
+  PLAYER_NOT_FOUND: "Player was not found."
 } as const;
 
 export const AUTH_VALIDATION_ERRORS = {

@@ -1,3 +1,5 @@
+import type { GameMode } from "./game.js";
+
 export interface PersistedParticipant {
   playerId: string;
   displayName: string;
@@ -8,6 +10,7 @@ export interface PersistedParticipant {
 
 export interface RecordFinishedMatchInput {
   id: string;
+  mode: GameMode;
   gridRows: number;
   gridCols: number;
   maxPlayers: number;

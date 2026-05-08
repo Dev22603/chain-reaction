@@ -24,6 +24,7 @@ model Player {
 
 model Match {
   id           String        @id @db.Uuid
+  mode         String        @default("casual")
   gridRows     Int           @map("grid_rows") @db.SmallInt
   gridCols     Int           @map("grid_cols") @db.SmallInt
   maxPlayers   Int           @map("max_players") @db.SmallInt
@@ -35,6 +36,7 @@ model Match {
   participants MatchPlayer[]
 
   @@index([endedAt(sort: Desc)], map: "idx_matches_ended_at")
+  @@index([mode, endedAt(sort: Desc)], map: "idx_matches_mode_ended_at")
   @@index([winnerId], map: "idx_matches_winner")
   @@map("matches")
 }

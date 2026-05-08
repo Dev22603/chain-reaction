@@ -4,10 +4,12 @@ export interface Cell {
 }
 
 export type Board = Cell[][];
+export type GameMode = "casual" | "ranked";
 
 export interface Player {
   id: string;
   name: string;
+  isGuest: boolean;
   eliminated: boolean;
   eliminatedTurn: number | null;
 }
@@ -21,6 +23,7 @@ export interface GameState {
 }
 
 export interface QueuedInfo {
+  mode: GameMode;
   position: number;
   maxPlayers: number;
 }
@@ -31,6 +34,7 @@ export interface LastError {
 }
 
 export interface JoinQueueInput {
+  mode: GameMode;
   gridRows: number;
   gridCols: number;
   maxPlayers: number;
@@ -44,11 +48,12 @@ export type ClientMessage =
   | { type: "leave_game" };
 
 export type ServerMessage =
-  | { type: "connected"; playerId: string }
-  | { type: "queued"; position: number; maxPlayers: number }
+  | { type: "connected"; playerId: string; displayName: string; isGuest: boolean }
+  | { type: "queued"; mode: GameMode; position: number; maxPlayers: number }
   | {
       type: "game_start";
       roomId: string;
+      mode: GameMode;
       players: Player[];
       gridRows: number;
       gridCols: number;
@@ -59,5 +64,5 @@ export type ServerMessage =
       currentTurn: number;
       players: Player[];
     }
-  | { type: "game_over"; winner: Pick<Player, "id" | "name"> }
+  | { type: "game_over"; mode: GameMode; winner: Pick<Player, "id" | "name"> }
   | { type: "error"; code: string; message: string; errors?: string[] };

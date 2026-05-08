@@ -26,6 +26,9 @@ export function QueueScreen({ info, onCancel }: QueueScreenProps) {
         <h1 id="queue-title" className="font-display text-3xl uppercase tracking-[0.05em] text-fg sm:text-4xl">
           Spinning Up<span className="ml-1 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-cherenkov">_</span>
         </h1>
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-fg-muted">
+          {info?.mode ?? "casual"} queue
+        </span>
       </div>
 
       <div className="relative">

@@ -20,12 +20,18 @@ export const MESSAGE_TYPES = {
   ERROR: "error"
 } as const;
 
+export const GAME_MODES = {
+  CASUAL: "casual",
+  RANKED: "ranked"
+} as const;
+
 export const ERROR_CODES = {
   VALIDATION_FAILED: "validation_failed",
   EMAIL_TAKEN: "email_taken",
   INVALID_CREDENTIALS: "invalid_credentials",
   NOT_AUTHENTICATED: "not_authenticated",
   NOT_AUTHORIZED: "not_authorized",
+  PLAYER_NOT_FOUND: "player_not_found",
   ROOM_NOT_FOUND: "room_not_found",
   NOT_IN_GAME: "not_in_game",
   NOT_YOUR_TURN: "not_your_turn",
