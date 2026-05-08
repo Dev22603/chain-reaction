@@ -22,6 +22,8 @@ export const MESSAGE_TYPES = {
 
 export const ERROR_CODES = {
   VALIDATION_FAILED: "validation_failed",
+  EMAIL_TAKEN: "email_taken",
+  INVALID_CREDENTIALS: "invalid_credentials",
   NOT_AUTHENTICATED: "not_authenticated",
   NOT_AUTHORIZED: "not_authorized",
   ROOM_NOT_FOUND: "room_not_found",
