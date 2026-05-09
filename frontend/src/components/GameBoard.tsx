@@ -55,9 +55,9 @@ export function GameBoard({
   );
 
   return (
-    <section className="grid gap-6">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
+    <section className="grid gap-4 sm:gap-6">
+      <header className="grid gap-4 border-b border-line pb-4 lg:flex lg:items-center lg:justify-between">
+        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
           <Badge className="border-current/35 bg-current/8" style={{ color: turnColor }}>
             <span
               className="h-2 w-2 rounded-full"
@@ -66,13 +66,13 @@ export function GameBoard({
             {isMyTurn ? "your turn" : "current turn"}
           </Badge>
           <h1
-            className="font-display text-2xl uppercase tracking-[0.05em] text-fg sm:text-3xl"
+            className="min-w-0 truncate font-display text-xl uppercase tracking-[0.05em] text-fg sm:text-3xl"
             style={{ textShadow: isMyTurn ? `0 0 20px ${turnColor}66` : undefined }}
           >
             {currentPlayer?.name ?? "Awaiting"}
           </h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0">
           {onToggleMute ? (
             <Button
               variant="ghost"
@@ -91,13 +91,24 @@ export function GameBoard({
         </div>
       </header>
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-        <div className="w-full lg:flex-1">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start">
+        <PlayerPanel
+          players={gameState.players}
+          currentTurn={gameState.currentTurn}
+          selfId={playerId}
+          orbCounts={orbCounts}
+          className="lg:hidden"
+        />
+
+        <div className="w-full min-w-0">
           <div
-            className="mx-auto grid w-full max-w-[760px] overflow-hidden border-[1.5px] bg-black/65 shadow-[0_0_24px_rgba(0,0,0,0.35)]"
+            className="mx-auto grid max-w-full overflow-hidden border-[1.5px] bg-black/65 shadow-[0_0_24px_rgba(0,0,0,0.35)]"
             style={{
               borderColor: turnColor,
-              gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`
+              gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+              gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+              width: `min(100%, 760px, calc((100svh - 240px) * ${cols} / ${rows}))`,
+              aspectRatio: `${cols} / ${rows}`
             }}
           >
             {gameState.board.map((row, rowIndex) =>
@@ -124,8 +135,11 @@ export function GameBoard({
               })
             )}
           </div>
-          <div className="mx-auto mt-2 max-w-[760px] font-mono text-[10px] uppercase tracking-[0.2em] text-fg-muted">
-            {rows} x {cols} lattice
+          <div className="mx-auto mt-2 flex max-w-[760px] items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-fg-muted">
+            <span>{rows} x {cols} lattice</span>
+            <span className={isMyTurn ? "text-radium" : "text-fg-muted"}>
+              {isMyTurn ? "tap a legal cell" : "watching reactor"}
+            </span>
           </div>
         </div>
 
@@ -134,6 +148,7 @@ export function GameBoard({
           currentTurn={gameState.currentTurn}
           selfId={playerId}
           orbCounts={orbCounts}
+          className="hidden lg:grid"
         />
       </div>
     </section>

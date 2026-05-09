@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, LogOut, Trophy, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 import { GameBoard } from "@/components/GameBoard";
@@ -27,7 +27,7 @@ export default function Home() {
   }, [game.lastError, sounds]);
 
   return (
-    <main className="relative z-10 mx-auto w-full max-w-[1180px] px-4 py-8 sm:px-8">
+    <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1220px] flex-col px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
       <BackgroundLattice />
       <TopBar player={auth.player} onLogout={auth.logout} />
 
@@ -113,40 +113,46 @@ function BackgroundLattice() {
 
 function TopBar({ player, onLogout }: { player: PublicPlayer | null; onLogout: () => void }) {
   return (
-    <div className="mb-8 flex items-center justify-between gap-4 border-b border-line pb-4">
-      <div className="flex items-center gap-3">
+    <div className="mb-5 grid gap-4 border-b border-line pb-4 sm:mb-8 lg:flex lg:items-center lg:justify-between">
+      <div className="flex min-w-0 items-center gap-3">
         <span className="relative grid h-8 w-8 place-items-center">
           <span className="absolute inset-0 animate-[orb-pulse_2.4s_ease-in-out_infinite] rounded-full bg-reactor opacity-80 shadow-reactor" />
           <span className="relative h-2 w-2 rounded-full bg-bg" />
         </span>
-        <div className="grid leading-tight">
-          <span className="font-display text-sm uppercase tracking-[0.32em] text-fg">Chain . Reaction</span>
+        <div className="grid min-w-0 leading-tight">
+          <span className="truncate font-display text-sm uppercase tracking-[0.24em] text-fg sm:tracking-[0.32em]">
+            Chain . Reaction
+          </span>
           <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-fg-muted">
             reactor.console
           </span>
         </div>
       </div>
       {player ? (
-        <div className="hidden items-center gap-3 font-mono text-[10px] uppercase tracking-[0.24em] text-fg-muted sm:flex">
-          <Link href="/leaderboard" className="hover:text-cherenkov">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-fg-muted sm:gap-3 sm:tracking-[0.24em] lg:pb-0">
+          <Link href="/leaderboard" className="inline-flex min-h-9 shrink-0 items-center gap-2 border border-line bg-surface/60 px-3 text-fg-soft hover:border-cherenkov hover:text-cherenkov">
+            <Trophy size={13} aria-hidden="true" />
             leaderboard
           </Link>
-          <span className="max-w-[180px] truncate text-cherenkov">{player.displayName}</span>
-          <button type="button" className="hover:text-fg" onClick={onLogout}>
+          <span className="min-h-9 max-w-[52vw] shrink-0 truncate border border-line bg-bg-soft px-3 py-2 text-cherenkov sm:max-w-[180px]">
+            {player.displayName}
+          </span>
+          <button type="button" className="inline-flex min-h-9 shrink-0 items-center gap-2 border border-line bg-surface/60 px-3 hover:text-fg" onClick={onLogout}>
+            <LogOut size={13} aria-hidden="true" />
             logout
           </button>
         </div>
       ) : (
-        <span className="hidden items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-fg-muted sm:flex">
-          <Link href="/login" className="hover:text-cherenkov">
+        <span className="flex items-center gap-2 overflow-x-auto pb-1 font-mono text-[10px] uppercase tracking-[0.22em] text-fg-muted sm:tracking-[0.3em] lg:pb-0">
+          <Link href="/login" className="inline-flex min-h-9 shrink-0 items-center border border-line bg-surface/60 px-3 hover:border-cherenkov hover:text-cherenkov">
             login
           </Link>
-          <span className="h-px w-8 bg-line" />
-          <Link href="/signup" className="hover:text-cherenkov">
+          <Link href="/signup" className="inline-flex min-h-9 shrink-0 items-center gap-2 border border-line bg-surface/60 px-3 hover:border-cherenkov hover:text-cherenkov">
+            <UserPlus size={13} aria-hidden="true" />
             signup
           </Link>
-          <span className="h-px w-8 bg-line" />
-          <Link href="/leaderboard" className="hover:text-cherenkov">
+          <Link href="/leaderboard" className="inline-flex min-h-9 shrink-0 items-center gap-2 border border-line bg-surface/60 px-3 hover:border-cherenkov hover:text-cherenkov">
+            <Trophy size={13} aria-hidden="true" />
             leaderboard
           </Link>
         </span>

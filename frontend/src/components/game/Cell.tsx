@@ -39,7 +39,7 @@ export function Cell({
       onClick={onPlay}
       aria-label={ariaLabel}
       className={cn(
-        "group relative grid aspect-square place-items-center overflow-hidden border bg-black/90 transition-[border-color,background,box-shadow] duration-200",
+        "group relative grid aspect-square min-h-0 place-items-center overflow-hidden border bg-black/90 transition-[border-color,background,box-shadow] duration-200",
         legal ? "cursor-pointer" : "cursor-not-allowed",
         highlight && "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]"
       )}
@@ -109,7 +109,14 @@ export function Cell({
 
 function CellOrbs({ count, color, critical }: { count: number; color: string; critical: boolean }) {
   const displayCount = Math.min(count, 4);
-  const size = displayCount === 1 ? 24 : displayCount === 2 ? 18 : displayCount === 3 ? 15 : 13;
+  const size =
+    displayCount === 1
+      ? "clamp(0.55rem, 52%, 1.5rem)"
+      : displayCount === 2
+        ? "clamp(0.45rem, 40%, 1.125rem)"
+        : displayCount === 3
+          ? "clamp(0.4rem, 34%, 0.95rem)"
+          : "clamp(0.35rem, 30%, 0.82rem)";
   const orbits = orbitConfig(displayCount, critical);
 
   return (
@@ -119,17 +126,17 @@ function CellOrbs({ count, color, critical }: { count: number; color: string; cr
           key={index}
           className="absolute left-1/2 top-1/2"
           style={{
-            animation: orbit.radius > 0 ? `orbit-spin ${orbit.duration}s linear infinite` : undefined,
-            animationDelay: orbit.radius > 0 ? `-${orbit.duration * orbit.startFraction}s` : undefined
+            animation: orbit.spins ? `orbit-spin ${orbit.duration}s linear infinite` : undefined,
+            animationDelay: orbit.spins ? `-${orbit.duration * orbit.startFraction}s` : undefined
           }}
         >
           <span
             className="absolute left-0 top-0"
             style={{
-              transform: `translate(-50%, -50%) translateX(${orbit.radius}px)`,
+              transform: `translate(-50%, -50%) translateX(${orbit.radius})`,
               animation:
-                orbit.radius > 0 ? `orbit-spin-reverse ${orbit.duration}s linear infinite` : undefined,
-              animationDelay: orbit.radius > 0 ? `-${orbit.duration * orbit.startFraction}s` : undefined
+                orbit.spins ? `orbit-spin-reverse ${orbit.duration}s linear infinite` : undefined,
+              animationDelay: orbit.spins ? `-${orbit.duration * orbit.startFraction}s` : undefined
             }}
           >
             <Orb color={color} size={size} delay={index * 0.08} critical={critical} />
@@ -151,28 +158,28 @@ function CellOrbs({ count, color, critical }: { count: number; color: string; cr
 function orbitConfig(
   count: number,
   critical: boolean
-): Array<{ radius: number; duration: number; startFraction: number }> {
+): Array<{ radius: string; duration: number; startFraction: number; spins: boolean }> {
   switch (count) {
     case 1:
-      return [{ radius: 0, duration: 0, startFraction: 0 }];
+      return [{ radius: "0px", duration: 0, startFraction: 0, spins: false }];
     case 2:
       return [
-        { radius: 12, duration: critical ? 1.9 : 3.9, startFraction: 0 },
-        { radius: 12, duration: critical ? 1.9 : 3.9, startFraction: 0.5 }
+        { radius: "clamp(0.28rem, 22%, 0.75rem)", duration: critical ? 1.9 : 3.9, startFraction: 0, spins: true },
+        { radius: "clamp(0.28rem, 22%, 0.75rem)", duration: critical ? 1.9 : 3.9, startFraction: 0.5, spins: true }
       ];
     case 3:
       return [
-        { radius: 11, duration: critical ? 1.8 : 3.5, startFraction: 0 },
-        { radius: 11, duration: critical ? 1.8 : 3.5, startFraction: 1 / 3 },
-        { radius: 11, duration: critical ? 1.8 : 3.5, startFraction: 2 / 3 }
+        { radius: "clamp(0.24rem, 20%, 0.7rem)", duration: critical ? 1.8 : 3.5, startFraction: 0, spins: true },
+        { radius: "clamp(0.24rem, 20%, 0.7rem)", duration: critical ? 1.8 : 3.5, startFraction: 1 / 3, spins: true },
+        { radius: "clamp(0.24rem, 20%, 0.7rem)", duration: critical ? 1.8 : 3.5, startFraction: 2 / 3, spins: true }
       ];
     case 4:
     default:
       return [
-        { radius: 11, duration: critical ? 1.6 : 4.4, startFraction: 0 },
-        { radius: 11, duration: critical ? 1.6 : 4.4, startFraction: 0.25 },
-        { radius: 11, duration: critical ? 1.6 : 4.4, startFraction: 0.5 },
-        { radius: 11, duration: critical ? 1.6 : 4.4, startFraction: 0.75 }
+        { radius: "clamp(0.22rem, 18%, 0.68rem)", duration: critical ? 1.6 : 4.4, startFraction: 0, spins: true },
+        { radius: "clamp(0.22rem, 18%, 0.68rem)", duration: critical ? 1.6 : 4.4, startFraction: 0.25, spins: true },
+        { radius: "clamp(0.22rem, 18%, 0.68rem)", duration: critical ? 1.6 : 4.4, startFraction: 0.5, spins: true },
+        { radius: "clamp(0.22rem, 18%, 0.68rem)", duration: critical ? 1.6 : 4.4, startFraction: 0.75, spins: true }
       ];
   }
 }

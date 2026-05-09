@@ -5,7 +5,7 @@ import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 
 const buttonStyles = cva(
-  "relative inline-flex select-none items-center justify-center gap-2 font-display uppercase tracking-[0.18em] transition-[transform,box-shadow,background,color] duration-200 ease-out disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-px",
+  "relative inline-flex min-w-0 select-none items-center justify-center gap-2 text-balance font-display uppercase tracking-[0.14em] transition-[transform,box-shadow,background,color,border-color] duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-40 active:translate-y-px",
   {
     variants: {
       variant: {
@@ -21,9 +21,9 @@ const buttonStyles = cva(
           "bg-cherenkov/15 text-cherenkov border border-cherenkov shadow-cherenkov"
       },
       size: {
-        sm: "h-9 px-3 text-[11px]",
-        md: "h-11 px-4 text-xs",
-        lg: "h-14 px-6 text-sm"
+        sm: "min-h-9 px-3 py-2 text-[10px] sm:text-[11px]",
+        md: "min-h-11 px-4 py-2.5 text-[11px] sm:text-xs",
+        lg: "min-h-14 px-5 py-3 text-xs sm:px-6 sm:text-sm"
       }
     },
     defaultVariants: {

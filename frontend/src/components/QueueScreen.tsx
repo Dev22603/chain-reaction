@@ -17,7 +17,7 @@ export function QueueScreen({ info, onCancel }: QueueScreenProps) {
 
   return (
     <Card
-      className="mx-auto mt-[10vh] grid w-[min(520px,100%)] gap-8 p-10 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]"
+      className="mx-auto grid w-full max-w-[560px] gap-7 p-5 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both] sm:mt-[8vh] sm:p-10"
       aria-labelledby="queue-title"
     >
       <CardCorners />
@@ -36,7 +36,7 @@ export function QueueScreen({ info, onCancel }: QueueScreenProps) {
           <div className="flex items-baseline justify-between">
             <span>Operators</span>
             <span className="text-fg">
-              {position}<span className="text-fg-muted">/{max || "—"}</span>
+              {position}<span className="text-fg-muted">/{max || "-"}</span>
             </span>
           </div>
           <div className="flex gap-1">

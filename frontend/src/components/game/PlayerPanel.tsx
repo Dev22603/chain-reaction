@@ -11,13 +11,14 @@ interface PlayerPanelProps {
   currentTurn: number;
   selfId: string | null;
   orbCounts: number[];
+  className?: string;
 }
 
-export function PlayerPanel({ players, currentTurn, selfId, orbCounts }: PlayerPanelProps) {
+export function PlayerPanel({ players, currentTurn, selfId, orbCounts, className }: PlayerPanelProps) {
   return (
-    <Card className="grid w-full gap-3 p-5 lg:w-[220px]">
+    <Card className={cn("grid w-full gap-3 p-4 sm:p-5 lg:w-[260px]", className)}>
       <CardEyebrow>// reactors</CardEyebrow>
-      <ul className="grid gap-2">
+      <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
         {players.map((player, index) => {
           const color = PLAYER_COLORS[index];
           const isTurn = index === currentTurn && !player.eliminated;
@@ -27,7 +28,7 @@ export function PlayerPanel({ players, currentTurn, selfId, orbCounts }: PlayerP
             <li
               key={player.id}
               className={cn(
-                "relative grid grid-cols-[auto_1fr_auto] items-center gap-3 border bg-bg-soft/60 px-3 py-2.5 transition-colors",
+                "relative grid min-w-0 grid-cols-[auto_1fr] items-center gap-3 border bg-bg-soft/60 px-3 py-2.5 transition-colors xl:grid-cols-[auto_1fr_auto]",
                 isTurn ? "border-line-2" : "border-line/60",
                 player.eliminated && "opacity-40"
               )}
@@ -66,13 +67,13 @@ export function PlayerPanel({ players, currentTurn, selfId, orbCounts }: PlayerP
               </span>
               {isTurn ? (
                 <span
-                  className="font-display text-[10px] uppercase tracking-[0.32em]"
+                  className="hidden font-display text-[10px] uppercase tracking-[0.32em] xl:block"
                   style={{ color }}
                 >
                   active
                 </span>
               ) : (
-                <span className="font-display text-[10px] uppercase tracking-[0.32em] text-fg-muted">
+                <span className="hidden font-display text-[10px] uppercase tracking-[0.32em] text-fg-muted xl:block">
                   idle
                 </span>
               )}
