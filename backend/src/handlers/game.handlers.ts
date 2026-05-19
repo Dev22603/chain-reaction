@@ -1,11 +1,12 @@
-import { GAME_MODES, MESSAGE_TYPES } from "../constants/app.constants.js";
+import { ERROR_CODES, GAME_MODES, MESSAGE_TYPES } from "../constants/app.constants.js";
 import { matchesRepo, scoresRepo } from "../db/index.js";
 import { applyMove, isEliminated } from "../game/gameLogic.js";
 import { getLogger } from "../lib/logger.js";
-import { playerRooms, rooms } from "../state/memory.js";
+import { players, playerRooms, rooms } from "../state/memory.js";
 import type { PlayerIndex, Room } from "../types/game.js";
 import type { MakeMoveMessage } from "../types/protocol.js";
-import { broadcast } from "../utils/broadcast.js";
+import type { ScoreDeltas } from "../types/scoring.js";
+import { broadcast, send } from "../utils/broadcast.js";
 
 const logger = getLogger("game.handlers");
 
@@ -54,6 +55,30 @@ export function handleMove(playerId: string, payload: MakeMoveMessage): void {
 }
 
 export function handleLeaveGame(playerId: string): void {
+  eliminateAndBroadcast(playerId);
+}
+
+// Called by the grace expiry timer after the reconnect window closes.
+export function graceExpireLeaveGame(playerId: string): void {
+  eliminateAndBroadcast(playerId);
+}
+
+// Sends the current board snapshot to a single reconnecting player.
+export function sendGameStateToPlayer(playerId: string): void {
+  const room = getRoomForPlayer(playerId);
+  if (!room) {
+    return;
+  }
+
+  send(players.get(playerId), {
+    type: MESSAGE_TYPES.GAME_STATE,
+    board: room.board,
+    currentTurn: room.currentTurn,
+    players: room.players
+  });
+}
+
+function eliminateAndBroadcast(playerId: string): void {
   const room = getRoomForPlayer(playerId);
   if (!room) {
     return;
@@ -124,30 +149,74 @@ function broadcastGameState(room: Room): void {
   });
 }
 
+function computeRankedDeltas(room: Room, winnerId: string): ScoreDeltas {
+  const deltas: ScoreDeltas = {};
+  for (const player of room.players) {
+    deltas[player.id] = player.id === winnerId ? 3 : 1;
+  }
+  return deltas;
+}
+
 function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>): void {
+  const scoreDeltas = room.mode === GAME_MODES.RANKED ? computeRankedDeltas(room, winner.id) : {};
+
   broadcast(room, {
     type: MESSAGE_TYPES.GAME_OVER,
     mode: room.mode,
     winner: {
       id: winner.id,
       name: winner.name
-    }
+    },
+    ...(Object.keys(scoreDeltas).length > 0 && { score_deltas: scoreDeltas })
   });
 
-  persistFinishedMatch(room, winner.id).catch((error: unknown) => {
-    logger.error("finished match persistence failed", {
-      roomId: room.id,
-      error: error instanceof Error ? error.message : String(error)
-    });
-  });
+  const playerSockets = room.players.map((p) => players.get(p.id));
+  const roomSnapshot = {
+    id: room.id,
+    mode: room.mode,
+    players: room.players.map((p) => ({ ...p })),
+    gridRows: room.gridRows,
+    gridCols: room.gridCols,
+    maxPlayers: room.maxPlayers,
+    startedAt: room.startedAt,
+    turnCount: room.turnCount,
+    forfeitedPlayerIds: new Set(room.forfeitedPlayerIds)
+  };
 
   rooms.delete(room.id);
   for (const player of room.players) {
     playerRooms.delete(player.id);
   }
+
+  persistFinishedMatch(roomSnapshot, winner.id).catch((error: unknown) => {
+    logger.error("finished match persistence failed", {
+      roomId: roomSnapshot.id,
+      error: error instanceof Error ? error.message : String(error)
+    });
+    for (const socket of playerSockets) {
+      send(socket, {
+        type: MESSAGE_TYPES.ERROR,
+        code: ERROR_CODES.MATCH_NOT_SAVED,
+        message: "Match result could not be saved. Leaderboard may not reflect this game."
+      });
+    }
+  });
 }
 
-async function persistFinishedMatch(room: Room, winnerId: string): Promise<void> {
+async function persistFinishedMatch(
+  room: {
+    id: string;
+    mode: Room["mode"];
+    players: Room["players"];
+    gridRows: number;
+    gridCols: number;
+    maxPlayers: number;
+    startedAt: Date;
+    turnCount: number;
+    forfeitedPlayerIds: Set<string>;
+  },
+  winnerId: string
+): Promise<void> {
   if (room.players.some((player) => player.isGuest)) {
     logger.info("skipping match persistence for guest room", {
       roomId: room.id,

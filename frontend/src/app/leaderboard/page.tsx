@@ -32,16 +32,6 @@ export default function LeaderboardPage() {
 
   return (
     <main className="relative z-10 mx-auto w-full max-w-[980px] px-4 py-8 sm:px-8">
-      <div className="mb-8 flex items-center justify-between gap-4 border-b border-line pb-4">
-        <Link href="/" className="font-display text-sm uppercase tracking-[0.32em] text-fg hover:text-cherenkov">
-          Chain . Reaction
-        </Link>
-        <Button variant="ghost" onClick={() => void loadLeaderboard()} disabled={loading}>
-          <RefreshCw size={16} aria-hidden="true" />
-          Refresh
-        </Button>
-      </div>
-
       <Card className="p-6 sm:p-8">
         <CardCorners />
         <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -49,7 +39,13 @@ export default function LeaderboardPage() {
             <CardEyebrow>// ranked simple points</CardEyebrow>
             <CardTitle className="text-3xl sm:text-4xl">Leaderboard</CardTitle>
           </div>
-          <Trophy className="text-uranium" size={32} aria-hidden="true" />
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" onClick={() => void loadLeaderboard()} disabled={loading}>
+              <RefreshCw size={16} aria-hidden="true" />
+              Refresh
+            </Button>
+            <Trophy className="text-uranium" size={32} aria-hidden="true" />
+          </div>
         </header>
 
         {error ? (

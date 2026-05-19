@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { LogIn, UserPlus } from "lucide-react";
+import { ChevronLeft, LogIn, UserPlus } from "lucide-react";
 import { authApi, ApiClientError } from "@/lib/api";
 import { setStoredAccessToken } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -104,7 +104,7 @@ export function AuthPanel({ mode }: AuthPanelProps) {
           </Button>
         </form>
 
-        <div className="mt-6 border-t border-line pt-5 text-center font-mono text-xs text-fg-muted">
+        <div className="mt-6 grid gap-3 border-t border-line pt-5 text-center font-mono text-xs text-fg-muted">
           {isSignup ? (
             <Link href="/login" className="text-cherenkov hover:text-fg">
               Already have an account?
@@ -114,6 +114,13 @@ export function AuthPanel({ mode }: AuthPanelProps) {
               Create an account
             </Link>
           )}
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-[0.32em] text-fg-soft hover:text-fg-muted"
+          >
+            <ChevronLeft size={12} aria-hidden="true" />
+            Back to home
+          </Link>
         </div>
       </Card>
     </main>

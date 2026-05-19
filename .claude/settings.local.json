@@ -10,7 +10,8 @@
       "Bash(agent-browser --session cr wait 600)",
       "Bash(agent-browser --session cr screenshot --full /tmp/cr-design/after-mobile.png)",
       "Bash(agent-browser --session cr emulate --help)",
-      "Bash(agent-browser --session mobile open http://localhost:3001 --viewport 390x844)"
+      "Bash(agent-browser --session mobile open http://localhost:3001 --viewport 390x844)",
+      "Bash(npm run *)"
     ]
   }
 }

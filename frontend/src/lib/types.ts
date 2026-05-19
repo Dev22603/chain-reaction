@@ -64,5 +64,10 @@ export type ServerMessage =
       currentTurn: number;
       players: Player[];
     }
-  | { type: "game_over"; mode: GameMode; winner: Pick<Player, "id" | "name"> }
+  | {
+      type: "game_over";
+      mode: GameMode;
+      winner: Pick<Player, "id" | "name">;
+      score_deltas?: Record<string, number>;
+    }
   | { type: "error"; code: string; message: string; errors?: string[] };

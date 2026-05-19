@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma.js";
-import type { ApplyMatchResultInput, LeaderboardEntry } from "../../types/scoring.js";
+import type { ApplyMatchResultInput, LeaderboardEntry, ScoreDeltas } from "../../types/scoring.js";
 
 export const scoresRepo = {
   async getLeaderboard({ limit = 20 }: { limit?: number } = {}): Promise<LeaderboardEntry[]> {
@@ -22,7 +22,13 @@ export const scoresRepo = {
     }));
   },
 
-  async applyMatchResult(input: ApplyMatchResultInput): Promise<void> {
+  async applyMatchResult(input: ApplyMatchResultInput): Promise<ScoreDeltas> {
+    const deltas: ScoreDeltas = {};
+
+    for (const participant of input.participants) {
+      deltas[participant.playerId] = participant.playerId === input.winnerId ? 3 : 1;
+    }
+
     await prisma.$transaction(
       input.participants.map((participant) => {
         const won = participant.playerId === input.winnerId;
@@ -59,5 +65,7 @@ export const scoresRepo = {
         });
       })
     );
+
+    return deltas;
   }
 };

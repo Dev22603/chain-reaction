@@ -7,6 +7,8 @@ export const LIMITS = {
   SAFETY_BREAK: 2000
 } as const;
 
+export const RECONNECT_GRACE_MS = 30_000;
+
 export const MESSAGE_TYPES = {
   JOIN_QUEUE: "join_queue",
   LEAVE_QUEUE: "leave_queue",
@@ -36,5 +38,6 @@ export const ERROR_CODES = {
   NOT_IN_GAME: "not_in_game",
   NOT_YOUR_TURN: "not_your_turn",
   DATABASE_UNAVAILABLE: "database_unavailable",
-  INTERNAL_ERROR: "internal_error"
+  INTERNAL_ERROR: "internal_error",
+  MATCH_NOT_SAVED: "match_not_saved"
 } as const;

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { History, Trophy } from "lucide-react";
+import { ArrowLeft, History, Home, Trophy, UserX } from "lucide-react";
 import {
   ApiClientError,
   playersApi,
@@ -57,22 +57,39 @@ export default function PlayerProfilePage() {
 
   return (
     <main className="relative z-10 mx-auto w-full max-w-[980px] px-4 py-8 sm:px-8">
-      <div className="mb-8 flex items-center justify-between gap-4 border-b border-line pb-4">
-        <Link href="/" className="font-display text-sm uppercase tracking-[0.32em] text-fg hover:text-cherenkov">
-          Chain . Reaction
-        </Link>
-        <Link href="/leaderboard" className="font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted hover:text-cherenkov">
-          leaderboard
-        </Link>
-      </div>
-
       {error ? (
-        <div role="alert" className="border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1">
-          {error}
-        </div>
+        <Card className="mx-auto grid w-[min(520px,100%)] gap-6 p-8 sm:p-10 [animation:panel-rise_0.5s_ease-out_both]" role="alert">
+          <CardCorners />
+          <div className="grid gap-3 text-center">
+            <CardEyebrow>// signal lost</CardEyebrow>
+            <UserX className="mx-auto text-cherenkov" size={40} aria-hidden="true" />
+            <h1 className="font-display text-3xl uppercase tracking-[0.06em] text-fg sm:text-4xl">
+              Player not found
+            </h1>
+            <p className="font-mono text-xs leading-relaxed text-fg-muted">
+              We could not locate an operator with that ID. They may have been purged from the reactor, or the link is stale.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href="/leaderboard"
+              className="inline-flex items-center justify-center gap-2 border border-cherenkov/60 bg-cherenkov/10 px-4 py-3 font-mono text-xs uppercase tracking-[0.28em] text-cherenkov transition hover:bg-cherenkov/20"
+            >
+              <ArrowLeft size={14} aria-hidden="true" />
+              Back to leaderboard
+            </Link>
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center gap-2 border border-line bg-bg-soft px-4 py-3 font-mono text-xs uppercase tracking-[0.28em] text-fg-muted transition hover:border-reactor/60 hover:text-reactor"
+            >
+              <Home size={14} aria-hidden="true" />
+              Back to home
+            </Link>
+          </div>
+        </Card>
       ) : null}
 
-      {loading ? (
+      {loading && !error ? (
         <Card className="p-8 text-center">
           <CardCorners />
           <p className="font-mono text-xs uppercase tracking-[0.24em] text-fg-muted">Loading profile</p>

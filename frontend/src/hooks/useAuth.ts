@@ -1,10 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { authApi, type PublicPlayer } from "@/lib/api";
 import { clearStoredAccessToken, getStoredAccessToken } from "@/lib/auth";
 
 export function useAuth() {
+  const router = useRouter();
   const [player, setPlayer] = useState<PublicPlayer | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +15,10 @@ export function useAuth() {
 
     async function loadPlayer() {
       if (!getStoredAccessToken()) {
-        setLoading(false);
+        if (active) {
+          setPlayer(null);
+          setLoading(false);
+        }
         return;
       }
 
@@ -44,8 +49,8 @@ export function useAuth() {
   const logout = useCallback(() => {
     clearStoredAccessToken();
     setPlayer(null);
-    window.location.reload();
-  }, []);
+    router.refresh();
+  }, [router]);
 
   return {
     player,

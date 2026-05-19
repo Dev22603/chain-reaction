@@ -63,6 +63,7 @@ export interface GameOverMessage {
   type: "game_over";
   mode: GameMode;
   winner: Pick<Player, "id" | "name">;
+  score_deltas?: Record<string, number>;
 }
 
 export interface ErrorMessage {

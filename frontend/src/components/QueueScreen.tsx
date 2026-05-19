@@ -28,7 +28,7 @@ export function QueueScreen({ info, onCancel }: QueueScreenProps) {
           <span className="ml-2 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-reactor">_</span>
         </h1>
         <p className="font-editorial text-base italic text-fg-soft">
-          Pairing {max ? `${max} reactors` : "operators"} into a casual lattice.
+          Pairing {max ? `${max} reactors` : "operators"} into a {info?.mode === "ranked" ? "ranked" : "casual"} lattice.
         </p>
       </header>
 

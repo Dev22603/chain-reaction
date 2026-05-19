@@ -17,3 +17,5 @@ export interface ApplyMatchResultInput {
   winnerId: string;
   participants: MatchScoreParticipant[];
 }
+
+export type ScoreDeltas = Record<string, number>;

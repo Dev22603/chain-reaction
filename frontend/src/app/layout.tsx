@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Bungee, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { TopBar } from "@/components/TopBar";
 
 const display = Bungee({
   weight: ["400"],
@@ -31,7 +32,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <TopBar />
+        {children}
+      </body>
     </html>
   );
 }

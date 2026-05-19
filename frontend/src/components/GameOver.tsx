@@ -1,6 +1,7 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
+import Link from "next/link";
+import { RotateCcw, Trophy } from "lucide-react";
 import { useMemo, type CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardCorners, CardEyebrow } from "@/components/ui/card";
@@ -11,10 +12,19 @@ interface GameOverProps {
   winner: Pick<Player, "id" | "name"> | null;
   mode: GameMode | null;
   winnerIndex?: number | null;
+  players?: Player[] | null;
+  scoreDeltas?: Record<string, number> | null;
   onPlayAgain: () => void;
 }
 
-export function GameOver({ winner, mode, winnerIndex = null, onPlayAgain }: GameOverProps) {
+export function GameOver({
+  winner,
+  mode,
+  winnerIndex = null,
+  players = null,
+  scoreDeltas = null,
+  onPlayAgain
+}: GameOverProps) {
   const color = winnerIndex === null ? "#ff5b2e" : PLAYER_COLORS[winnerIndex] ?? "#ff5b2e";
   const confetti = useMemo(
     () =>
@@ -93,10 +103,53 @@ export function GameOver({ winner, mode, winnerIndex = null, onPlayAgain }: Game
           : "Casual result complete. Leaderboard points are unchanged."}
       </div>
 
-      <Button variant="primary" size="lg" onClick={onPlayAgain}>
-        <RotateCcw size={16} aria-hidden="true" strokeWidth={2.5} />
-        New Round
-      </Button>
+      {players && players.length > 0 && scoreDeltas ? (
+        <ul className="grid gap-1">
+          {players.map((player, index) => {
+            const delta = scoreDeltas[player.id];
+            const isWinner = player.id === winner?.id;
+            const playerColor = PLAYER_COLORS[index] ?? "#ff5b2e";
+            return (
+              <li
+                key={player.id}
+                className="flex items-center justify-between border border-line bg-bg-soft px-4 py-2 font-mono text-xs"
+              >
+                <span className="flex items-center gap-2">
+                  <span
+                    className="inline-block h-2 w-2 rounded-full"
+                    style={{ background: playerColor }}
+                    aria-hidden="true"
+                  />
+                  <span className="text-fg-soft">{player.name}</span>
+                </span>
+                {delta !== undefined ? (
+                  <span
+                    className={
+                      isWinner ? "font-display text-cherenkov" : "font-display text-fg-muted"
+                    }
+                  >
+                    {`+${delta}`}
+                  </span>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
+
+      <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+        <Button variant="primary" size="lg" onClick={onPlayAgain}>
+          <RotateCcw size={16} aria-hidden="true" strokeWidth={2.5} />
+          New Round
+        </Button>
+        <Link
+          href="/leaderboard"
+          className="relative inline-flex min-h-14 select-none items-center justify-center gap-2 border border-line bg-surface/60 px-5 py-3 font-display text-xs uppercase tracking-[0.14em] text-fg-soft backdrop-blur transition-[transform,box-shadow,background,color,border-color] duration-200 ease-out hover:border-cherenkov hover:text-cherenkov hover:shadow-cherenkov active:translate-y-px sm:px-6 sm:text-sm"
+        >
+          <Trophy size={16} aria-hidden="true" strokeWidth={2.5} />
+          Leaderboard
+        </Link>
+      </div>
     </Card>
   );
 }

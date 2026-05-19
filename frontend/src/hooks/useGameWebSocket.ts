@@ -16,6 +16,8 @@ import { getStoredAccessToken } from "@/lib/auth";
 
 const DEFAULT_WS_URL = "ws://localhost:8080";
 
+export type WebSocketConnectionState = "connecting" | "open" | "closed" | "error";
+
 function buildWebSocketUrl(): string {
   const url = new URL(process.env.NEXT_PUBLIC_WS_URL ?? DEFAULT_WS_URL);
   const token = getStoredAccessToken();
@@ -34,7 +36,9 @@ export function useGameWebSocket() {
   const [gameMode, setGameMode] = useState<GameMode | null>(null);
   const [queuedInfo, setQueuedInfo] = useState<QueuedInfo | null>(null);
   const [winner, setWinner] = useState<Pick<Player, "id" | "name"> | null>(null);
+  const [scoreDeltas, setScoreDeltas] = useState<Record<string, number> | null>(null);
   const [lastError, setLastError] = useState<LastError | null>(null);
+  const [connectionState, setConnectionState] = useState<WebSocketConnectionState>("connecting");
 
   const sendJSON = useCallback((message: ClientMessage) => {
     const socket = socketRef.current;
@@ -48,6 +52,19 @@ export function useGameWebSocket() {
   useEffect(() => {
     const socket = new WebSocket(buildWebSocketUrl());
     socketRef.current = socket;
+    setConnectionState("connecting");
+
+    socket.onopen = () => {
+      setConnectionState("open");
+    };
+
+    socket.onerror = () => {
+      setConnectionState("error");
+    };
+
+    socket.onclose = () => {
+      setConnectionState("closed");
+    };
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data as string) as ServerMessage;
@@ -84,6 +101,7 @@ export function useGameWebSocket() {
         case "game_over":
           setGameMode(message.mode);
           setWinner(message.winner);
+          setScoreDeltas(message.score_deltas ?? null);
           setLastError(null);
           setPhase("gameover");
           break;
@@ -133,6 +151,7 @@ export function useGameWebSocket() {
     setGameMode(null);
     setQueuedInfo(null);
     setWinner(null);
+    setScoreDeltas(null);
     setLastError(null);
     setPhase("lobby");
   }, []);
@@ -144,7 +163,9 @@ export function useGameWebSocket() {
     gameMode,
     queuedInfo,
     winner,
+    scoreDeltas,
     lastError,
+    connectionState,
     joinQueue,
     leaveQueue,
     makeMove,
