@@ -33,7 +33,12 @@ export function getCriticalMass(
   rows: number,
   cols: number
 ): number {
-  return getNeighbors(row, col, rows, cols).length;
+  // ⚡ Bolt: Fast geometric calculation instead of expensive array allocation/filtering
+  // O(1) mathematical approach vs O(1) but high-overhead array creation in getNeighbors
+  let mass = 4;
+  if (row === 0 || row === rows - 1) mass -= 1;
+  if (col === 0 || col === cols - 1) mass -= 1;
+  return mass;
 }
 
 export function applyMove(
