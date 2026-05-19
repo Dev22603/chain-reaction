@@ -24,7 +24,7 @@ interface LandingHubProps {
   displayName: string | null;
   connectionReady: boolean;
   onPlay: (playerCount: number) => void;
-  onCreateRoom: (settings: { playerCount: number }) => void;
+  onCreateRoom: (config: CreateRoomConfig) => void;
   onJoinRoom: (code: string) => void;
   onInteract?: () => void;
 }
@@ -50,7 +50,7 @@ export function LandingHub({
   const handleCreateConfirm = useCallback(
     (config: CreateRoomConfig) => {
       setCreateOpen(false);
-      onCreateRoom({ playerCount: config.players });
+      onCreateRoom(config);
     },
     [onCreateRoom]
   );

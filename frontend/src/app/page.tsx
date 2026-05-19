@@ -9,6 +9,7 @@ import { QueueScreen } from "@/components/QueueScreen";
 import { Card, CardCorners } from "@/components/ui/card";
 import { useGameWebSocket } from "@/hooks/useGameWebSocket";
 import { useAuth } from "@/hooks/useAuth";
+import type { CreateRoomConfig } from "@/components/dialogs/CreateRoomDialog";
 import { useSounds } from "@/hooks/useSounds";
 
 const DEFAULT_GRID = { rows: 6, cols: 9 };
@@ -75,12 +76,25 @@ export default function Home() {
     });
   };
 
-  const onCreateRoom = (_settings: { playerCount: number }) => {
-    // TODO: wire once game.createRoom exists
+  const onCreateRoom = (config: CreateRoomConfig) => {
+    if (game.connectionState !== "open") {
+      flashNotice("Connecting to the reactor… try again in a moment.");
+      return;
+    }
+    game.createRoom({
+      playerName,
+      gridRows: config.gridRows,
+      gridCols: config.gridCols,
+      maxPlayers: config.players
+    });
   };
 
-  const onJoinRoom = (_code: string) => {
-    // TODO: wire once game.joinRoomByCode exists
+  const onJoinRoom = (code: string) => {
+    if (game.connectionState !== "open") {
+      flashNotice("Connecting to the reactor… try again in a moment.");
+      return;
+    }
+    game.joinRoomByCode(code, playerName);
   };
 
   const errorVisible = Boolean(game.lastError) || Boolean(softNotice);
@@ -136,7 +150,7 @@ export default function Home() {
       ) : null}
 
       {game.phase === "queued" ? (
-        <QueueScreen info={game.queuedInfo} onCancel={game.leaveQueue} />
+        <QueueScreen info={game.queuedInfo} code={game.roomCode} onCancel={game.leaveQueue} />
       ) : null}
 
       {game.phase === "playing" && game.gameState ? (

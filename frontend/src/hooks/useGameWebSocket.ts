@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   ClientMessage,
+  CreateRoomInput,
   GameState,
   GameMode,
   JoinQueueInput,
@@ -39,6 +40,7 @@ export function useGameWebSocket() {
   const [scoreDeltas, setScoreDeltas] = useState<Record<string, number> | null>(null);
   const [lastError, setLastError] = useState<LastError | null>(null);
   const [connectionState, setConnectionState] = useState<WebSocketConnectionState>("connecting");
+  const [roomCode, setRoomCode] = useState<string | null>(null);
 
   const sendJSON = useCallback((message: ClientMessage) => {
     const socket = socketRef.current;
@@ -105,6 +107,10 @@ export function useGameWebSocket() {
           setLastError(null);
           setPhase("gameover");
           break;
+        case "room_created":
+          setRoomCode(message.code);
+          setPhase("queued");
+          break;
         case "error":
           setLastError({ code: message.code, message: message.message });
           break;
@@ -122,6 +128,20 @@ export function useGameWebSocket() {
   const joinQueue = useCallback(
     (input: JoinQueueInput) => {
       sendJSON({ type: "join_queue", ...input });
+    },
+    [sendJSON]
+  );
+
+  const createRoom = useCallback(
+    (input: CreateRoomInput) => {
+      sendJSON({ type: "create_room", ...input });
+    },
+    [sendJSON]
+  );
+
+  const joinRoomByCode = useCallback(
+    (code: string, playerName: string) => {
+      sendJSON({ type: "join_room_by_code", code, playerName });
     },
     [sendJSON]
   );
@@ -150,6 +170,7 @@ export function useGameWebSocket() {
     setGameState(null);
     setGameMode(null);
     setQueuedInfo(null);
+    setRoomCode(null);
     setWinner(null);
     setScoreDeltas(null);
     setLastError(null);
@@ -162,11 +183,14 @@ export function useGameWebSocket() {
     gameState,
     gameMode,
     queuedInfo,
+    roomCode,
     winner,
     scoreDeltas,
     lastError,
     connectionState,
     joinQueue,
+    createRoom,
+    joinRoomByCode,
     leaveQueue,
     makeMove,
     leaveGame,

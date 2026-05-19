@@ -3,6 +3,7 @@ export const LIMITS = {
   GRID_MAX: 20,
   PLAYERS_MIN: 2,
   PLAYERS_MAX: 4,
+  PRIVATE_ROOM_PLAYERS_MAX: 8,
   PLAYER_NAME_MAX: 100,
   SAFETY_BREAK: 2000
 } as const;
@@ -14,11 +15,14 @@ export const MESSAGE_TYPES = {
   LEAVE_QUEUE: "leave_queue",
   MAKE_MOVE: "make_move",
   LEAVE_GAME: "leave_game",
+  CREATE_ROOM: "create_room",
+  JOIN_ROOM_BY_CODE: "join_room_by_code",
   CONNECTED: "connected",
   QUEUED: "queued",
   GAME_START: "game_start",
   GAME_STATE: "game_state",
   GAME_OVER: "game_over",
+  ROOM_CREATED: "room_created",
   ERROR: "error"
 } as const;
 
@@ -36,6 +40,8 @@ export const ERROR_CODES = {
   NOT_AUTHORIZED: "not_authorized",
   PLAYER_NOT_FOUND: "player_not_found",
   ROOM_NOT_FOUND: "room_not_found",
+  ROOM_CODE_INVALID: "room_code_invalid",
+  ROOM_FULL: "room_full",
   NOT_IN_GAME: "not_in_game",
   NOT_YOUR_TURN: "not_your_turn",
   DATABASE_UNAVAILABLE: "database_unavailable",

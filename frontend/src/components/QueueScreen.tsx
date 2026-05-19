@@ -7,10 +7,11 @@ import type { QueuedInfo } from "@/lib/types";
 
 interface QueueScreenProps {
   info: QueuedInfo | null;
+  code?: string | null;
   onCancel: () => void;
 }
 
-export function QueueScreen({ info, onCancel }: QueueScreenProps) {
+export function QueueScreen({ info, code, onCancel }: QueueScreenProps) {
   const position = info?.position ?? 1;
   const max = info?.maxPlayers ?? 0;
   const slots = max || 4;
@@ -77,6 +78,18 @@ export function QueueScreen({ info, onCancel }: QueueScreenProps) {
             queue · {info?.mode ?? "casual"} <br />
             est. wait · low
           </p>
+
+          {code ? (
+            <div className="grid gap-1 border-t border-line/60 pt-4">
+              <p className="font-display text-[10px] uppercase tracking-[0.4em] text-fg-soft">invite code</p>
+              <p className="font-display text-2xl tracking-[0.3em] text-cherenkov">
+                {code}
+              </p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-fg-muted">
+                Share this code with friends
+              </p>
+            </div>
+          ) : null}
         </div>
       </section>
 

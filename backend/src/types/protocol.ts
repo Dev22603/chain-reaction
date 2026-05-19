@@ -23,11 +23,27 @@ export interface LeaveGameMessage {
   type: "leave_game";
 }
 
+export interface CreateRoomMessage {
+  type: "create_room";
+  playerName: string;
+  gridRows: number;
+  gridCols: number;
+  maxPlayers: number;
+}
+
+export interface JoinRoomByCodeMessage {
+  type: "join_room_by_code";
+  playerName: string;
+  code: string;
+}
+
 export type ClientMessage =
   | JoinQueueMessage
   | LeaveQueueMessage
   | MakeMoveMessage
-  | LeaveGameMessage;
+  | LeaveGameMessage
+  | CreateRoomMessage
+  | JoinRoomByCodeMessage;
 
 export interface ConnectedMessage {
   type: "connected";
@@ -73,10 +89,17 @@ export interface ErrorMessage {
   errors?: string[];
 }
 
+export interface RoomCreatedMessage {
+  type: "room_created";
+  roomId: string;
+  code: string;
+}
+
 export type ServerMessage =
   | ConnectedMessage
   | QueuedMessage
   | GameStartMessage
   | GameStateMessage
   | GameOverMessage
+  | RoomCreatedMessage
   | ErrorMessage;

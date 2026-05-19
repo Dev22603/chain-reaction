@@ -86,6 +86,7 @@ function createRoom(roomPlayers: Player[], mode: GameMode, gridRows: number, gri
   const room: Room = {
     id: randomUUID(),
     mode,
+    isPrivate: false,
     players: roomPlayers.map((player) => ({ ...player, eliminated: false })),
     gridRows,
     gridCols,

@@ -3,6 +3,7 @@ import { ERROR_CODES, MESSAGE_TYPES } from "./constants/app.constants.js";
 import { SERVER_MESSAGES } from "./constants/app.messages.js";
 import { handleLeaveGame, handleMove } from "./handlers/game.handlers.js";
 import { handleJoinQueue, handleLeaveQueue } from "./handlers/queue.handlers.js";
+import { handleCreateRoom, handleJoinRoomByCode } from "./handlers/room.handlers.js";
 import { getLogger } from "./lib/logger.js";
 import { validateMessage } from "./schemas/messages.schemas.js";
 import { ApiError } from "./utils/api_error.js";
@@ -36,6 +37,12 @@ export function dispatch(socket: WebSocket, playerId: string, raw: WebSocket.Raw
         break;
       case MESSAGE_TYPES.LEAVE_GAME:
         handleLeaveGame(playerId);
+        break;
+      case MESSAGE_TYPES.CREATE_ROOM:
+        handleCreateRoom(playerId, message);
+        break;
+      case MESSAGE_TYPES.JOIN_ROOM_BY_CODE:
+        handleJoinRoomByCode(playerId, message);
         break;
       default:
         break;

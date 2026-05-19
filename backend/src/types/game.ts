@@ -20,6 +20,8 @@ export interface Player {
 export interface Room {
   id: string;
   mode: GameMode;
+  isPrivate: boolean;
+  inviteCode?: string;
   players: Player[];
   gridRows: number;
   gridCols: number;

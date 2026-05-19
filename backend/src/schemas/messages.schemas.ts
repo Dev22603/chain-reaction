@@ -49,6 +49,40 @@ export const LeaveGameSchema = z.object({
   type: z.literal(MESSAGE_TYPES.LEAVE_GAME)
 });
 
+export const CreateRoomSchema = z.object({
+  type: z.literal(MESSAGE_TYPES.CREATE_ROOM),
+  playerName: z
+    .string()
+    .trim()
+    .min(1, QUEUE_VALIDATION_ERRORS.PLAYER_NAME_REQUIRED)
+    .max(LIMITS.PLAYER_NAME_MAX, QUEUE_VALIDATION_ERRORS.PLAYER_NAME_MAX),
+  gridRows: z
+    .number()
+    .int()
+    .min(LIMITS.GRID_MIN, QUEUE_VALIDATION_ERRORS.GRID_ROWS_RANGE)
+    .max(LIMITS.GRID_MAX, QUEUE_VALIDATION_ERRORS.GRID_ROWS_RANGE),
+  gridCols: z
+    .number()
+    .int()
+    .min(LIMITS.GRID_MIN, QUEUE_VALIDATION_ERRORS.GRID_COLS_RANGE)
+    .max(LIMITS.GRID_MAX, QUEUE_VALIDATION_ERRORS.GRID_COLS_RANGE),
+  maxPlayers: z
+    .number()
+    .int()
+    .min(LIMITS.PLAYERS_MIN, QUEUE_VALIDATION_ERRORS.MAX_PLAYERS_RANGE)
+    .max(LIMITS.PRIVATE_ROOM_PLAYERS_MAX, QUEUE_VALIDATION_ERRORS.MAX_PLAYERS_RANGE)
+});
+
+export const JoinRoomByCodeSchema = z.object({
+  type: z.literal(MESSAGE_TYPES.JOIN_ROOM_BY_CODE),
+  playerName: z
+    .string()
+    .trim()
+    .min(1, QUEUE_VALIDATION_ERRORS.PLAYER_NAME_REQUIRED)
+    .max(LIMITS.PLAYER_NAME_MAX, QUEUE_VALIDATION_ERRORS.PLAYER_NAME_MAX),
+  code: z.string().trim().length(6).toUpperCase()
+});
+
 export function validateMessage(parsed: unknown): ClientMessage | null {
   const base = BaseMessageSchema.safeParse(parsed);
   if (!base.success) {
@@ -82,6 +116,10 @@ function getSchemaForType(type: string) {
       return MakeMoveSchema;
     case MESSAGE_TYPES.LEAVE_GAME:
       return LeaveGameSchema;
+    case MESSAGE_TYPES.CREATE_ROOM:
+      return CreateRoomSchema;
+    case MESSAGE_TYPES.JOIN_ROOM_BY_CODE:
+      return JoinRoomByCodeSchema;
     default:
       return null;
   }

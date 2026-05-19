@@ -2,7 +2,7 @@ import { ERROR_CODES, MESSAGE_TYPES } from "../constants/app.constants.js";
 import { matchesRepo, scoresRepo } from "../db/index.js";
 import { applyMove, isEliminated } from "../game/gameLogic.js";
 import { getLogger } from "../lib/logger.js";
-import { players, playerRooms, rooms } from "../state/memory.js";
+import { players, playerRooms, roomCodes, rooms } from "../state/memory.js";
 import type { PlayerIndex, Room } from "../types/game.js";
 import type { MakeMoveMessage } from "../types/protocol.js";
 import type { ScoreDeltas } from "../types/scoring.js";
@@ -186,6 +186,9 @@ function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>):
   };
 
   rooms.delete(room.id);
+  if (room.inviteCode) {
+    roomCodes.delete(room.inviteCode);
+  }
   for (const player of room.players) {
     playerRooms.delete(player.id);
   }

@@ -41,11 +41,20 @@ export interface JoinQueueInput {
   playerName: string;
 }
 
+export interface CreateRoomInput {
+  playerName: string;
+  gridRows: number;
+  gridCols: number;
+  maxPlayers: number;
+}
+
 export type ClientMessage =
   | ({ type: "join_queue" } & JoinQueueInput)
   | { type: "leave_queue" }
   | { type: "make_move"; row: number; col: number }
-  | { type: "leave_game" };
+  | { type: "leave_game" }
+  | ({ type: "create_room" } & CreateRoomInput)
+  | { type: "join_room_by_code"; playerName: string; code: string };
 
 export type ServerMessage =
   | { type: "connected"; playerId: string; displayName: string; isGuest: boolean }
@@ -70,4 +79,5 @@ export type ServerMessage =
       winner: Pick<Player, "id" | "name">;
       score_deltas?: Record<string, number>;
     }
-  | { type: "error"; code: string; message: string; errors?: string[] };
+  | { type: "error"; code: string; message: string; errors?: string[] }
+  | { type: "room_created"; roomId: string; code: string };
