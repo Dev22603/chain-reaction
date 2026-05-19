@@ -1,8 +1,8 @@
 "use client";
 
 import { X } from "lucide-react";
+import { AtomicHero } from "@/components/AtomicHero";
 import { Button } from "@/components/ui/button";
-import { Card, CardCorners, CardEyebrow } from "@/components/ui/card";
 import type { QueuedInfo } from "@/lib/types";
 
 interface QueueScreenProps {
@@ -11,67 +11,79 @@ interface QueueScreenProps {
 }
 
 export function QueueScreen({ info, onCancel }: QueueScreenProps) {
-  const position = info?.position ?? 0;
+  const position = info?.position ?? 1;
   const max = info?.maxPlayers ?? 0;
   const slots = max || 4;
+  const percent = max > 0 ? Math.min(100, Math.round((position / max) * 100)) : 0;
 
   return (
-    <Card
-      className="mx-auto grid w-full max-w-[560px] gap-7 p-5 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both] sm:mt-[8vh] sm:p-10"
-      aria-labelledby="queue-title"
-    >
-      <CardCorners />
-      <div className="grid gap-3">
-        <CardEyebrow>// awaiting fission</CardEyebrow>
-        <h1 id="queue-title" className="font-display text-3xl uppercase tracking-[0.05em] text-fg sm:text-4xl">
-          Spinning Up<span className="ml-1 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-cherenkov">_</span>
+    <div className="relative mx-auto grid w-full max-w-[720px] gap-10 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]">
+      <header className="grid gap-3">
+        <p className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.42em] text-cherenkov/80">
+          <span className="h-1.5 w-1.5 animate-[orb-pulse_1.8s_ease-in-out_infinite] rounded-full bg-cherenkov" />
+          // awaiting fission
+        </p>
+        <h1 className="font-display text-5xl font-black uppercase leading-[0.85] tracking-tight text-fg sm:text-7xl">
+          Spinning up
+          <span className="ml-2 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-reactor">_</span>
         </h1>
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-fg-muted">
-          {info?.mode ?? "casual"} queue
-        </span>
-      </div>
+        <p className="font-editorial text-base italic text-fg-soft">
+          Pairing {max ? `${max} reactors` : "operators"} into a casual lattice.
+        </p>
+      </header>
 
-      <div className="relative">
-        <div className="grid gap-2 font-display text-[11px] uppercase tracking-[0.3em] text-fg-muted">
-          <div className="flex items-baseline justify-between">
-            <span>Operators</span>
-            <span className="text-fg">
-              {position}<span className="text-fg-muted">/{max || "-"}</span>
-            </span>
+      <section className="grid items-center gap-8 sm:grid-cols-[1fr_auto] sm:gap-12">
+        <AtomicHero className="mx-auto h-[260px] w-full max-w-[320px] sm:h-[320px]" />
+
+        <div className="grid min-w-[260px] gap-5 border border-line bg-bg-soft/50 p-5">
+          <div className="grid gap-2">
+            <div className="flex items-baseline justify-between font-mono text-[10px] uppercase tracking-[0.32em] text-fg-muted">
+              <span>operators</span>
+              <span>
+                <span className="text-fg">{position}</span>
+                <span className="opacity-60">/{max || "-"}</span>
+              </span>
+            </div>
+            <div className="flex gap-1">
+              {Array.from({ length: slots }, (_, idx) => {
+                const filled = idx < position;
+                return (
+                  <div
+                    key={idx}
+                    className={
+                      "h-2 flex-1 transition-colors duration-300 " +
+                      (filled ? "bg-reactor shadow-reactor" : "bg-line")
+                    }
+                  />
+                );
+              })}
+            </div>
           </div>
-          <div className="flex gap-1">
-            {Array.from({ length: slots }, (_, idx) => {
-              const filled = idx < position;
-              return (
-                <div
-                  key={idx}
-                  className={
-                    filled
-                      ? "h-1.5 flex-1 bg-cherenkov shadow-cherenkov"
-                      : "h-1.5 flex-1 bg-line"
-                  }
-                />
-              );
-            })}
+
+          <div className="grid gap-2 border-t border-line/60 pt-4">
+            <p className="font-display text-[10px] uppercase tracking-[0.4em] text-fg-soft">progress</p>
+            <div className="relative h-12 overflow-hidden border border-line bg-bg">
+              <div
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-reactor via-reactor-glow to-uranium transition-all duration-500"
+                style={{ width: `${percent}%` }}
+              />
+              <div className="relative grid h-full place-items-center font-display text-sm font-semibold uppercase tracking-[0.3em] text-paper mix-blend-difference">
+                {percent}%
+              </div>
+            </div>
           </div>
+
+          <p className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.26em] text-fg-muted">
+            queue · {info?.mode ?? "casual"} <br />
+            est. wait · low
+          </p>
         </div>
+      </section>
 
-        <div className="mt-6 flex items-center justify-center">
-          <div className="relative h-24 w-24">
-            <span className="absolute inset-0 rounded-full border-2 border-line" />
-            <span className="absolute inset-0 rounded-full border-2 border-transparent border-t-cherenkov [animation:spinner-ring_1.4s_linear_infinite]" />
-            <span className="absolute inset-3 rounded-full border border-transparent border-t-reactor [animation:spinner-ring_2.2s_linear_infinite_reverse]" />
-            <span className="absolute inset-0 grid place-items-center font-display text-xs tracking-[0.2em] text-cherenkov">
-              SYNC
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <Button variant="ghost" onClick={onCancel}>
-        <X size={16} aria-hidden="true" />
-        Abort
+      <Button variant="ghost" size="md" onClick={onCancel} className="justify-self-start">
+        <X size={14} aria-hidden="true" />
+        Abort sequence
       </Button>
-    </Card>
+    </div>
   );
 }

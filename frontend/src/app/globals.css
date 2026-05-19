@@ -23,7 +23,13 @@
   --color-p3: #ffd23f;
   --color-p4: #5cff9b;
 
-  --font-display: "Audiowide", "Bungee", system-ui, sans-serif;
+  --color-paper: #f1ead0;
+  --color-paper-dim: #c9c0a0;
+  --color-hazard: #ffd23f;
+  --color-hazard-dim: #5a4b15;
+
+  --font-display: "Big Shoulders", "Bebas Neue", "Impact", system-ui, sans-serif;
+  --font-editorial: "Fraunces", "Iowan Old Style", "Georgia", serif;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
   --font-sans: "JetBrains Mono", ui-monospace, monospace;
 
@@ -266,7 +272,82 @@ select {
     opacity: 1;
   }
   100% {
-    transform: translateY(120px) rotate(720deg);
+    transform: translateY(120px) rotate(120deg);
     opacity: 0;
   }
+}
+
+@keyframes orbit-tilt-a {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-tilt-b {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes nucleus-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1) drop-shadow(0 0 18px rgba(255, 91, 46, 0.55));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: brightness(1.25) drop-shadow(0 0 32px rgba(255, 138, 76, 0.85));
+  }
+}
+
+@keyframes electron-trail {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes hero-reveal {
+  0% { opacity: 0; transform: translateY(28px); letter-spacing: 0.32em; filter: blur(12px); }
+  60% { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0); letter-spacing: -0.02em; filter: blur(0); }
+}
+
+@keyframes word-slide {
+  0% { opacity: 0; transform: translateX(-24px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes chip-pop {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes dialog-rise {
+  0% { opacity: 0; transform: translateY(20px) scale(0.97); filter: blur(8px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes overlay-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.hazard-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-hazard) 0,
+    var(--color-hazard) 12px,
+    var(--color-bg) 12px,
+    var(--color-bg) 24px
+  );
+}
+
+.paper-grain {
+  background-image:
+    radial-gradient(rgba(241, 234, 208, 0.06) 1px, transparent 1px),
+    radial-gradient(rgba(241, 234, 208, 0.04) 1px, transparent 1px);
+  background-size: 22px 22px, 7px 7px;
+  background-position: 0 0, 3px 4px;
 }
