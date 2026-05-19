@@ -44,19 +44,19 @@ export function DialogShell({
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
-      className="fixed inset-0 z-50 grid place-items-center px-3 py-6 sm:px-6"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto px-3 py-6 sm:items-center sm:px-6"
     >
       <button
         type="button"
         aria-label="Close dialog"
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-bg/80 backdrop-blur-md [animation:overlay-fade_0.2s_ease-out_both]"
+        className="fixed inset-0 cursor-default bg-bg/80 backdrop-blur-md [animation:overlay-fade_0.2s_ease-out_both]"
         tabIndex={-1}
       />
 
       <div
         className={cn(
-          "relative w-full overflow-hidden border bg-surface/95 shadow-panel [animation:dialog-rise_0.45s_cubic-bezier(0.2,0.85,0.4,1)_both]",
+          "relative my-auto w-full rounded-2xl border-2 bg-surface/95 shadow-panel [animation:dialog-rise_0.45s_cubic-bezier(0.2,0.85,0.4,1)_both]",
           width === "lg" ? "max-w-[640px]" : "max-w-[500px]",
           accent === "reactor" ? "border-reactor/60" : "border-cherenkov/60"
         )}

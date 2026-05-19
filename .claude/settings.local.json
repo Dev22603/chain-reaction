@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(agent-browser --session cr open http://localhost:3001)",
+      "Bash(agent-browser --session cr wait --load networkidle)",
+      "Bash(agent-browser --session cr wait 800)",
+      "Bash(agent-browser --session cr screenshot --full /tmp/cr-design/after-final-landing.png)",
+      "Bash(agent-browser --session cr --help)",
+      "Bash(agent-browser --session cr viewport 390 844)",
+      "Bash(agent-browser --session cr wait 600)",
+      "Bash(agent-browser --session cr screenshot --full /tmp/cr-design/after-mobile.png)",
+      "Bash(agent-browser --session cr emulate --help)",
+      "Bash(agent-browser --session mobile open http://localhost:3001 --viewport 390x844)"
+    ]
+  }
+}

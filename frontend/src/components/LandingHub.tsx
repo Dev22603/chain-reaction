@@ -53,8 +53,6 @@ export function LandingHub({
     setJoinOpen(true);
   }, [onInteract]);
 
-  const activeColor = PLAYER_COLORS[playerCount] ?? "#ff6b1f";
-
   return (
     <>
       <div className="relative mx-auto grid w-full max-w-[860px] place-items-center gap-8 pt-2 pb-12 sm:gap-10 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]">
@@ -126,13 +124,9 @@ export function LandingHub({
         <button
           type="button"
           onClick={handlePlay}
-          className="game-btn-shadow group relative grid w-full max-w-[460px] grid-flow-col items-center justify-center gap-3 rounded-3xl px-8 py-5 font-display text-3xl tracking-wide text-white sm:py-6 sm:text-4xl [animation:button-bounce-in_0.5s_cubic-bezier(0.2,0.8,0.4,1)_0.15s_both]"
-          style={{
-            background: `linear-gradient(180deg, ${activeColor} 0%, ${activeColor}dd 50%, ${activeColor}aa 100%), linear-gradient(180deg, #ff6b1f 0%, #ff3b6b 100%)`,
-            backgroundBlendMode: "screen"
-          }}
+          className="game-btn-shadow group relative grid w-full max-w-[460px] grid-flow-col items-center justify-center gap-3 rounded-3xl bg-gradient-to-b from-uranium via-reactor to-[#d23a1a] px-8 py-5 font-display text-3xl tracking-wide text-white sm:py-6 sm:text-4xl [animation:button-bounce-in_0.5s_cubic-bezier(0.2,0.8,0.4,1)_0.15s_both]"
         >
-          <Play size={28} strokeWidth={3} fill="currentColor" aria-hidden="true" className="drop-shadow-[0_2px_0_rgba(0,0,0,0.35)]" />
+          <Play size={28} strokeWidth={3} fill="currentColor" aria-hidden="true" className="drop-shadow-[0_2px_0_rgba(0,0,0,0.45)]" />
           <span className="game-text-shadow">PLAY</span>
         </button>
 
