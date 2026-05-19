@@ -2,7 +2,13 @@
 
 How players get into a game and how the match progresses at the lifecycle level. Frame-level details are in [PROTOCOL.md](./PROTOCOL.md).
 
-Players in the lobby pick a board size and player count, then join a queue. When a queue bucket fills, a room is created and the match begins.
+Players in the lobby pick a player count and enter via one of three paths:
+
+- **PLAY (public queue)** — joins a shared bucket. When the bucket fills, a room is created automatically.
+- **CREATE (private room)** — immediately creates a room and returns a 6-char invite code. The creator waits for others to join by code.
+- **JOIN (private room)** — enters an existing private room by its 6-char invite code.
+
+All three paths lead to the same match flow once all players are in a room.
 
 ## Queue bucket
 

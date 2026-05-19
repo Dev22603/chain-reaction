@@ -19,7 +19,16 @@ export function verifyAccessToken(token: string): AuthTokenPayload {
     }
 
     return decoded;
-  } catch {
+  } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      throw new ApiError(
+        ERROR_CODES.AUTH_TOKEN_EXPIRED,
+        "Access token has expired",
+        [],
+        401
+      );
+    }
+
     throw new ApiError(
       ERROR_CODES.NOT_AUTHENTICATED,
       SERVER_MESSAGES.NOT_AUTHENTICATED,

@@ -12,7 +12,7 @@ const GameModeSchema = z.enum([GAME_MODES.CASUAL, GAME_MODES.RANKED]);
 
 export const JoinQueueSchema = z.object({
   type: z.literal(MESSAGE_TYPES.JOIN_QUEUE),
-  mode: GameModeSchema.default(GAME_MODES.CASUAL),
+  mode: GameModeSchema.optional().default(GAME_MODES.CASUAL),
   gridRows: z
     .number()
     .int()

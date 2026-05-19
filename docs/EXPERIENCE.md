@@ -21,11 +21,13 @@ The user moves through four phases:
 
 ### Lobby
 
-The default. The player picks a name, grid size, and max players, then joins a queue.
+The default. The player picks how many players, then chooses one of three entry points:
 
-- Defaults: 6×9, 2 players.
-- Submit is disabled for an empty/invalid name.
-- Grid size is validated against the same bounds the server enforces (3–20).
+- **PLAY** — joins a public matchmaking queue. When enough players queue with the same settings, a room is created automatically.
+- **CREATE** — opens a private room and receives a 6-char alphanumeric invite code. Share the code with friends to play together.
+- **JOIN** — enters a 6-char code to join a specific private room.
+
+Defaults: 6×9 grid, 2 players. The WebSocket connection must be open before any action is available.
 
 ### Queued
 
@@ -42,7 +44,7 @@ Shows the board, the current-player indicator, the player list with elimination 
 
 ### Gameover
 
-Shows the winner's name and a "Play Again" button. "Play Again" resets local state and returns to the lobby. The WebSocket connection stays open across the reset.
+Shows the winner's name, a "Play Again" button, and a "Leaderboard" link. For authenticated players, shows their XP earned this match (+3 for winner, +1 for others). Guests see the result but no XP. "Play Again" resets local state and returns to the lobby. The WebSocket connection stays open across the reset.
 
 ## Errors
 

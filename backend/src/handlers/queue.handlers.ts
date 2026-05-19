@@ -1,11 +1,9 @@
 import { randomUUID } from "node:crypto";
-import { ERROR_CODES, GAME_MODES, MESSAGE_TYPES } from "../constants/app.constants.js";
-import { SERVER_MESSAGES } from "../constants/app.messages.js";
+import { GAME_MODES, MESSAGE_TYPES } from "../constants/app.constants.js";
 import { createBoard } from "../game/gameLogic.js";
 import { connections, players, playerRooms, queues, rooms } from "../state/memory.js";
 import type { GameMode, Player, Room } from "../types/game.js";
 import type { JoinQueueMessage } from "../types/protocol.js";
-import { ApiError } from "../utils/api_error.js";
 import { broadcast, send } from "../utils/broadcast.js";
 
 function getQueueKey(mode: GameMode, gridRows: number, gridCols: number, maxPlayers: number): string {
@@ -48,11 +46,9 @@ export function handleJoinQueue(playerId: string, payload: JoinQueueMessage): vo
 
   const identity = connections.get(playerId);
   const isGuest = identity?.isGuest ?? true;
-  if (payload.mode === GAME_MODES.RANKED && isGuest) {
-    throw new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.RANKED_REQUIRES_AUTH, [], 401);
-  }
+  const mode: GameMode = payload.mode ?? GAME_MODES.CASUAL;
 
-  const key = getQueueKey(payload.mode, payload.gridRows, payload.gridCols, payload.maxPlayers);
+  const key = getQueueKey(mode, payload.gridRows, payload.gridCols, payload.maxPlayers);
   const queue = queues.get(key) ?? [];
   const player: Player = {
     id: playerId,
@@ -67,7 +63,7 @@ export function handleJoinQueue(playerId: string, payload: JoinQueueMessage): vo
 
   send(players.get(playerId), {
     type: MESSAGE_TYPES.QUEUED,
-    mode: payload.mode,
+    mode,
     position: queue.length,
     maxPlayers: payload.maxPlayers
   });
@@ -78,7 +74,7 @@ export function handleJoinQueue(playerId: string, payload: JoinQueueMessage): vo
       queues.delete(key);
     }
 
-    createRoom(roomPlayers, payload.mode, payload.gridRows, payload.gridCols);
+    createRoom(roomPlayers, mode, payload.gridRows, payload.gridCols);
   }
 }
 

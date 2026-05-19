@@ -1,4 +1,4 @@
-import { ERROR_CODES, GAME_MODES, MESSAGE_TYPES } from "../constants/app.constants.js";
+import { ERROR_CODES, MESSAGE_TYPES } from "../constants/app.constants.js";
 import { matchesRepo, scoresRepo } from "../db/index.js";
 import { applyMove, isEliminated } from "../game/gameLogic.js";
 import { getLogger } from "../lib/logger.js";
@@ -149,16 +149,18 @@ function broadcastGameState(room: Room): void {
   });
 }
 
-function computeRankedDeltas(room: Room, winnerId: string): ScoreDeltas {
+function computeAuthDeltas(room: Room, winnerId: string): ScoreDeltas {
   const deltas: ScoreDeltas = {};
   for (const player of room.players) {
-    deltas[player.id] = player.id === winnerId ? 3 : 1;
+    if (!player.isGuest) {
+      deltas[player.id] = player.id === winnerId ? 3 : 1;
+    }
   }
   return deltas;
 }
 
 function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>): void {
-  const scoreDeltas = room.mode === GAME_MODES.RANKED ? computeRankedDeltas(room, winner.id) : {};
+  const scoreDeltas = computeAuthDeltas(room, winner.id);
 
   broadcast(room, {
     type: MESSAGE_TYPES.GAME_OVER,
@@ -217,21 +219,32 @@ async function persistFinishedMatch(
   },
   winnerId: string
 ): Promise<void> {
-  if (room.players.some((player) => player.isGuest)) {
-    logger.info("skipping match persistence for guest room", {
-      roomId: room.id,
-      mode: room.mode
+  const winner = room.players.find((p) => p.id === winnerId);
+  if (!winner || winner.isGuest) {
+    logger.info("skipping match persistence: winner is a guest", {
+      roomId: room.id
     });
     return;
   }
 
-  const participants = room.players.map((player, index) => ({
-    playerId: player.id,
-    displayName: player.name,
-    playerIndex: index,
-    eliminatedTurn: player.id === winnerId ? null : player.eliminatedTurn,
-    forfeited: room.forfeitedPlayerIds.has(player.id)
-  }));
+  const authParticipants = room.players.filter((p) => !p.isGuest);
+  if (authParticipants.length === 0) {
+    logger.info("skipping match persistence: no authenticated participants", {
+      roomId: room.id
+    });
+    return;
+  }
+
+  const participants = authParticipants.map((player, _index) => {
+    const globalIndex = room.players.indexOf(player);
+    return {
+      playerId: player.id,
+      displayName: player.name,
+      playerIndex: globalIndex,
+      eliminatedTurn: player.id === winnerId ? null : player.eliminatedTurn,
+      forfeited: room.forfeitedPlayerIds.has(player.id)
+    };
+  });
 
   await matchesRepo.recordFinished({
     id: room.id,
@@ -245,13 +258,6 @@ async function persistFinishedMatch(
     turnCount: room.turnCount,
     participants
   });
-
-  if (room.mode !== GAME_MODES.RANKED) {
-    logger.info("skipping score update for casual match", {
-      roomId: room.id
-    });
-    return;
-  }
 
   await scoresRepo.applyMatchResult({
     winnerId,

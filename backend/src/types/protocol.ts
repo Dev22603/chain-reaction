@@ -2,7 +2,7 @@ import type { Board, GameMode, Player } from "./game.js";
 
 export interface JoinQueueMessage {
   type: "join_queue";
-  mode: GameMode;
+  mode?: GameMode;
   gridRows: number;
   gridCols: number;
   maxPlayers: number;

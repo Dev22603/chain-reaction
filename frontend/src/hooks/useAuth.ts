@@ -2,13 +2,19 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { authApi, type PublicPlayer } from "@/lib/api";
+import { authApi, ApiClientError, type PublicPlayer } from "@/lib/api";
 import { clearStoredAccessToken, getStoredAccessToken } from "@/lib/auth";
 
 export function useAuth() {
   const router = useRouter();
   const [player, setPlayer] = useState<PublicPlayer | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const logout = useCallback(() => {
+    clearStoredAccessToken();
+    setPlayer(null);
+    router.refresh();
+  }, [router]);
 
   useEffect(() => {
     let active = true;
@@ -27,10 +33,14 @@ export function useAuth() {
         if (active) {
           setPlayer(result.player);
         }
-      } catch {
+      } catch (err) {
         if (active) {
-          clearStoredAccessToken();
-          setPlayer(null);
+          if (err instanceof ApiClientError && err.code === "auth_token_expired") {
+            logout();
+          } else {
+            clearStoredAccessToken();
+            setPlayer(null);
+          }
         }
       } finally {
         if (active) {
@@ -44,13 +54,7 @@ export function useAuth() {
     return () => {
       active = false;
     };
-  }, []);
-
-  const logout = useCallback(() => {
-    clearStoredAccessToken();
-    setPlayer(null);
-    router.refresh();
-  }, [router]);
+  }, [logout]);
 
   return {
     player,

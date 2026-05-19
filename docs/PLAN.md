@@ -4,9 +4,10 @@
 
 Build a maintainable "Chess.com for Chain Reaction":
 
-- Casual games are open to guests.
-- Ranked games require an authenticated account.
-- Ranked games update persistent simple points.
+- All games are open to everyone — guests and authenticated players play together in the same rooms.
+- Authenticated players automatically earn XP for any game outcome. No explicit mode toggle.
+- Guests can play but never earn XP, regardless of outcome.
+- No negative XP: winner earns +3, all other non-forfeiting players earn +1.
 - Elo/rating is intentionally deferred until the scoring foundation is stable.
 - Backend code follows the setup guide: Express app in `app.ts`, server lifecycle in `index.ts`, and route/controller/service/repository layering for HTTP resources.
 
@@ -53,7 +54,6 @@ Goal: make account identity usable by both HTTP and WebSocket flows.
   - verify token server-side
   - attach stable player identity when valid
   - fall back to guest identity when no token exists
-  - prevent guests from joining ranked queue
 
 ### Milestone 3: Persistence And Scoring
 
@@ -71,9 +71,9 @@ Goal: make completed games persist without hurting gameplay UX.
   - store participants
   - store forfeits and eliminated turns
 - Scoring:
-  - only ranked authenticated matches update score
-  - casual matches do not affect score
-  - score remains simple points for MVP
+  - all completed matches update score for authenticated participants
+  - guest participants never earn XP regardless of outcome
+  - score remains simple points for MVP (winner +3, non-winner +1, forfeit TBD)
 
 ### Milestone 4: Product Frontend
 
@@ -82,19 +82,17 @@ Goal: turn the current game shell into an account-aware product.
 - Add login/signup pages.
 - Add authenticated user state.
 - Add auth-aware top bar.
-- Add casual/ranked queue selector.
-- Add ranked lock/redirect for guests.
+- Add CREATE / JOIN / PLAY lobby buttons: PLAY joins public queue, CREATE opens a private room with a 6-char invite code, JOIN enters a room by code.
 - Add leaderboard page.
 - Add profile page.
 - Add match-history view.
-- Add game result summary with mode and winner.
+- Add game result summary with XP deltas for authenticated players.
 - Add loading, error, connecting, reconnecting, and disconnected states.
 
 ### Milestone 5: Chess.com-Style Depth
 
 Goal: add competitive and social surfaces after the core path is stable.
 
-- Ranked vs casual queue separation.
 - Player profile stats.
 - Leaderboard filters.
 - Reconnection.
@@ -149,9 +147,10 @@ Goal: make the product deployable and observable.
 
 - Connection accepts optional JWT.
 - `connected` returns `playerId`, `displayName`, and `isGuest`.
-- `join_queue` includes `mode: "casual" | "ranked"`.
-- `queued`, `game_start`, and `game_over` include mode.
-- Ranked queue rejects guests with `not_authenticated`.
+- `join_queue` no longer requires a `mode` field. Mode is removed from the user-facing protocol.
+- `create_room` opens a private room and returns a 6-char invite code.
+- `join_room_by_code` joins a private room by code.
+- `queued`, `game_start`, and `game_over` do not include a user-facing mode.
 
 ## Verification Commands
 
@@ -168,8 +167,8 @@ cd frontend && npm run lint
 ## Decisions
 
 - LocalStorage JWT is the MVP token strategy.
-- Guests are casual-only.
-- Simple points are the MVP scoring model.
-- Elo/rating is deferred.
-- Authenticated casual matches may be persisted as history but do not update score.
-- Guest rooms are not persisted.
+- All games are the same type — no casual/ranked distinction exposed to users.
+- Authenticated players earn XP automatically in any game. Guests earn none.
+- Simple points are the MVP scoring model. Elo/rating is deferred.
+- All matches with at least one authenticated player are persisted.
+- Guest-only rooms are not persisted.

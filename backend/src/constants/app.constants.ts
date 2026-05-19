@@ -32,6 +32,7 @@ export const ERROR_CODES = {
   EMAIL_TAKEN: "email_taken",
   INVALID_CREDENTIALS: "invalid_credentials",
   NOT_AUTHENTICATED: "not_authenticated",
+  AUTH_TOKEN_EXPIRED: "auth_token_expired",
   NOT_AUTHORIZED: "not_authorized",
   PLAYER_NOT_FOUND: "player_not_found",
   ROOM_NOT_FOUND: "room_not_found",
@@ -39,5 +40,9 @@ export const ERROR_CODES = {
   NOT_YOUR_TURN: "not_your_turn",
   DATABASE_UNAVAILABLE: "database_unavailable",
   INTERNAL_ERROR: "internal_error",
-  MATCH_NOT_SAVED: "match_not_saved"
+  MATCH_NOT_SAVED: "match_not_saved",
+  RATE_LIMITED: "rate_limited"
 } as const;
+
+export const WS_RATE_LIMIT_MAX = 60;
+export const WS_RATE_LIMIT_WINDOW_MS = 60_000;

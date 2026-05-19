@@ -21,11 +21,16 @@ The schema source of truth is `backend/prisma/schema.prisma`. Postgres column na
 
 ## Scoring Policy
 
+XP is awarded to **authenticated participants only**. Guest players in the same room earn nothing. There is no explicit mode distinction — any completed match with authenticated players triggers scoring.
+
 | Outcome | Score | Wins | Losses | Games | Forfeits |
 |---|---:|---:|---:|---:|---:|
-| Winner | +3 | +1 | 0 | +1 | 0 |
-| Non-winner eliminated | +1 | 0 | +1 | +1 | 0 |
-| Forfeit | policy TBD | 0 | +1 | +1 | +1 |
+| Authenticated winner | +3 | +1 | 0 | +1 | 0 |
+| Authenticated non-winner | +1 | 0 | +1 | +1 | 0 |
+| Authenticated forfeit | +0 | 0 | +1 | +1 | +1 |
+| Guest (any outcome) | 0 | 0 | 0 | 0 | 0 |
+
+No negative XP. Every authenticated player's score either goes up or stays the same.
 
 `matches` and `match_players` are the durable audit log. `player_scores` is a cached projection and must be recomputable from match history.
 

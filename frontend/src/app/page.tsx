@@ -10,7 +10,6 @@ import { Card, CardCorners } from "@/components/ui/card";
 import { useGameWebSocket } from "@/hooks/useGameWebSocket";
 import { useAuth } from "@/hooks/useAuth";
 import { useSounds } from "@/hooks/useSounds";
-import type { GameMode } from "@/lib/types";
 
 const DEFAULT_GRID = { rows: 6, cols: 9 };
 
@@ -62,22 +61,26 @@ export default function Home() {
     noticeTimeout.current = setTimeout(() => setSoftNotice(null), 5200);
   }
 
-  const onPlay = (playerCount: number, mode: GameMode) => {
-    if (mode === "ranked" && !auth.isAuthenticated) {
-      flashNotice("Sign in to play ranked. Casual matches are open to everyone.");
-      return;
-    }
+  const onPlay = (playerCount: number) => {
     if (game.connectionState !== "open") {
       flashNotice("Connecting to the reactor… try again in a moment.");
       return;
     }
     game.joinQueue({
-      mode,
+      mode: "casual",
       gridRows: DEFAULT_GRID.rows,
       gridCols: DEFAULT_GRID.cols,
       maxPlayers: playerCount,
       playerName
     });
+  };
+
+  const onCreateRoom = (_settings: { playerCount: number }) => {
+    // TODO: wire once game.createRoom exists
+  };
+
+  const onJoinRoom = (_code: string) => {
+    // TODO: wire once game.joinRoomByCode exists
   };
 
   const errorVisible = Boolean(game.lastError) || Boolean(softNotice);
@@ -127,6 +130,8 @@ export default function Home() {
           connectionReady={game.connectionState === "open"}
           onInteract={() => sounds.play("click")}
           onPlay={onPlay}
+          onCreateRoom={onCreateRoom}
+          onJoinRoom={onJoinRoom}
         />
       ) : null}
 

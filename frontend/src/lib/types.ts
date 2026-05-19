@@ -34,7 +34,7 @@ export interface LastError {
 }
 
 export interface JoinQueueInput {
-  mode: GameMode;
+  mode?: GameMode;
   gridRows: number;
   gridCols: number;
   maxPlayers: number;

@@ -1,10 +1,12 @@
 "use client";
 
-import { Lock, Play, Sparkles, Trophy } from "lucide-react";
+import { Play, Sparkles, Trophy, Users, LogIn } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { AtomicHero } from "@/components/AtomicHero";
-import type { GameMode } from "@/lib/types";
+import { CreateRoomDialog } from "@/components/dialogs/CreateRoomDialog";
+import { JoinRoomDialog } from "@/components/dialogs/JoinRoomDialog";
+import type { CreateRoomConfig } from "@/components/dialogs/CreateRoomDialog";
 
 const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 7, 8] as const;
 const PLAYER_COLORS: Record<number, string> = {
@@ -21,25 +23,45 @@ interface LandingHubProps {
   isAuthenticated: boolean;
   displayName: string | null;
   connectionReady: boolean;
-  onPlay: (playerCount: number, mode: GameMode) => void;
+  onPlay: (playerCount: number) => void;
+  onCreateRoom: (settings: { playerCount: number }) => void;
+  onJoinRoom: (code: string) => void;
   onInteract?: () => void;
 }
 
 export function LandingHub({
   isAuthenticated,
+  displayName: _displayName,
   connectionReady,
   onPlay,
+  onCreateRoom,
+  onJoinRoom,
   onInteract
 }: LandingHubProps) {
   const [playerCount, setPlayerCount] = useState<number>(2);
-  const [mode, setMode] = useState<GameMode>("casual");
+  const [createOpen, setCreateOpen] = useState(false);
+  const [joinOpen, setJoinOpen] = useState(false);
 
   const handlePlay = useCallback(() => {
     onInteract?.();
-    onPlay(playerCount, mode);
-  }, [onInteract, onPlay, playerCount, mode]);
+    onPlay(playerCount);
+  }, [onInteract, onPlay, playerCount]);
 
-  const rankedLocked = !isAuthenticated;
+  const handleCreateConfirm = useCallback(
+    (config: CreateRoomConfig) => {
+      setCreateOpen(false);
+      onCreateRoom({ playerCount: config.players });
+    },
+    [onCreateRoom]
+  );
+
+  const handleJoinConfirm = useCallback(
+    (code: string) => {
+      setJoinOpen(false);
+      onJoinRoom(code);
+    },
+    [onJoinRoom]
+  );
 
   return (
     <div className="relative mx-auto grid w-full max-w-[860px] place-items-center gap-8 pt-2 pb-12 sm:gap-10 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]">
@@ -111,53 +133,50 @@ export function LandingHub({
         </div>
       </div>
 
-      <div
-        className="grid w-full max-w-[460px] gap-2"
-        role="radiogroup"
-        aria-label="Match mode"
-      >
-        <p className="text-center font-display text-xs tracking-[0.2em] text-fg-muted sm:text-sm">
-          MATCH MODE
-        </p>
-        <div className="grid grid-cols-2 gap-2 rounded-2xl border-2 border-line bg-surface/40 p-1.5">
-          <ModeChip
-            label="Casual"
-            description="Friendly. No leaderboard impact."
-            selected={mode === "casual"}
-            onSelect={() => {
+      <div className="grid w-full max-w-[460px] gap-3">
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => {
               onInteract?.();
-              setMode("casual");
+              setCreateOpen(true);
             }}
-          />
-          <ModeChip
-            label="Ranked"
-            description={rankedLocked ? "Sign in to unlock" : "Earn leaderboard points"}
-            selected={mode === "ranked"}
-            locked={rankedLocked}
-            onSelect={() => {
-              onInteract?.();
-              setMode("ranked");
-            }}
-          />
-        </div>
-      </div>
+            className="group relative grid place-items-center gap-2 rounded-2xl border-2 border-line bg-surface/40 px-5 py-4 font-display text-xl tracking-wide text-fg transition-colors hover:border-reactor hover:text-white sm:text-2xl"
+          >
+            <Users size={20} strokeWidth={2.5} aria-hidden="true" />
+            <span>CREATE</span>
+          </button>
 
-      <button
-        type="button"
-        onClick={handlePlay}
-        disabled={!connectionReady}
-        aria-disabled={!connectionReady}
-        className="game-btn-shadow group relative grid w-full max-w-[460px] grid-flow-col items-center justify-center gap-3 rounded-3xl bg-gradient-to-b from-uranium via-reactor to-[#d23a1a] px-8 py-5 font-display text-3xl tracking-wide text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-50 sm:py-6 sm:text-4xl [animation:button-bounce-in_0.5s_cubic-bezier(0.2,0.8,0.4,1)_0.15s_both]"
-      >
-        <Play
-          size={28}
-          strokeWidth={3}
-          fill="currentColor"
-          aria-hidden="true"
-          className="drop-shadow-[0_2px_0_rgba(0,0,0,0.45)]"
-        />
-        <span className="game-text-shadow">{connectionReady ? "PLAY" : "CONNECTING…"}</span>
-      </button>
+          <button
+            type="button"
+            onClick={() => {
+              onInteract?.();
+              setJoinOpen(true);
+            }}
+            className="group relative grid place-items-center gap-2 rounded-2xl border-2 border-line bg-surface/40 px-5 py-4 font-display text-xl tracking-wide text-fg transition-colors hover:border-cherenkov hover:text-white sm:text-2xl"
+          >
+            <LogIn size={20} strokeWidth={2.5} aria-hidden="true" />
+            <span>JOIN</span>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          onClick={handlePlay}
+          disabled={!connectionReady}
+          aria-disabled={!connectionReady}
+          className="game-btn-shadow group relative grid w-full grid-flow-col items-center justify-center gap-3 rounded-3xl bg-gradient-to-b from-uranium via-reactor to-[#d23a1a] px-8 py-5 font-display text-3xl tracking-wide text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-50 sm:py-6 sm:text-4xl [animation:button-bounce-in_0.5s_cubic-bezier(0.2,0.8,0.4,1)_0.15s_both]"
+        >
+          <Play
+            size={28}
+            strokeWidth={3}
+            fill="currentColor"
+            aria-hidden="true"
+            className="drop-shadow-[0_2px_0_rgba(0,0,0,0.45)]"
+          />
+          <span className="game-text-shadow">{connectionReady ? "PLAY" : "CONNECTING…"}</span>
+        </button>
+      </div>
 
       <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-sm">
         {!isAuthenticated ? (
@@ -180,43 +199,21 @@ export function LandingHub({
           </Link>
         )}
       </div>
-    </div>
-  );
-}
 
-function ModeChip({
-  label,
-  description,
-  selected,
-  locked,
-  onSelect
-}: {
-  label: string;
-  description: string;
-  selected: boolean;
-  locked?: boolean;
-  onSelect: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="radio"
-      aria-checked={selected}
-      onClick={onSelect}
-      className={
-        "grid gap-1 rounded-xl px-4 py-3 text-left font-body transition-colors " +
-        (selected
-          ? "bg-cherenkov/15 text-cherenkov shadow-[inset_0_0_0_2px_rgba(42,216,255,0.45)]"
-          : "text-fg-soft hover:bg-surface/40")
-      }
-    >
-      <span className="flex items-center gap-2 font-display text-base">
-        {locked ? <Lock size={12} aria-hidden="true" /> : null}
-        {label}
-      </span>
-      <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-fg-muted">
-        {description}
-      </span>
-    </button>
+      <CreateRoomDialog
+        open={createOpen}
+        defaultPlayers={playerCount}
+        onClose={() => setCreateOpen(false)}
+        onConfirm={handleCreateConfirm}
+        onInteract={onInteract}
+      />
+
+      <JoinRoomDialog
+        open={joinOpen}
+        onClose={() => setJoinOpen(false)}
+        onConfirm={handleJoinConfirm}
+        onInteract={onInteract}
+      />
+    </div>
   );
 }

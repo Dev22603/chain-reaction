@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { IncomingMessage, Server } from "node:http";
 import type WebSocket from "ws";
 import { WebSocketServer } from "ws";
-import { MESSAGE_TYPES, RECONNECT_GRACE_MS } from "../constants/app.constants.js";
+import { MESSAGE_TYPES, RECONNECT_GRACE_MS, WS_RATE_LIMIT_MAX, WS_RATE_LIMIT_WINDOW_MS } from "../constants/app.constants.js";
 import { graceExpireLeaveGame, sendGameStateToPlayer } from "../handlers/game.handlers.js";
 import { handleLeaveGame } from "../handlers/game.handlers.js";
 import { handleLeaveQueue } from "../handlers/queue.handlers.js";
@@ -15,6 +15,8 @@ import { send } from "../utils/broadcast.js";
 import { verifyAccessToken } from "../utils/jwt.js";
 
 const logger = getLogger("realtime.websocket");
+
+const rateLimitState = new WeakMap<WebSocket, { count: number; windowStart: number }>();
 
 export function attachWebSocketServer(server: Server): WebSocketServer {
   const wss = new WebSocketServer({ server });
@@ -73,7 +75,24 @@ async function handleConnection(socket: WebSocket, request: IncomingMessage): Pr
 }
 
 function wireSocketEvents(socket: WebSocket, identity: ConnectionIdentity): void {
+  rateLimitState.set(socket, { count: 0, windowStart: Date.now() });
+
   socket.on("message", (raw) => {
+    const state = rateLimitState.get(socket) ?? { count: 0, windowStart: Date.now() };
+
+    if (Date.now() - state.windowStart > WS_RATE_LIMIT_WINDOW_MS) {
+      state.count = 0;
+      state.windowStart = Date.now();
+    }
+
+    state.count += 1;
+    rateLimitState.set(socket, state);
+
+    if (state.count > WS_RATE_LIMIT_MAX) {
+      socket.send(JSON.stringify({ type: "error", code: "rate_limited", message: "Too many messages. Slow down." }));
+      return;
+    }
+
     dispatch(socket, identity.playerId, raw);
   });
 
