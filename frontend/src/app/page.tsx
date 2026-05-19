@@ -7,7 +7,7 @@ import { GameBoard } from "@/components/GameBoard";
 import { GameOver } from "@/components/GameOver";
 import { LandingHub } from "@/components/LandingHub";
 import { QueueScreen } from "@/components/QueueScreen";
-import { Card, CardCorners, CardEyebrow } from "@/components/ui/card";
+import { Card, CardCorners } from "@/components/ui/card";
 import { useGameWebSocket } from "@/hooks/useGameWebSocket";
 import { useAuth } from "@/hooks/useAuth";
 import { useSounds } from "@/hooks/useSounds";
@@ -16,7 +16,7 @@ import type { PublicPlayer } from "@/lib/api";
 const DEFAULT_GRID = { rows: 6, cols: 9 };
 
 function makeGuestName() {
-  if (typeof window === "undefined") return "Operator";
+  if (typeof window === "undefined") return "Player";
   const stored = window.localStorage.getItem("cr.guest.name");
   if (stored) return stored;
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -24,7 +24,7 @@ function makeGuestName() {
   for (let i = 0; i < 4; i += 1) {
     suffix += alphabet[Math.floor(Math.random() * alphabet.length)];
   }
-  const generated = `Operator-${suffix}`;
+  const generated = `Player-${suffix}`;
   window.localStorage.setItem("cr.guest.name", generated);
   return generated;
 }
@@ -85,8 +85,7 @@ export default function Home() {
   const errorVisible = Boolean(game.lastError) || Boolean(softNotice);
 
   return (
-    <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1280px] flex-col gap-8 px-4 py-6 sm:px-8 sm:py-8 lg:px-10">
-      <AmbientBackdrop />
+    <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1280px] flex-col gap-6 px-4 py-5 sm:px-8 sm:py-7 lg:px-10">
       <TopBar player={auth.player} onLogout={auth.logout} />
 
       {errorVisible ? (
@@ -147,9 +146,8 @@ export default function Home() {
       {game.phase === "playing" && !game.gameState ? (
         <Card className="mx-auto mt-[10vh] grid w-[min(420px,100%)] gap-4 p-10 text-center [animation:panel-rise_0.5s_ease-out_both]">
           <CardCorners />
-          <CardEyebrow>// initializing</CardEyebrow>
-          <h1 className="font-display text-4xl font-black uppercase tracking-tight text-fg">
-            Priming Lattice
+          <h1 className="font-display text-4xl tracking-tight text-fg">
+            Starting game
             <span className="ml-1 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-cherenkov">
               _
             </span>
@@ -169,74 +167,49 @@ export default function Home() {
   );
 }
 
-function AmbientBackdrop() {
-  return (
-    <>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[60vh] bg-gradient-to-b from-reactor/[0.10] via-transparent to-transparent"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute right-[-15%] top-[20%] -z-10 h-[60vh] w-[60vh] rounded-full bg-cherenkov/10 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-[-10%] bottom-[10%] -z-10 h-[45vh] w-[45vh] rounded-full bg-radium/[0.06] blur-3xl"
-      />
-    </>
-  );
-}
-
 function TopBar({ player, onLogout }: { player: PublicPlayer | null; onLogout: () => void }) {
   return (
-    <header className="grid gap-4 border-b border-line/60 pb-5 lg:flex lg:items-center lg:justify-between">
-      <Link href="/" className="flex min-w-0 items-center gap-3 transition-opacity hover:opacity-90">
+    <header className="flex items-center justify-between gap-3">
+      <Link href="/" className="flex min-w-0 items-center gap-2.5 transition-opacity hover:opacity-90">
         <span className="relative grid h-9 w-9 place-items-center">
-          <span className="absolute inset-0 animate-[orb-pulse_2.4s_ease-in-out_infinite] rounded-full bg-reactor opacity-80 shadow-reactor" />
-          <span className="relative h-2 w-2 rounded-full bg-bg" />
+          <span className="absolute inset-0 animate-[orb-pulse_2.4s_ease-in-out_infinite] rounded-full bg-gradient-to-br from-reactor-glow to-reactor opacity-90 shadow-[0_0_24px_rgba(255,107,31,0.5)]" />
+          <span className="relative h-2.5 w-2.5 rounded-full bg-white" />
         </span>
-        <div className="grid min-w-0 leading-tight">
-          <span className="truncate font-display text-base font-black uppercase tracking-tight text-fg">
-            Chain<span className="text-reactor">.</span>Reaction
-          </span>
-          <span className="font-mono text-[9px] uppercase tracking-[0.32em] text-fg-muted">
-            atomic edition
-          </span>
-        </div>
+        <span className="truncate font-display text-base text-white">
+          Chain Reaction
+        </span>
       </Link>
 
-      <nav className="flex items-center gap-2 overflow-x-auto pb-1 font-mono text-[10px] uppercase tracking-[0.24em] text-fg-muted sm:tracking-[0.3em] lg:pb-0">
+      <nav className="flex items-center gap-2">
         <Link
           href="/leaderboard"
-          className="inline-flex min-h-9 shrink-0 items-center gap-2 border border-line bg-surface/60 px-3 hover:border-cherenkov hover:text-cherenkov"
+          className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border-2 border-line bg-surface/60 px-3 font-body text-sm font-semibold text-fg-soft transition-colors hover:border-cherenkov hover:text-cherenkov"
         >
-          <Trophy size={12} aria-hidden="true" />
-          leaderboard
+          <Trophy size={14} aria-hidden="true" />
+          <span className="hidden sm:inline">Leaderboard</span>
         </Link>
         {player ? (
           <>
-            <span className="inline-flex min-h-9 shrink-0 items-center gap-2 border border-cherenkov/40 bg-cherenkov/5 px-3 text-cherenkov">
-              <span className="h-1.5 w-1.5 rounded-full bg-cherenkov shadow-[0_0_8px_rgba(37,211,255,0.7)]" />
-              <span className="max-w-[160px] truncate">{player.displayName}</span>
+            <span className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border-2 border-cherenkov/50 bg-cherenkov/10 px-3 font-body text-sm font-semibold text-cherenkov">
+              <span className="h-1.5 w-1.5 rounded-full bg-cherenkov shadow-[0_0_8px_rgba(42,216,255,0.7)]" />
+              <span className="max-w-[140px] truncate">{player.displayName}</span>
             </span>
             <button
               type="button"
-              className="inline-flex min-h-9 shrink-0 items-center gap-2 border border-line bg-surface/60 px-3 hover:border-reactor hover:text-reactor"
+              className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full border-2 border-line bg-surface/60 px-3 font-body text-sm font-semibold text-fg-soft transition-colors hover:border-reactor hover:text-reactor"
               onClick={onLogout}
               aria-label="Sign out"
             >
-              <LogOut size={12} aria-hidden="true" />
-              <span className="hidden sm:inline">sign out</span>
+              <LogOut size={14} aria-hidden="true" />
             </button>
           </>
         ) : (
           <Link
             href="/login"
-            className="inline-flex min-h-9 shrink-0 items-center gap-2 border border-uranium/40 bg-uranium/10 px-3 text-uranium hover:bg-uranium/15"
+            className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border-2 border-uranium/40 bg-uranium/10 px-3.5 font-body text-sm font-semibold text-uranium transition-colors hover:border-uranium hover:bg-uranium/20"
           >
-            <Sparkles size={12} aria-hidden="true" />
-            sign in · +xp
+            <Sparkles size={14} aria-hidden="true" />
+            Sign in
           </Link>
         )}
       </nav>

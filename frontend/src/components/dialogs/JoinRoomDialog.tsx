@@ -1,9 +1,8 @@
 "use client";
 
-import { ArrowRight, KeyRound, X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DialogShell } from "@/components/dialogs/DialogShell";
-import { Button } from "@/components/ui/button";
 
 interface JoinRoomDialogProps {
   open: boolean;
@@ -100,33 +99,29 @@ export function JoinRoomDialog({ open, onClose, onConfirm, onInteract }: JoinRoo
       width="md"
       accent="cherenkov"
     >
-      <div className="grid gap-7 p-6 sm:p-8">
-        <header className="grid gap-3">
-          <div className="flex items-center justify-between gap-3">
-            <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.4em] text-cherenkov">
-              <KeyRound size={11} aria-hidden="true" />
-              // friend lobby
-            </p>
+      <div className="grid gap-6 p-6 sm:p-8">
+        <header className="grid gap-2">
+          <div className="flex items-start justify-between gap-3">
+            <h2 id="join-room-title" className="font-display text-4xl leading-[0.95] tracking-tight text-white game-text-shadow sm:text-5xl">
+              JOIN
+              <br />
+              <span className="text-cherenkov">A ROOM</span>
+            </h2>
             <button
               type="button"
               onClick={onClose}
-              className="grid h-8 w-8 place-items-center border border-line text-fg-muted hover:border-cherenkov hover:text-cherenkov"
+              className="grid h-9 w-9 place-items-center rounded-full border-2 border-line text-fg-muted transition-colors hover:border-cherenkov hover:text-cherenkov"
               aria-label="Close dialog"
             >
-              <X size={14} aria-hidden="true" />
+              <X size={16} aria-hidden="true" />
             </button>
           </div>
-          <h2 id="join-room-title" className="font-display text-5xl font-black uppercase leading-[0.85] tracking-tight text-fg sm:text-6xl">
-            Drop
-            <br />
-            <span className="text-cherenkov">the code</span>
-          </h2>
-          <p className="max-w-md font-editorial text-base italic text-fg-soft">
-            6 characters. Letters or digits. Your host knows the rest.
+          <p className="max-w-md font-body text-sm text-fg-soft sm:text-base">
+            Enter the 6-character code your host shared with you.
           </p>
         </header>
 
-        <div className="grid gap-5">
+        <div className="grid gap-4">
           <div className="flex justify-center gap-2 sm:gap-3" onPaste={handlePaste}>
             {chars.map((char, idx) => (
               <input
@@ -145,33 +140,36 @@ export function JoinRoomDialog({ open, onClose, onConfirm, onInteract }: JoinRoo
                 spellCheck={false}
                 aria-label={`Code position ${idx + 1}`}
                 className={
-                  "h-16 w-12 border bg-bg text-center font-display text-4xl font-black uppercase text-fg transition-all focus:outline-none sm:h-20 sm:w-14 sm:text-5xl " +
+                  "h-16 w-12 rounded-xl border-2 bg-bg text-center font-display text-4xl uppercase text-white transition-all focus:outline-none sm:h-20 sm:w-14 sm:text-5xl " +
                   (char
                     ? "border-cherenkov bg-cherenkov/10 shadow-cherenkov"
-                    : "border-line hover:border-line-2 focus:border-cherenkov focus:shadow-cherenkov")
+                    : "border-line hover:border-line-2 focus:border-cherenkov")
                 }
               />
             ))}
           </div>
-          <p className="text-center font-mono text-[10px] uppercase tracking-[0.32em] text-fg-muted">
-            paste supported · type to advance
+          <p className="text-center font-body text-xs text-fg-muted">
+            Paste a code or type to advance
           </p>
         </div>
 
         <footer className="flex flex-col-reverse items-stretch justify-between gap-3 sm:flex-row sm:items-center">
-          <Button variant="ghost" size="md" onClick={onClose}>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border-2 border-line bg-surface/60 px-5 py-3 font-display text-sm text-fg-soft transition-colors hover:border-fg-muted hover:text-fg"
+          >
             Cancel
-          </Button>
-          <Button
-            variant="primary"
-            size="lg"
+          </button>
+          <button
+            type="button"
             onClick={handleConfirm}
             disabled={!complete}
-            className="sm:min-w-[220px]"
+            className="game-btn-shadow inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-b from-cherenkov to-[#1ba0c4] px-6 py-3.5 font-display text-lg text-white game-text-shadow disabled:opacity-40 sm:min-w-[220px]"
           >
-            Enter lobby
-            <ArrowRight size={16} strokeWidth={2.5} aria-hidden="true" />
-          </Button>
+            Enter room
+            <ArrowRight size={18} strokeWidth={3} aria-hidden="true" />
+          </button>
         </footer>
       </div>
     </DialogShell>

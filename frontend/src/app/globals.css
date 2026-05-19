@@ -1,25 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #07070b;
-  --color-bg-soft: #0d0e14;
-  --color-surface: #12131c;
-  --color-surface-2: #1a1c28;
-  --color-line: #232636;
-  --color-line-2: #2f3245;
-  --color-fg: #ecedf3;
-  --color-fg-soft: #aab0c5;
-  --color-fg-muted: #6a708a;
+  --color-bg: #0a0420;
+  --color-bg-soft: #140832;
+  --color-bg-deep: #050214;
+  --color-surface: #1a0d44;
+  --color-surface-2: #221157;
+  --color-line: #2e1a6f;
+  --color-line-2: #3d23a0;
+  --color-fg: #ffffff;
+  --color-fg-soft: #d4c9ff;
+  --color-fg-muted: #8a7eb8;
 
-  --color-reactor: #ff5b2e;
-  --color-reactor-glow: #ff8a4c;
-  --color-cherenkov: #25d3ff;
+  --color-reactor: #ff6b1f;
+  --color-reactor-glow: #ffa039;
+  --color-cherenkov: #2ad8ff;
   --color-radium: #b6ff3c;
-  --color-plasma: #ff2f9d;
+  --color-plasma: #ff3da7;
   --color-uranium: #ffd23f;
 
   --color-p1: #ff3b6b;
-  --color-p2: #25d3ff;
+  --color-p2: #2ad8ff;
   --color-p3: #ffd23f;
   --color-p4: #5cff9b;
 
@@ -28,14 +29,14 @@
   --color-hazard: #ffd23f;
   --color-hazard-dim: #5a4b15;
 
-  --font-display: "Big Shoulders", "Bebas Neue", "Impact", system-ui, sans-serif;
-  --font-editorial: "Fraunces", "Iowan Old Style", "Georgia", serif;
+  --font-display: "Bungee", "Bebas Neue", "Impact", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
-  --font-sans: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
-  --shadow-reactor: 0 0 0 1px rgba(255, 91, 46, 0.4), 0 0 24px rgba(255, 91, 46, 0.35), 0 0 60px rgba(255, 91, 46, 0.2);
-  --shadow-cherenkov: 0 0 0 1px rgba(37, 211, 255, 0.4), 0 0 24px rgba(37, 211, 255, 0.35);
-  --shadow-panel: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  --shadow-reactor: 0 0 0 1px rgba(255, 107, 31, 0.4), 0 0 24px rgba(255, 107, 31, 0.4), 0 0 60px rgba(255, 107, 31, 0.25);
+  --shadow-cherenkov: 0 0 0 1px rgba(42, 216, 255, 0.4), 0 0 24px rgba(42, 216, 255, 0.35);
+  --shadow-panel: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
 }
 
 * {
@@ -51,9 +52,8 @@ body {
 html {
   background: var(--color-bg);
   color: var(--color-fg);
-  font-family: var(--font-mono);
-  font-feature-settings: "ss01", "cv11";
-  letter-spacing: 0.01em;
+  font-family: var(--font-body);
+  letter-spacing: -0.005em;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -61,9 +61,10 @@ body {
   position: relative;
   min-height: 100vh;
   background:
-    radial-gradient(1200px 600px at 12% -10%, rgba(255, 91, 46, 0.12), transparent 60%),
-    radial-gradient(1000px 500px at 88% 110%, rgba(37, 211, 255, 0.1), transparent 60%),
-    linear-gradient(180deg, #07070b 0%, #0a0a12 100%);
+    radial-gradient(800px 600px at 15% 20%, rgba(255, 107, 31, 0.18), transparent 60%),
+    radial-gradient(900px 700px at 85% 80%, rgba(42, 216, 255, 0.16), transparent 60%),
+    radial-gradient(700px 500px at 50% 100%, rgba(255, 61, 167, 0.12), transparent 60%),
+    linear-gradient(180deg, #0a0420 0%, #140832 50%, #0a0420 100%);
   overflow-x: hidden;
 }
 
@@ -73,29 +74,11 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 48px 48px;
+    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
   background-position: -1px -1px;
-  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse at center, black 35%, transparent 80%);
   z-index: 0;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.018) 0px,
-      rgba(255, 255, 255, 0.018) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-  mix-blend-mode: overlay;
-  z-index: 1;
 }
 
 @layer base {
@@ -118,8 +101,9 @@ body::after {
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-cherenkov);
-    outline-offset: 2px;
+    outline: 3px solid var(--color-uranium);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 }
 
@@ -149,24 +133,6 @@ body::after {
   50% {
     transform: scale(1.06);
     filter: brightness(1.25);
-  }
-}
-
-@keyframes orbit-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes orbit-spin-reverse {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(-360deg);
   }
 }
 
@@ -227,19 +193,6 @@ body::after {
   }
 }
 
-@keyframes title-glitch {
-  0%, 92%, 100% { transform: translate(0); }
-  93% { transform: translate(-1px, 0); }
-  94% { transform: translate(2px, -1px); }
-  95% { transform: translate(-1px, 1px); }
-  96% { transform: translate(0, 0); }
-}
-
-@keyframes scan-line {
-  0% { transform: translateY(-120%); }
-  100% { transform: translateY(120%); }
-}
-
 @keyframes spinner-ring {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -279,51 +232,31 @@ body::after {
   }
 }
 
-@keyframes orbit-tilt-a {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes hero-drop {
+  0% { opacity: 0; transform: translateY(-40px) scale(0.85); }
+  60% { opacity: 1; transform: translateY(8px) scale(1.04); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@keyframes orbit-tilt-b {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
+@keyframes float-orb {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-16px) rotate(8deg); }
 }
 
-@keyframes nucleus-pulse {
-  0%, 100% {
-    transform: scale(1);
-    filter: brightness(1) drop-shadow(0 0 18px rgba(255, 91, 46, 0.55));
-  }
-  50% {
-    transform: scale(1.08);
-    filter: brightness(1.25) drop-shadow(0 0 32px rgba(255, 138, 76, 0.85));
-  }
+@keyframes float-orb-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-6deg); }
 }
 
-@keyframes electron-trail {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+@keyframes button-bounce-in {
+  0% { opacity: 0; transform: translateY(20px) scale(0.92); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@keyframes hero-reveal {
-  0% { opacity: 0; transform: translateY(28px); letter-spacing: 0.32em; filter: blur(12px); }
-  60% { opacity: 1; filter: blur(0); }
-  100% { opacity: 1; transform: translateY(0); letter-spacing: -0.02em; filter: blur(0); }
-}
-
-@keyframes word-slide {
-  0% { opacity: 0; transform: translateX(-24px); }
-  100% { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes ticker-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes chip-pop {
-  0% { transform: scale(0.92); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes wobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
 }
 
 @keyframes dialog-rise {
@@ -334,6 +267,11 @@ body::after {
 @keyframes overlay-fade {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes chip-pop {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .hazard-stripes {
@@ -352,4 +290,35 @@ body::after {
     radial-gradient(rgba(241, 234, 208, 0.04) 1px, transparent 1px);
   background-size: 22px 22px, 7px 7px;
   background-position: 0 0, 3px 4px;
+}
+
+/* Chunky 3D game-style button effect */
+.game-btn-shadow {
+  box-shadow:
+    0 6px 0 0 rgba(0, 0, 0, 0.45),
+    0 10px 24px 0 rgba(0, 0, 0, 0.35),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.35);
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+}
+
+.game-btn-shadow:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 0 0 rgba(0, 0, 0, 0.45),
+    0 14px 30px 0 rgba(0, 0, 0, 0.4),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.4);
+}
+
+.game-btn-shadow:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 0 rgba(0, 0, 0, 0.4),
+    0 4px 12px 0 rgba(0, 0, 0, 0.3),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.25);
+}
+
+.game-text-shadow {
+  text-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.4),
+    0 8px 24px rgba(0, 0, 0, 0.35);
 }
