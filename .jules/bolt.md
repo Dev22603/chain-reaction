@@ -1,0 +1,3 @@
+## 2025-02-18 - [Optimize `getCriticalMass` fast math calculation]
+**Learning:** Found a hot loop array allocation in `applyMove` (backend) where `getCriticalMass` repeatedly called `getNeighbors` which allocates arrays and loops using `.filter()`. This generated excessive garbage during cascade simulations and caused significant slowdowns.
+**Action:** Replaced array allocation with a pure mathematical check (starting with 4 minus 1 for each board edge the cell rests on), turning O(N) operations with allocations to O(1) pure math. When exploring game logic simulation loops, proactively look for array instantiations and conversions in frequently called code.
