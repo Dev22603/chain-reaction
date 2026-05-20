@@ -4,7 +4,7 @@
 - **Branch:** `claude/harden-backend-production-6qIcf`
 - **Scope:** Backend (`backend/`) only. The full live attack surface — the WebSocket game protocol **and** the JWT auth / HTTP API / Postgres persistence that already exist in the code — because all of it is reachable from the public internet via Fly.io. Frontend is explicitly out of scope.
 - **Target model:** Unauthenticated-by-default public real-time multiplayer game, ads-funded, with an optional account/ranked layer already implemented. Single Fly.io machine, free-tier services only, in-memory game state, no Redis.
-- **Method:** Manual code review of the entire backend (`src/`, `prisma/`, `Dockerfile`, `fly.toml`, CI), `npm audit`, and threat modelling (see `THREAT_MODEL.md`). The Sentry/Phoenix/trailofbits/OWASP/WebSocket-Engineer skills named in the task brief were **not installed** in this environment, so their automated confidence-scored passes were replaced with an equivalent manual STRIDE/DREAD + OWASP + `ws`-hardening review. Findings below carry an explicit confidence rating in their place.
+- **Method:** Manual code review of the entire backend (`src/`, `prisma/`, `Dockerfile`, `fly.toml`, CI), `npm audit`, and threat modelling (see `THREAT_MODEL.md`). At audit time the Sentry/Phoenix/trailofbits/OWASP/WebSocket-Engineer skills named in the task brief were not installed, so the primary pass used an equivalent manual STRIDE/DREAD + OWASP + `ws`-hardening review. The **Sentry `find-bugs` + `security-review`** and **WebSocket Engineer** skills were subsequently installed (merged from `main`) and used as a **cross-check pass** — see *Cross-check against installed skills* below and Appendix B. Phoenix, trailofbits, and agamm OWASP remain unavailable. Findings carry an explicit confidence rating in place of the skills' automated scoring.
 
 > **Note on the brief vs. reality:** the task framed this as "no user accounts, no payments, Postgres deferred." The code already contains full JWT auth (`signup`/`login`/`me` + WS `?token=`), bcrypt, accounts, and a Prisma/Postgres scoring layer with migrations. This audit treats those as in-scope live surface. The "do not add Postgres" constraint is moot (it is already here); no new infrastructure is proposed — only hardening of what exists.
 
@@ -81,7 +81,7 @@
 - **Current state:** `src/realtime/websocket.ts:22` (`new WebSocketServer({ server })` — no options); `wireSocketEvents` (`:77`) registers `message`/`close` but no `pong`/`ping` handling; no `clients` size check; grep confirms no `maxPayload`/`isAlive`/`ping`/`heartbeat` anywhere in `src/`.
 - **Severity:** High
 - **Confidence:** High
-- **Direction:** Set `maxPayload` to a few KB (largest legit client frame is tiny); add a 30s `ping`/`pong` sweep that terminates unresponsive sockets; cap total `wss.clients` and connections-per-IP (using the Fly client IP, see F-05).
+- **Direction:** Set `maxPayload` to a few KB (largest legit client frame is tiny); add a 30s `ping`/`pong` sweep that terminates unresponsive sockets, plus an idle timeout that closes sockets with no game activity; cap total `wss.clients` and connections-per-IP (using the Fly client IP, see F-05). (All four are the exact controls prescribed in `websocket-engineer/references/security.md`.)
 
 ### F-03 — No `Origin` validation on the WebSocket upgrade
 - **What:** The upgrade handshake accepts connections from any origin; there is no `verifyClient`/`handleProtocols` origin allowlist.
@@ -97,7 +97,7 @@
 - **Current state:** `src/realtime/websocket.ts:168-171` (`url.searchParams.get("token")`); `src/utils/jwt.ts:16` (`jwt.verify(token, config.JWT_SECRET)` with no `algorithms`); `config.JWT_EXPIRES_IN` default `"7d"` (`src/constants/config.ts:12`).
 - **Severity:** Medium
 - **Confidence:** High
-- **Direction:** Pass the token via the `Sec-WebSocket-Protocol` subprotocol header instead of the URL; pin `algorithms: ["HS256"]` in `verify`; shorten TTL and plan a refresh/rotation story (revocation list is deferred — it would need shared state we don't have yet, so flag for scale).
+- **Direction:** Pass the token via the `Sec-WebSocket-Protocol` subprotocol header instead of the URL; pin `algorithms: ["HS256"]` and set/validate `iss`/`aud` claims in `verify`; shorten TTL and plan a refresh/rotation story (revocation list is deferred — it would need shared state we don't have yet, so flag for scale).
 
 ---
 
@@ -194,7 +194,7 @@
 - **Current state:** `src/handlers/game.handlers.ts:13-55` (no started/min-players gate), `:138-141` (`getWinner` win-at-1), `:162-209` (`endGame`), `:211-272` (`persistFinishedMatch` — no `mode` check before `recordFinished`/`applyMatchResult`); `src/db/repos/scores.ts:25-70` (`applyMatchResult` unconditional); private rooms are created as `casual` (`src/handlers/room.handlers.ts:45`).
 - **Severity:** High
 - **Confidence:** High
-- **Direction:** Gate `make_move` and win evaluation on an explicit `started` flag set only when the room reaches its required player count (≥2); restrict `applyMatchResult` (leaderboard points) to `ranked` matches with ≥2 distinct authenticated participants; persist casual/solo as history at most, never as score.
+- **Direction:** Gate `make_move` and win evaluation on an explicit `started` flag set only when the room reaches its required player count (≥2); restrict `applyMatchResult` (leaderboard points) to `ranked` matches with ≥2 distinct authenticated participants; persist casual/solo as history at most, never as score. Model this as a server-side game state machine (lobby → active → finished) with valid transitions (the `business-logic.md` workflow-bypass fix), and add a per-account ranked-completion velocity cap as anti-farming defense-in-depth.
 
 ### F-14 — Ranked-queue auth requirement is documented but never enforced
 - **What:** `PROTOCOL.md` and the `RANKED_REQUIRES_AUTH` message say ranked queue requires an authenticated identity, but `handleJoinQueue` performs no such check.
@@ -338,6 +338,28 @@
 
 ---
 
+## Cross-check against installed skills (find-bugs + security-review + WebSocket Engineer)
+
+After the initial manual audit, the Sentry `find-bugs` and `security-review` skills and the `websocket-engineer` reference set were installed (committed to `main`, merged into this branch) and used to re-walk the findings. **Outcome: strong corroboration, no new Critical/High findings.**
+
+- `websocket-engineer/references/security.md` independently prescribes every WS control flagged here — per-IP connection limiting, `maxPayload`/message-size caps, ping/pong + idle timeout, CORS/Origin allowlisting, and "query-string tokens are *less secure* — upgrade to a token" — matching **F-02, F-03, F-05, F-09, F-19, F-21, F-04**.
+- The `security-review` skill's "Always Flag (Secrets)" rule confirms **F-01** as Critical; `api-security.md` confirms the JWT direction (pin `alg`, validate `iss`/`aud`, "API key in URL = logged/cached/visible") and the CORS wildcard finding; `modern-threats.md` confirms the CSWSH (**F-03**) and prototype-pollution positions.
+
+Walking the `find-bugs` checklist also let me explicitly **clear** several items — recorded here so reviewers know they were considered, not missed:
+
+| Checklist item | Result |
+|---|---|
+| Injection (SQL/command/template) | **Clean.** All DB access is parameterized via Prisma; no `eval`/`child_process`/template execution; no raw SQL anywhere. |
+| Deserialization / SSRF | **Clean.** No `unserialize`/`pickle`-style sinks; no outbound requests built from user input. |
+| Mass assignment | **Clean.** No user-supplied object is spread into Prisma; every repo writes explicit server-built fields; identity comes from the connection/token, never the payload. |
+| Field-level authorization | **Clean.** Public `/players/:id` and `/leaderboard` expose only non-sensitive fields (no `email`/`password_hash`); `email` is returned only via authenticated `/me`. |
+| CSRF | **N/A.** Auth is a bearer token (header/subprotocol), not a cookie, so cross-site request / CSWSH riding a session does not apply; Origin pinning (F-03) is still recommended. |
+| Race conditions / TOCTOU | **Mitigated.** Node's single-threaded loop serializes each (synchronous) message handler; the async boundaries (identity resolution, post-`game_over` persistence) were reviewed and show no high-confidence TOCTOU. Match persistence is **idempotent** — the match row's primary key is the room UUID, so a duplicate write is rejected, not double-counted. |
+| HTTP request size | **Bounded.** `express.json()` caps bodies at its 100 kb default; the unbounded-payload gap is WebSocket-only (F-02). |
+| Numeric overflow | **Bounded.** Grid (3–20) and player (2–8) counts are validated; scoring deltas are server-set constants, not client values (F-11 adds coordinate bounds for completeness). |
+
+The skills' reference patterns (connection-limiter, `maxPayload`, ping/pong, IP-keyed audit logging, server-side state machine, business-action rate limiting) are concrete remediation inputs for Phase 2.
+
 ## Constraint conflicts & "don't spend money / don't hurt players" notes
 
 - **No paid infra needed for any P0.** Every High/Critical fix (F-01, F-02, F-05, F-08, F-09, F-13) is pure application code on the existing single machine. Do **not** buy Cloudflare Pro/WAF, paid monitoring, or Redis to close these.
@@ -358,4 +380,6 @@ The `fast-uri`/`hono` chain comes from `prisma` (dev/CLI, e.g. Studio) and is no
 
 ## Appendix B — Methodology note
 
-The task brief specified Sentry (`find-bugs`, `security-review`), Security-Phoenix (`/security-assessment`, `/threatmodel`), trailofbits, agamm OWASP, and WebSocket-Engineer skills for this phase. **None were installed** in this environment (confirmed: no `.claude/skills/`, no `.claude/commands/`), and they could not be reliably auto-installed from a sandbox for a security task. This audit therefore used an equivalent manual methodology: full backend code read, OWASP-aligned review, `ws`-specific hardening checklist, `npm audit`, and a STRIDE/DREAD threat model (`THREAT_MODEL.md`). Confidence ratings are provided per finding in lieu of the skills' automated scoring. If the skills are installed later, a re-run is worthwhile as a cross-check, but the findings here are code-grounded with file citations.
+The task brief specified Sentry (`find-bugs`, `security-review`), Security-Phoenix (`/security-assessment`, `/threatmodel`), trailofbits, agamm OWASP, and WebSocket-Engineer skills for this phase. At audit time none were installed, so the primary pass used an equivalent manual methodology: full backend code read, OWASP-aligned review, a `ws`-specific hardening checklist, `npm audit`, and a STRIDE/DREAD threat model (`THREAT_MODEL.md`).
+
+The **Sentry `find-bugs` + `security-review`** skills and the **WebSocket Engineer** reference set were subsequently installed (committed to `main`, merged into this branch) and used as a **cross-check pass** — see *Cross-check against installed skills* above. They corroborated the findings and surfaced no new Critical/High issues; their value was confirmation plus concrete remediation patterns for Phase 2. **Phoenix `/threatmodel`/`/security-assessment`, trailofbits, and agamm OWASP remain unavailable** — their absence does not materially weaken this audit (the STRIDE/DREAD model and OWASP coverage were done manually), but installing them later for an independent re-run is still worthwhile. Confidence ratings are provided per finding throughout, in place of the skills' automated scoring.
