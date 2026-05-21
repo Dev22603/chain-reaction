@@ -1,9 +1,11 @@
 import { randomUUID } from "node:crypto";
-import { GAME_MODES, MESSAGE_TYPES } from "../constants/app.constants.js";
+import { ERROR_CODES, GAME_MODES, LIMITS, MESSAGE_TYPES } from "../constants/app.constants.js";
+import { SERVER_MESSAGES } from "../constants/app.messages.js";
 import { createBoard } from "../game/gameLogic.js";
 import { connections, players, playerRooms, queues, rooms } from "../state/memory.js";
 import type { GameMode, Player, Room } from "../types/game.js";
 import type { JoinQueueMessage } from "../types/protocol.js";
+import { ApiError } from "../utils/api_error.js";
 import { broadcast, send } from "../utils/broadcast.js";
 
 function getQueueKey(mode: GameMode, gridRows: number, gridCols: number, maxPlayers: number): string {
@@ -42,6 +44,10 @@ export function handleJoinQueue(playerId: string, payload: JoinQueueMessage): vo
     return;
   }
 
+  if (rooms.size >= LIMITS.MAX_ROOMS) {
+    throw new ApiError(ERROR_CODES.SERVER_BUSY, SERVER_MESSAGES.SERVER_BUSY);
+  }
+
   removeFromAllQueues(playerId);
 
   const identity = connections.get(playerId);
@@ -50,6 +56,11 @@ export function handleJoinQueue(playerId: string, payload: JoinQueueMessage): vo
 
   const key = getQueueKey(mode, payload.gridRows, payload.gridCols, payload.maxPlayers);
   const queue = queues.get(key) ?? [];
+
+  if (queue.length >= LIMITS.MAX_QUEUE_SIZE) {
+    throw new ApiError(ERROR_CODES.SERVER_BUSY, "Queue is full. Please try again later.");
+  }
+
   const player: Player = {
     id: playerId,
     name: identity && !identity.isGuest ? identity.displayName : payload.playerName,
@@ -83,6 +94,10 @@ export function handleLeaveQueue(playerId: string): void {
 }
 
 function createRoom(roomPlayers: Player[], mode: GameMode, gridRows: number, gridCols: number): void {
+  if (rooms.size >= LIMITS.MAX_ROOMS) {
+    throw new ApiError(ERROR_CODES.SERVER_BUSY, SERVER_MESSAGES.SERVER_BUSY);
+  }
+
   const room: Room = {
     id: randomUUID(),
     mode,

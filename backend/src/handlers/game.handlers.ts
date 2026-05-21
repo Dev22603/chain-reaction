@@ -1,8 +1,8 @@
-import { ERROR_CODES, MESSAGE_TYPES } from "../constants/app.constants.js";
+import { ERROR_CODES, MESSAGE_TYPES, ROOM_IDLE_TTL_MS } from "../constants/app.constants.js";
 import { matchesRepo, scoresRepo } from "../db/index.js";
 import { applyMove, isEliminated } from "../game/gameLogic.js";
 import { getLogger } from "../lib/logger.js";
-import { players, playerRooms, roomCodes, rooms } from "../state/memory.js";
+import { pendingReconnects, players, playerRooms, roomCodes, rooms } from "../state/memory.js";
 import type { PlayerIndex, Room } from "../types/game.js";
 import type { MakeMoveMessage } from "../types/protocol.js";
 import type { ScoreDeltas } from "../types/scoring.js";
@@ -104,6 +104,12 @@ function eliminateAndBroadcast(playerId: string): void {
     return;
   }
 
+  const alive = room.players.filter((player) => !player.eliminated);
+  if (alive.length === 0) {
+    destroyRoom(room);
+    return;
+  }
+
   if (room.currentTurn === playerIndex) {
     room.currentTurn = advanceTurn(room);
   }
@@ -159,6 +165,58 @@ function computeAuthDeltas(room: Room, winnerId: string): ScoreDeltas {
   return deltas;
 }
 
+export function destroyRoom(room: Room): void {
+  rooms.delete(room.id);
+  if (room.inviteCode) {
+    roomCodes.delete(room.inviteCode);
+  }
+  for (const player of room.players) {
+    playerRooms.delete(player.id);
+    const pending = pendingReconnects.get(player.id);
+    if (pending) {
+      clearTimeout(pending.timeoutHandle);
+      pendingReconnects.delete(player.id);
+    }
+  }
+}
+
+let reaperInterval: NodeJS.Timeout | null = null;
+
+export function startRoomReaper(): void {
+  if (reaperInterval) return;
+
+  reaperInterval = setInterval(() => {
+    logger.info("running periodic room reaper");
+    const now = Date.now();
+    for (const room of Array.from(rooms.values())) {
+      // Check 1: no connected sockets
+      const hasConnectedPlayers = room.players.some((p) => players.has(p.id));
+      if (!hasConnectedPlayers) {
+        logger.info("reaper: destroying room with no connected players", { roomId: room.id });
+        destroyRoom(room);
+        continue;
+      }
+
+      // Check 2: private rooms unfilled past TTL
+      if (room.isPrivate && room.players.length < room.maxPlayers) {
+        const age = now - room.startedAt.getTime();
+        if (age > ROOM_IDLE_TTL_MS) {
+          logger.info("reaper: destroying unfilled private room past TTL", { roomId: room.id, ageMs: age });
+          destroyRoom(room);
+        }
+      }
+    }
+  }, 60_000);
+}
+
+export function stopRoomReaper(): void {
+  if (reaperInterval) {
+    clearInterval(reaperInterval);
+    reaperInterval = null;
+    logger.info("stopped periodic room reaper");
+  }
+}
+
 function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>): void {
   const scoreDeltas = computeAuthDeltas(room, winner.id);
 
@@ -185,13 +243,7 @@ function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>):
     forfeitedPlayerIds: new Set(room.forfeitedPlayerIds)
   };
 
-  rooms.delete(room.id);
-  if (room.inviteCode) {
-    roomCodes.delete(room.inviteCode);
-  }
-  for (const player of room.players) {
-    playerRooms.delete(player.id);
-  }
+  destroyRoom(room);
 
   persistFinishedMatch(roomSnapshot, winner.id).catch((error: unknown) => {
     logger.error("finished match persistence failed", {
