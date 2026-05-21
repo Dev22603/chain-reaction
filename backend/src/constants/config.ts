@@ -23,5 +23,6 @@ export const config = {
   JWT_SECRET: jwtSecret ?? "change-me-in-development",
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? "7d",
   ALLOWED_ORIGINS: (process.env.ALLOWED_ORIGINS ?? "").split(",").map(s => s.trim()).filter(Boolean),
-  CLIENT_IP_HEADER: process.env.CLIENT_IP_HEADER
+  CLIENT_IP_HEADER: process.env.CLIENT_IP_HEADER,
+  ANONYMIZE_LOGS: process.env.ANONYMIZE_LOGS === "true"
 } as const;

@@ -1,4 +1,5 @@
 import type { IncomingMessage } from "node:http";
+import { createHash } from "node:crypto";
 import { config } from "../constants/config.js";
 
 /**
@@ -31,3 +32,14 @@ export function getClientIp(req: IncomingMessage): string {
   // 4. Fallback to socket remote address
   return first || req.socket.remoteAddress || "unknown";
 }
+
+/**
+ * Hashes and truncates a client IP address to ensure privacy compliance (GDPR/F-27)
+ * if ANONYMIZE_LOGS is enabled. Otherwise, returns the original IP.
+ */
+export function anonymizeIp(ip: string): string {
+  if (ip === "unknown") return "unknown";
+  if (!config.ANONYMIZE_LOGS) return ip;
+  return createHash("sha256").update(ip).digest("hex").slice(0, 12);
+}
+

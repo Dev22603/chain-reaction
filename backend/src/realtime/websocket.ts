@@ -23,9 +23,10 @@ import { getLogger } from "../lib/logger.js";
 import { dispatch } from "../router.js";
 import { connections, pendingReconnects, playerRooms, players } from "../state/memory.js";
 import type { ConnectionIdentity } from "../types/connection.js";
-import { getClientIp } from "../utils/clientIp.js";
+import { getClientIp, anonymizeIp } from "../utils/clientIp.js";
 import { send } from "../utils/broadcast.js";
 import { verifyAccessToken } from "../utils/jwt.js";
+import { logSecurityEvent } from "../utils/securityLogger.js";
 
 const logger = getLogger("realtime.websocket");
 
@@ -45,20 +46,23 @@ export function attachWebSocketServer(server: Server): WebSocketServer {
       const { ALLOWED_ORIGINS } = config;
       const origin = info.origin;
       const originOk = ALLOWED_ORIGINS.length === 0 || (origin && ALLOWED_ORIGINS.includes(origin));
+      const ip = getClientIp(info.req);
       if (!originOk) {
+        logSecurityEvent("rejected_origin", { ip, origin });
         logger.warn("websocket upgrade rejected: origin not allowed", { origin });
         return done(false, 1008, "origin not allowed");
       }
 
-      const ip = getClientIp(info.req);
       if (totalConnections >= LIMITS.MAX_CONNECTIONS) {
-        logger.warn("websocket upgrade rejected: server full", { ip, totalConnections });
+        logSecurityEvent("rate_limit_trip", { ip, details: "server connection cap reached", totalConnections });
+        logger.warn("websocket upgrade rejected: server full", { ip: anonymizeIp(ip), totalConnections });
         return done(false, 1013, "server full");
       }
 
       const currentIpConnections = perIp.get(ip) ?? 0;
       if (currentIpConnections >= LIMITS.MAX_CONNECTIONS_PER_IP) {
-        logger.warn("websocket upgrade rejected: too many connections from IP", { ip, currentIpConnections });
+        logSecurityEvent("rate_limit_trip", { ip, details: "IP connection cap reached", currentIpConnections });
+        logger.warn("websocket upgrade rejected: too many connections from IP", { ip: anonymizeIp(ip), currentIpConnections });
         return done(false, 1013, "too many connections");
       }
 
@@ -91,6 +95,15 @@ export function attachWebSocketServer(server: Server): WebSocketServer {
     socket.on("pong", () => {
       socketLiveness.set(socket, true);
     });
+    
+    // Catch oversized WS frames / range errors
+    socket.on("error", (err) => {
+      const errMsg = err.message || "";
+      if (errMsg.includes("Max payload size exceeded") || errMsg.includes("payload")) {
+        logSecurityEvent("malformed_frame", { ip, details: "oversized WS frame", error: errMsg });
+      }
+    });
+
     resetIdleTimeout(socket);
 
     socket.on("close", () => {
@@ -131,7 +144,7 @@ function resetIdleTimeout(socket: WebSocket): void {
 }
 
 async function handleConnection(socket: WebSocket, request: IncomingMessage, ip: string): Promise<void> {
-  const identity = await resolveIdentity(request);
+  const identity = await resolveIdentity(request, ip);
 
   // If this authenticated player has a pending reconnect, resume instead of starting fresh.
   if (!identity.isGuest) {
@@ -210,12 +223,14 @@ function wireSocketEvents(socket: WebSocket, identity: ConnectionIdentity, ip: s
     const isSustainedAbuse = ipBucket.count > Math.floor(WS_RATE_LIMIT_MAX_PER_IP * 1.5);
 
     if (isSustainedAbuse) {
-      logger.warn("terminating socket due to sustained message rate abuse", { ip, playerId: identity.playerId });
+      logSecurityEvent("rate_limit_trip", { ip, details: "sustained WS message abuse", playerId: identity.playerId });
+      logger.warn("terminating socket due to sustained message rate abuse", { ip: anonymizeIp(ip), playerId: identity.playerId });
       socket.close(1008, "rate limited");
       return;
     }
 
     if (isAbuse) {
+      logSecurityEvent("rate_limit_trip", { ip, details: "WS message rate limit exceeded", playerId: identity.playerId });
       socket.send(
         JSON.stringify({
           type: MESSAGE_TYPES.ERROR,
@@ -226,7 +241,7 @@ function wireSocketEvents(socket: WebSocket, identity: ConnectionIdentity, ip: s
       return;
     }
 
-    dispatch(socket, identity.playerId, raw);
+    dispatch(socket, identity.playerId, raw, ip);
   });
 
   socket.on("close", () => {
@@ -271,7 +286,7 @@ function wireSocketEvents(socket: WebSocket, identity: ConnectionIdentity, ip: s
   });
 }
 
-async function resolveIdentity(request: IncomingMessage): Promise<ConnectionIdentity> {
+async function resolveIdentity(request: IncomingMessage, ip: string): Promise<ConnectionIdentity> {
   const token = getTokenFromRequest(request);
   if (!token) {
     return buildGuestIdentity();
@@ -291,6 +306,7 @@ async function resolveIdentity(request: IncomingMessage): Promise<ConnectionIden
       isGuest: false
     };
   } catch (error) {
+    logSecurityEvent("auth_failure", { ip, details: "WS token validation failed" });
     logger.warn("websocket auth failed", {
       error: error instanceof Error ? error.message : String(error)
     });
