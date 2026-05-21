@@ -3,13 +3,15 @@ import type { IncomingMessage, Server } from "node:http";
 import type WebSocket from "ws";
 import { WebSocketServer } from "ws";
 import {
+  ERROR_CODES,
   LIMITS,
   MESSAGE_TYPES,
   RECONNECT_GRACE_MS,
+  WS_GLOBAL_MSG_BUDGET,
   WS_IDLE_TIMEOUT_MS,
   WS_MAX_PAYLOAD_BYTES,
   WS_PING_INTERVAL_MS,
-  WS_RATE_LIMIT_MAX,
+  WS_RATE_LIMIT_MAX_PER_IP,
   WS_RATE_LIMIT_WINDOW_MS
 } from "../constants/app.constants.js";
 import { config } from "../constants/config.js";
@@ -27,7 +29,8 @@ import { verifyAccessToken } from "../utils/jwt.js";
 
 const logger = getLogger("realtime.websocket");
 
-const rateLimitState = new WeakMap<WebSocket, { count: number; windowStart: number }>();
+const ipRateLimits = new Map<string, { count: number; windowStart: number }>();
+const globalMsgBucket = { count: 0, windowStart: Date.now() };
 const socketLiveness = new WeakMap<WebSocket, boolean>();
 const idleTimeouts = new WeakMap<WebSocket, NodeJS.Timeout>();
 
@@ -101,6 +104,7 @@ export function attachWebSocketServer(server: Server): WebSocketServer {
       const count = perIp.get(ip) ?? 1;
       if (count <= 1) {
         perIp.delete(ip);
+        ipRateLimits.delete(ip);
       } else {
         perIp.set(ip, count - 1);
       }
@@ -149,7 +153,7 @@ async function handleConnection(socket: WebSocket, request: IncomingMessage, ip:
         logger.info("player reconnected but room ended during grace window", { playerId: identity.playerId });
       }
 
-      wireSocketEvents(socket, identity);
+      wireSocketEvents(socket, identity, ip);
       return;
     }
   }
@@ -164,7 +168,7 @@ async function handleConnection(socket: WebSocket, request: IncomingMessage, ip:
     isGuest: identity.isGuest
   });
 
-  wireSocketEvents(socket, identity);
+  wireSocketEvents(socket, identity, ip);
 
   logger.info("player connected", {
     playerId: identity.playerId,
@@ -173,24 +177,52 @@ async function handleConnection(socket: WebSocket, request: IncomingMessage, ip:
   });
 }
 
-function wireSocketEvents(socket: WebSocket, identity: ConnectionIdentity): void {
-  rateLimitState.set(socket, { count: 0, windowStart: Date.now() });
-
+function wireSocketEvents(socket: WebSocket, identity: ConnectionIdentity, ip: string): void {
   socket.on("message", (raw) => {
     resetIdleTimeout(socket);
 
-    const state = rateLimitState.get(socket) ?? { count: 0, windowStart: Date.now() };
-
-    if (Date.now() - state.windowStart > WS_RATE_LIMIT_WINDOW_MS) {
-      state.count = 0;
-      state.windowStart = Date.now();
+    // 1. Global message rate limiting
+    if (Date.now() - globalMsgBucket.windowStart > WS_RATE_LIMIT_WINDOW_MS) {
+      globalMsgBucket.count = 0;
+      globalMsgBucket.windowStart = Date.now();
+    }
+    globalMsgBucket.count++;
+    if (globalMsgBucket.count > WS_GLOBAL_MSG_BUDGET) {
+      socket.send(
+        JSON.stringify({
+          type: MESSAGE_TYPES.ERROR,
+          code: ERROR_CODES.RATE_LIMITED,
+          message: "Server is under high load. Please try again later."
+        })
+      );
+      return;
     }
 
-    state.count += 1;
-    rateLimitState.set(socket, state);
+    // 2. Per-IP message rate limiting
+    let ipBucket = ipRateLimits.get(ip);
+    if (!ipBucket || Date.now() - ipBucket.windowStart > WS_RATE_LIMIT_WINDOW_MS) {
+      ipBucket = { count: 0, windowStart: Date.now() };
+    }
+    ipBucket.count++;
+    ipRateLimits.set(ip, ipBucket);
 
-    if (state.count > WS_RATE_LIMIT_MAX) {
-      socket.send(JSON.stringify({ type: "error", code: "rate_limited", message: "Too many messages. Slow down." }));
+    const isAbuse = ipBucket.count > WS_RATE_LIMIT_MAX_PER_IP;
+    const isSustainedAbuse = ipBucket.count > Math.floor(WS_RATE_LIMIT_MAX_PER_IP * 1.5);
+
+    if (isSustainedAbuse) {
+      logger.warn("terminating socket due to sustained message rate abuse", { ip, playerId: identity.playerId });
+      socket.close(1008, "rate limited");
+      return;
+    }
+
+    if (isAbuse) {
+      socket.send(
+        JSON.stringify({
+          type: MESSAGE_TYPES.ERROR,
+          code: ERROR_CODES.RATE_LIMITED,
+          message: "Too many messages. Slow down."
+        })
+      );
       return;
     }
 

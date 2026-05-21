@@ -1,11 +1,11 @@
 # Graph Report - chain-reaction  (2026-05-21)
 
 ## Corpus Check
-- 104 files · ~99,930 words
+- 104 files · ~100,102 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 326 nodes · 429 edges · 41 communities detected
+- 326 nodes · 431 edges · 41 communities detected
 - Extraction: 89% EXTRACTED · 11% INFERRED · 0% AMBIGUOUS · INFERRED: 46 edges (avg confidence: 0.81)
 - Token cost: 0 input · 0 output
 
@@ -71,10 +71,10 @@
   backend\src\router.ts → backend\src\handlers\queue.handlers.ts
 - `dispatch()` --calls--> `handleLeaveQueue()`  [INFERRED]
   backend\src\router.ts → backend\src\handlers\queue.handlers.ts
-- `dispatch()` --calls--> `handleCreateRoom()`  [INFERRED]
-  backend\src\router.ts → backend\src\handlers\room.handlers.ts
-- `dispatch()` --calls--> `send()`  [INFERRED]
-  backend\src\router.ts → backend\src\utils\broadcast.ts
+- `createBoard()` --calls--> `handleCreateRoom()`  [INFERRED]
+  backend\src\game\gameLogic.ts → backend\src\handlers\room.handlers.ts
+- `applyMove()` --calls--> `handleMove()`  [INFERRED]
+  backend\src\game\gameLogic.ts → backend\src\handlers\game.handlers.ts
 
 ## Hyperedges (group relationships)
 - **Client-to-Server Protocol Messages** — protocol_msg_join_queue, protocol_msg_leave_queue, protocol_msg_make_move, protocol_msg_leave_game [EXTRACTED 1.00]
@@ -84,32 +84,32 @@
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.1
+Cohesion: 0.11
 Nodes (7): getBearerToken(), requireAuth(), buildAuthResult(), throwInvalidCredentials(), isAuthTokenPayload(), signAccessToken(), verifyAccessToken()
 
 ### Community 1 - "Community 1"
-Cohesion: 0.13
-Nodes (9): ApiError, getSchemaForType(), validateMessage(), getQueueKey(), handleJoinQueue(), handleLeaveQueue(), removeFromAllQueues(), generateInviteCode() (+1 more)
-
-### Community 2 - "Community 2"
 Cohesion: 0.08
 Nodes (30): Database Boundary (post-M7), Fly.io Deployment Plan, System Overview (Frontend, Backend, DB), Backend File Map, Adding a New Message Type Steps, Production-Grade Node.js Backend Setup Guide, Context File Index, ApiError Throw/Catch in Router Pattern (+22 more)
 
+### Community 2 - "Community 2"
+Cohesion: 0.15
+Nodes (7): ApiError, getSchemaForType(), validateMessage(), getQueueKey(), handleJoinQueue(), handleLeaveQueue(), removeFromAllQueues()
+
 ### Community 3 - "Community 3"
-Cohesion: 0.11
-Nodes (7): send(), sendGameStateToPlayer(), buildGuestIdentity(), getTokenFromRequest(), handleConnection(), resolveIdentity(), wireSocketEvents()
+Cohesion: 0.16
+Nodes (22): broadcast(), send(), advanceTurn(), broadcastGameState(), computeAuthDeltas(), destroyRoom(), eliminateAndBroadcast(), endGame() (+14 more)
 
 ### Community 4 - "Community 4"
+Cohesion: 0.13
+Nodes (3): buildGuestIdentity(), getTokenFromRequest(), resolveIdentity()
+
+### Community 5 - "Community 5"
 Cohesion: 0.11
 Nodes (20): Backend Responsibilities, game/gameLogic.ts pure module, In-Memory State Maps (players/queues/rooms/playerRooms), Backend Critical Invariants, Connection-to-Game State Flow, Wire (snake_case) vs Internal (camelCase) Format, Repository Pattern Hard Rules, Provider Swap Rule (+12 more)
 
-### Community 5 - "Community 5"
+### Community 6 - "Community 6"
 Cohesion: 0.12
 Nodes (20): Connection-to-Cleanup Lifecycle, Frontend Phase Machine, Chain Reaction Claude Context Overview, Frontend onmessage Error Handling, When to Send error vs Silently Drop, Frontend Component Tree (page.tsx), GameBoard Rendering Contract, useGameWebSocket Hook (state ownership) (+12 more)
-
-### Community 6 - "Community 6"
-Cohesion: 0.22
-Nodes (16): broadcast(), advanceTurn(), broadcastGameState(), computeAuthDeltas(), destroyRoom(), eliminateAndBroadcast(), endGame(), getRoomForPlayer() (+8 more)
 
 ### Community 7 - "Community 7"
 Cohesion: 0.15
@@ -310,7 +310,7 @@ Nodes (1): Rule: Conventional Commits
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `applyMove() function` connect `Community 4` to `Community 5`?**
+- **Why does `applyMove() function` connect `Community 5` to `Community 6`?**
   _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **Are the 8 inferred relationships involving `dispatch()` (e.g. with `validateMessage()` and `handleJoinQueue()`) actually correct?**
   _`dispatch()` has 8 INFERRED edges - model-reasoned connections that need verification._
@@ -319,8 +319,8 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `Graphify Knowledge Graph Instructions`, `graphify query/path/explain CLI`, `Frontend Responsibilities` to the rest of the system?**
   _61 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.13 - nodes in this community are weakly interconnected._
-- **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._
+- **Should `Community 4` be split into smaller, more focused modules?**
+  _Cohesion score 0.13 - nodes in this community are weakly interconnected._

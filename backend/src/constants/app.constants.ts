@@ -57,6 +57,8 @@ export const ERROR_CODES = {
 
 export const WS_RATE_LIMIT_MAX = 60;
 export const WS_RATE_LIMIT_WINDOW_MS = 60_000;
+export const WS_RATE_LIMIT_MAX_PER_IP = 120;   // 120 messages per minute per IP
+export const WS_GLOBAL_MSG_BUDGET = 2000;      // 2000 messages per minute globally
 
 export const WS_MAX_PAYLOAD_BYTES = 16 * 1024; // 16 KB
 export const WS_PING_INTERVAL_MS = 30_000;     // 30 seconds
