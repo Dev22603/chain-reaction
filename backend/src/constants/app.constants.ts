@@ -5,7 +5,9 @@ export const LIMITS = {
   PLAYERS_MAX: 4,
   PRIVATE_ROOM_PLAYERS_MAX: 8,
   PLAYER_NAME_MAX: 100,
-  SAFETY_BREAK: 2000
+  SAFETY_BREAK: 2000,
+  MAX_CONNECTIONS: 1000,
+  MAX_CONNECTIONS_PER_IP: 20
 } as const;
 
 export const RECONNECT_GRACE_MS = 30_000;
@@ -52,3 +54,8 @@ export const ERROR_CODES = {
 
 export const WS_RATE_LIMIT_MAX = 60;
 export const WS_RATE_LIMIT_WINDOW_MS = 60_000;
+
+export const WS_MAX_PAYLOAD_BYTES = 16 * 1024; // 16 KB
+export const WS_PING_INTERVAL_MS = 30_000;     // 30 seconds
+export const WS_IDLE_TIMEOUT_MS = 600_000;     // 10 minutes (600,000 ms)
+
