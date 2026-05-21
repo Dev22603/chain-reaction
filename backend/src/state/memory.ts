@@ -15,3 +15,4 @@ export const rooms = new Map<string, Room>();
 export const playerRooms = new Map<string, string>();
 export const pendingReconnects = new Map<string, PendingReconnect>();
 export const roomCodes = new Map<string, string>(); // inviteCode -> roomId
+export const rankedCompletions = new Map<string, number[]>(); // playerId -> completion timestamps

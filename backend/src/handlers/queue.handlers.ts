@@ -48,11 +48,15 @@ export function handleJoinQueue(playerId: string, payload: JoinQueueMessage): vo
     throw new ApiError(ERROR_CODES.SERVER_BUSY, SERVER_MESSAGES.SERVER_BUSY);
   }
 
-  removeFromAllQueues(playerId);
-
+  const mode: GameMode = payload.mode ?? GAME_MODES.CASUAL;
   const identity = connections.get(playerId);
   const isGuest = identity?.isGuest ?? true;
-  const mode: GameMode = payload.mode ?? GAME_MODES.CASUAL;
+
+  if (mode === GAME_MODES.RANKED && isGuest) {
+    throw new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.RANKED_REQUIRES_AUTH);
+  }
+
+  removeFromAllQueues(playerId);
 
   const key = getQueueKey(mode, payload.gridRows, payload.gridCols, payload.maxPlayers);
   const queue = queues.get(key) ?? [];
@@ -110,6 +114,7 @@ function createRoom(roomPlayers: Player[], mode: GameMode, gridRows: number, gri
     currentTurn: 0,
     turnCount: 0,
     startedAt: new Date(),
+    status: "active",
     forfeitedPlayerIds: new Set()
   };
 

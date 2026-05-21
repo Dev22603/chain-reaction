@@ -66,4 +66,5 @@ export const WS_IDLE_TIMEOUT_MS = 600_000;     // 10 minutes (600,000 ms)
 
 export const ROOM_IDLE_TTL_MS = 300_000;       // 5 minutes
 
-
+export const RANKED_VELOCITY_LIMIT = 10;
+export const RANKED_VELOCITY_WINDOW_MS = 600_000; // 10 minutes

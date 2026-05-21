@@ -58,6 +58,7 @@ export function handleCreateRoom(playerId: string, payload: CreateRoomMessage): 
     currentTurn: 0,
     turnCount: 0,
     startedAt: new Date(),
+    status: "lobby",
     forfeitedPlayerIds: new Set()
   };
 
@@ -118,6 +119,7 @@ export function handleJoinRoomByCode(playerId: string, payload: JoinRoomByCodeMe
   logger.info("player joined private room", { roomId, playerId, playerCount: room.players.length });
 
   if (room.players.length === room.maxPlayers) {
+    room.status = "active";
     broadcast(room, {
       type: MESSAGE_TYPES.GAME_START,
       roomId: room.id,

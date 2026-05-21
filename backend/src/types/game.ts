@@ -30,5 +30,6 @@ export interface Room {
   currentTurn: PlayerIndex;
   turnCount: number;
   startedAt: Date;
+  status: "lobby" | "active" | "finished";
   forfeitedPlayerIds: Set<PlayerId>;
 }

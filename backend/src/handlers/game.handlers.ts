@@ -1,8 +1,21 @@
-import { ERROR_CODES, MESSAGE_TYPES, ROOM_IDLE_TTL_MS } from "../constants/app.constants.js";
+import {
+  ERROR_CODES,
+  MESSAGE_TYPES,
+  ROOM_IDLE_TTL_MS,
+  RANKED_VELOCITY_LIMIT,
+  RANKED_VELOCITY_WINDOW_MS
+} from "../constants/app.constants.js";
 import { matchesRepo, scoresRepo } from "../db/index.js";
 import { applyMove, isEliminated } from "../game/gameLogic.js";
 import { getLogger } from "../lib/logger.js";
-import { pendingReconnects, players, playerRooms, roomCodes, rooms } from "../state/memory.js";
+import {
+  pendingReconnects,
+  players,
+  playerRooms,
+  rankedCompletions,
+  roomCodes,
+  rooms
+} from "../state/memory.js";
 import type { PlayerIndex, Room } from "../types/game.js";
 import type { MakeMoveMessage } from "../types/protocol.js";
 import type { ScoreDeltas } from "../types/scoring.js";
@@ -12,7 +25,7 @@ const logger = getLogger("game.handlers");
 
 export function handleMove(playerId: string, payload: MakeMoveMessage): void {
   const room = getRoomForPlayer(playerId);
-  if (!room) {
+  if (!room || room.status !== "active") {
     return;
   }
 
@@ -97,6 +110,11 @@ function eliminateAndBroadcast(playerId: string): void {
   leavingPlayer.eliminated = true;
   leavingPlayer.eliminatedTurn ??= room.turnCount;
   room.forfeitedPlayerIds.add(leavingPlayer.id);
+
+  if (room.status !== "active") {
+    destroyRoom(room);
+    return;
+  }
 
   const winner = getWinner(room);
   if (winner) {
@@ -218,6 +236,7 @@ export function stopRoomReaper(): void {
 }
 
 function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>): void {
+  room.status = "finished";
   const scoreDeltas = computeAuthDeltas(room, winner.id);
 
   broadcast(room, {
@@ -275,8 +294,8 @@ async function persistFinishedMatch(
   winnerId: string
 ): Promise<void> {
   const winner = room.players.find((p) => p.id === winnerId);
-  if (!winner || winner.isGuest) {
-    logger.info("skipping match persistence: winner is a guest", {
+  if (!winner) {
+    logger.info("skipping match persistence: winner not found", {
       roomId: room.id
     });
     return;
@@ -290,12 +309,11 @@ async function persistFinishedMatch(
     return;
   }
 
-  const participants = authParticipants.map((player, _index) => {
-    const globalIndex = room.players.indexOf(player);
+  const participants = room.players.map((player) => {
     return {
       playerId: player.id,
       displayName: player.name,
-      playerIndex: globalIndex,
+      playerIndex: room.players.indexOf(player),
       eliminatedTurn: player.id === winnerId ? null : player.eliminatedTurn,
       forfeited: room.forfeitedPlayerIds.has(player.id)
     };
@@ -314,11 +332,42 @@ async function persistFinishedMatch(
     participants
   });
 
-  await scoresRepo.applyMatchResult({
-    winnerId,
-    participants: participants.map((participant) => ({
-      playerId: participant.playerId,
-      forfeited: participant.forfeited
-    }))
-  });
+  if (room.mode === "ranked" && authParticipants.length >= 2 && !winner.isGuest) {
+    const now = Date.now();
+    let isCapped = false;
+
+    for (const p of authParticipants) {
+      const timestamps = rankedCompletions.get(p.id) ?? [];
+      const validTimestamps = timestamps.filter((t) => now - t < RANKED_VELOCITY_WINDOW_MS);
+      if (validTimestamps.length >= RANKED_VELOCITY_LIMIT) {
+        isCapped = true;
+        logger.warn("Ranked velocity cap exceeded for player, skipping leaderboard update", {
+          playerId: p.id,
+          roomId: room.id
+        });
+      }
+    }
+
+    for (const p of authParticipants) {
+      const timestamps = rankedCompletions.get(p.id) ?? [];
+      const validTimestamps = timestamps.filter((t) => now - t < RANKED_VELOCITY_WINDOW_MS);
+      validTimestamps.push(now);
+      rankedCompletions.set(p.id, validTimestamps);
+    }
+
+    if (isCapped) {
+      logger.info("skipping scoresRepo.applyMatchResult due to velocity cap", {
+        roomId: room.id
+      });
+      return;
+    }
+
+    await scoresRepo.applyMatchResult({
+      winnerId,
+      participants: authParticipants.map((participant) => ({
+        playerId: participant.id,
+        forfeited: room.forfeitedPlayerIds.has(participant.id)
+      }))
+    });
+  }
 }

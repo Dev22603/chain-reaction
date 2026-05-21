@@ -25,6 +25,10 @@ export const scoresRepo = {
   async applyMatchResult(input: ApplyMatchResultInput): Promise<ScoreDeltas> {
     const deltas: ScoreDeltas = {};
 
+    if (input.participants.length < 2) {
+      return deltas;
+    }
+
     for (const participant of input.participants) {
       deltas[participant.playerId] = participant.playerId === input.winnerId ? 3 : 1;
     }
