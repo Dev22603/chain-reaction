@@ -14,17 +14,12 @@ export function getNeighbors(
   rows: number,
   cols: number
 ): Array<[number, number]> {
-  const candidates: Array<[number, number]> = [
-    [row - 1, col],
-    [row + 1, col],
-    [row, col - 1],
-    [row, col + 1]
-  ];
-
-  return candidates.filter(
-    ([nextRow, nextCol]) =>
-      nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols
-  );
+  const neighbors: Array<[number, number]> = [];
+  if (row > 0) neighbors.push([row - 1, col]);
+  if (row < rows - 1) neighbors.push([row + 1, col]);
+  if (col > 0) neighbors.push([row, col - 1]);
+  if (col < cols - 1) neighbors.push([row, col + 1]);
+  return neighbors;
 }
 
 export function getCriticalMass(
@@ -33,7 +28,12 @@ export function getCriticalMass(
   rows: number,
   cols: number
 ): number {
-  return getNeighbors(row, col, rows, cols).length;
+  return (
+    (row > 0 ? 1 : 0) +
+    (row < rows - 1 ? 1 : 0) +
+    (col > 0 ? 1 : 0) +
+    (col < cols - 1 ? 1 : 0)
+  );
 }
 
 export function applyMove(

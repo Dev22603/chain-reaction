@@ -1,0 +1,3 @@
+## 2024-05-18 - [Optimize backend gameLogic array allocations]
+**Learning:** In highly nested, hot loops like `applyMove` for a game tick, allocating new arrays and using array methods like `.filter` and `.length` per cell per tick (`getNeighbors`) introduces extreme overhead. Calling `getNeighbors(...).length` to get critical mass caused a massive bottleneck when resolving chain reactions.
+**Action:** Replace `candidates.filter` with a conditional append using `.push`, and refactor functions like `getCriticalMass` to compute properties from bounds purely with math or primitives without instantiating arrays first.
