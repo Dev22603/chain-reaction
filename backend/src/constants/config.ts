@@ -21,7 +21,9 @@ export const config = {
   PORT: Number.isNaN(parsedPort) ? 8080 : parsedPort,
   DATABASE_URL: process.env.DATABASE_URL,
   JWT_SECRET: jwtSecret ?? "change-me-in-development",
-  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? "7d",
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? "1d",
+  JWT_ISSUER: process.env.JWT_ISSUER ?? "chain-reaction-backend",
+  JWT_AUDIENCE: process.env.JWT_AUDIENCE ?? "chain-reaction-client",
   ALLOWED_ORIGINS: (process.env.ALLOWED_ORIGINS ?? "").split(",").map(s => s.trim()).filter(Boolean),
   CLIENT_IP_HEADER: process.env.CLIENT_IP_HEADER,
   ANONYMIZE_LOGS: process.env.ANONYMIZE_LOGS === "true"

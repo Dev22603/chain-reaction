@@ -1,7 +1,7 @@
-# Graph Report - chain-reaction  (2026-05-21)
+# Graph Report - chain-reaction  (2026-05-22)
 
 ## Corpus Check
-- 105 files · ~101,088 words
+- 105 files · ~101,142 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary

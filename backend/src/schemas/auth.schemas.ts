@@ -7,7 +7,10 @@ const emailSchema = z
   .toLowerCase()
   .email(AUTH_VALIDATION_ERRORS.EMAIL_INVALID);
 
-const passwordSchema = z.string().min(8, AUTH_VALIDATION_ERRORS.PASSWORD_MIN);
+const passwordSchema = z
+  .string()
+  .min(8, AUTH_VALIDATION_ERRORS.PASSWORD_MIN)
+  .max(200, AUTH_VALIDATION_ERRORS.PASSWORD_MAX);
 
 const displayNameSchema = z
   .string()

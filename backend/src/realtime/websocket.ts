@@ -315,6 +315,7 @@ async function resolveIdentity(request: IncomingMessage, ip: string): Promise<Co
 }
 
 function getTokenFromRequest(request: IncomingMessage): string | null {
+  // TODO(frontend): move WS token off the URL query string (F-04)
   const url = new URL(request.url ?? "/", "http://localhost");
   return url.searchParams.get("token")?.trim() || null;
 }

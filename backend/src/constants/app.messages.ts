@@ -13,6 +13,7 @@ export const SERVER_MESSAGES = {
 export const AUTH_VALIDATION_ERRORS = {
   EMAIL_INVALID: "email must be valid",
   PASSWORD_MIN: "password must be at least 8 characters",
+  PASSWORD_MAX: "password must be 200 characters or less",
   DISPLAY_NAME_REQUIRED: "displayName is required",
   DISPLAY_NAME_MAX: "displayName must be 100 characters or less"
 } as const;
