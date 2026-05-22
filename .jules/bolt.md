@@ -1,0 +1,3 @@
+## 2024-05-22 - Optimizing `applyMove` Hot Loop in Game Logic
+**Learning:** `applyMove` is a highly-frequented function during cascades. Calling functions that return small allocated arrays like `.filter()` or even `.push()` for returning neighbor coordinates resulted in massive GC overhead. The most performant solution is inlining adjacent cell mutation entirely inside the unstable cell loop using simple coordinate boundary math (rows/cols max sizes vs 0 boundaries).
+**Action:** When working in deep game logic or game loop ticks, skip abstraction layer functions for neighbor finding and inline direct array mutation (`board[r][c]...`) protected by boundary conditionals. Compute lengths mathematically rather than evaluating arrays when possible.
