@@ -14,17 +14,12 @@ export function getNeighbors(
   rows: number,
   cols: number
 ): Array<[number, number]> {
-  const candidates: Array<[number, number]> = [
-    [row - 1, col],
-    [row + 1, col],
-    [row, col - 1],
-    [row, col + 1]
-  ];
-
-  return candidates.filter(
-    ([nextRow, nextCol]) =>
-      nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols
-  );
+  const neighbors: Array<[number, number]> = [];
+  if (row > 0) neighbors.push([row - 1, col]);
+  if (row < rows - 1) neighbors.push([row + 1, col]);
+  if (col > 0) neighbors.push([row, col - 1]);
+  if (col < cols - 1) neighbors.push([row, col + 1]);
+  return neighbors;
 }
 
 export function getCriticalMass(
@@ -33,7 +28,10 @@ export function getCriticalMass(
   rows: number,
   cols: number
 ): number {
-  return getNeighbors(row, col, rows, cols).length;
+  let mass = 4;
+  if (row === 0 || row === rows - 1) mass -= 1;
+  if (col === 0 || col === cols - 1) mass -= 1;
+  return mass;
 }
 
 export function applyMove(
@@ -71,9 +69,16 @@ export function applyMove(
       break;
     }
 
-    for (const [unstableRow, unstableCol] of unstableCells) {
+    for (let i = 0; i < unstableCells.length; i += 1) {
+      const unstableRow = unstableCells[i]?.[0];
+      const unstableCol = unstableCells[i]?.[1];
+      if (unstableRow === undefined || unstableCol === undefined) {
+        continue;
+      }
+
       const cell = board[unstableRow]?.[unstableCol];
-      if (!cell || cell.count < getCriticalMass(unstableRow, unstableCol, rows, cols)) {
+      const criticalMass = getCriticalMass(unstableRow, unstableCol, rows, cols);
+      if (!cell || cell.count < criticalMass) {
         continue;
       }
 
@@ -82,25 +87,38 @@ export function applyMove(
         continue;
       }
 
-      const criticalMass = getCriticalMass(unstableRow, unstableCol, rows, cols);
       cell.count -= criticalMass;
       if (cell.count === 0) {
         cell.owner = null;
       }
 
-      for (const [neighborRow, neighborCol] of getNeighbors(
-        unstableRow,
-        unstableCol,
-        rows,
-        cols
-      )) {
-        const neighbor = board[neighborRow]?.[neighborCol];
-        if (!neighbor) {
-          continue;
+      if (unstableRow > 0) {
+        const neighbor = board[unstableRow - 1]?.[unstableCol];
+        if (neighbor) {
+          neighbor.count += 1;
+          neighbor.owner = explodingOwner;
         }
-
-        neighbor.count += 1;
-        neighbor.owner = explodingOwner;
+      }
+      if (unstableRow < rows - 1) {
+        const neighbor = board[unstableRow + 1]?.[unstableCol];
+        if (neighbor) {
+          neighbor.count += 1;
+          neighbor.owner = explodingOwner;
+        }
+      }
+      if (unstableCol > 0) {
+        const neighbor = board[unstableRow]?.[unstableCol - 1];
+        if (neighbor) {
+          neighbor.count += 1;
+          neighbor.owner = explodingOwner;
+        }
+      }
+      if (unstableCol < cols - 1) {
+        const neighbor = board[unstableRow]?.[unstableCol + 1];
+        if (neighbor) {
+          neighbor.count += 1;
+          neighbor.owner = explodingOwner;
+        }
       }
     }
   }
