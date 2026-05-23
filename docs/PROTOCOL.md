@@ -152,6 +152,7 @@ Sent once. Room is deleted immediately after broadcast; no more frames arrive fo
 | `room_not_found` | Player references a room that no longer exists | Usually a race after `game_over` |
 | `not_in_game` | `make_move` or `leave_game` when the player has no `playerRooms` entry | Send only if the client clearly thinks it's playing |
 | `not_your_turn` | Reserved; we usually drop silently | Send only if a future feature needs explicit feedback |
+| `server_busy` | Room creation or queue placement fails due to capacity bounds | |
 | `internal_error` | Anything thrown that wasn't an `ApiError` | Log full error server-side; never leak details |
 
 Codes are defined in `backend/src/constants/app.constants.ts` as `ERROR_CODES`.

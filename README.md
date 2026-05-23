@@ -49,8 +49,8 @@ npm run db:migrate -w backend
 
 ## Key Docs
 
-- `docs/PLAN.md`: milestone build plan.
-- `docs/TODO.md`: micro-level implementation checklist.
-- `docs/PROTOCOL.md`: WebSocket message contract.
-- `docs/RULES.md`: non-negotiable architecture and implementation rules.
-- `docs/GAME_LOGIC.md`: Chain Reaction rules and invariants.
+- [Architecture](./docs/ARCHITECTURE.md) — System design and data flow.
+- [Protocol](./docs/PROTOCOL.md) — WebSocket message contract.
+- [Hardening & Roadmap](./docs/HARDENING_STATUS.md) — Security status and future tasks.
+- [Game Logic](./docs/GAME_LOGIC.md) — Chain Reaction rules and invariants.
+- [Backend Setup](./docs/BACKEND_SETUP_GUIDE.md) — Deployment and local environment.

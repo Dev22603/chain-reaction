@@ -8,20 +8,23 @@ import { getLogger } from "./lib/logger.js";
 import { validateMessage } from "./schemas/messages.schemas.js";
 import { ApiError } from "./utils/api_error.js";
 import { send } from "./utils/broadcast.js";
+import { logSecurityEvent } from "./utils/securityLogger.js";
 
 const logger = getLogger("router");
 
-export function dispatch(socket: WebSocket, playerId: string, raw: WebSocket.RawData): void {
+export function dispatch(socket: WebSocket, playerId: string, raw: WebSocket.RawData, ip: string): void {
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw.toString());
   } catch {
+    logSecurityEvent("malformed_frame", { ip, details: "JSON parse error" });
     return;
   }
 
   try {
     const message = validateMessage(parsed);
     if (!message) {
+      logSecurityEvent("malformed_frame", { ip, details: "unknown or invalid message type" });
       return;
     }
 
@@ -49,6 +52,9 @@ export function dispatch(socket: WebSocket, playerId: string, raw: WebSocket.Raw
     }
   } catch (error) {
     if (error instanceof ApiError) {
+      if (error.code === ERROR_CODES.VALIDATION_FAILED) {
+        logSecurityEvent("malformed_frame", { ip, details: "schema validation failed", errors: error.errors });
+      }
       send(socket, {
         type: MESSAGE_TYPES.ERROR,
         code: error.code,
@@ -68,3 +74,4 @@ export function dispatch(socket: WebSocket, playerId: string, raw: WebSocket.Raw
     });
   }
 }
+

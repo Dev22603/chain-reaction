@@ -9,6 +9,7 @@ import { ApiError } from "../utils/api_error.js";
 import { signAccessToken } from "../utils/jwt.js";
 
 const PASSWORD_SALT_ROUNDS = 12;
+const DUMMY_HASH = "$2b$12$4lpQHVrnzc9xN9kLolJIMu3rGeYx60oB1JYyZqEdzvqVTpPRiVQHC";
 
 export const authService = {
   async signup(input: SignupInput): Promise<AuthResult> {
@@ -30,12 +31,10 @@ export const authService = {
 
   async login(input: LoginInput): Promise<AuthResult> {
     const player = await playersRepo.findByEmail(input.email);
-    if (!player?.passwordHash) {
-      throwInvalidCredentials();
-    }
+    const passwordHash = player?.passwordHash ?? DUMMY_HASH;
 
-    const validPassword = await bcrypt.compare(input.password, player.passwordHash);
-    if (!validPassword) {
+    const validPassword = await bcrypt.compare(input.password, passwordHash);
+    if (!player || !player.passwordHash || !validPassword) {
       throwInvalidCredentials();
     }
 

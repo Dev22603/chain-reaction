@@ -2,7 +2,19 @@ import { randomUUID } from "node:crypto";
 import type { IncomingMessage, Server } from "node:http";
 import type WebSocket from "ws";
 import { WebSocketServer } from "ws";
-import { MESSAGE_TYPES, RECONNECT_GRACE_MS, WS_RATE_LIMIT_MAX, WS_RATE_LIMIT_WINDOW_MS } from "../constants/app.constants.js";
+import {
+  ERROR_CODES,
+  LIMITS,
+  MESSAGE_TYPES,
+  RECONNECT_GRACE_MS,
+  WS_GLOBAL_MSG_BUDGET,
+  WS_IDLE_TIMEOUT_MS,
+  WS_MAX_PAYLOAD_BYTES,
+  WS_PING_INTERVAL_MS,
+  WS_RATE_LIMIT_MAX_PER_IP,
+  WS_RATE_LIMIT_WINDOW_MS
+} from "../constants/app.constants.js";
+import { config } from "../constants/config.js";
 import { graceExpireLeaveGame, sendGameStateToPlayer } from "../handlers/game.handlers.js";
 import { handleLeaveGame } from "../handlers/game.handlers.js";
 import { handleLeaveQueue } from "../handlers/queue.handlers.js";
@@ -11,25 +23,128 @@ import { getLogger } from "../lib/logger.js";
 import { dispatch } from "../router.js";
 import { connections, pendingReconnects, playerRooms, players } from "../state/memory.js";
 import type { ConnectionIdentity } from "../types/connection.js";
+import { getClientIp, anonymizeIp } from "../utils/clientIp.js";
 import { send } from "../utils/broadcast.js";
 import { verifyAccessToken } from "../utils/jwt.js";
+import { logSecurityEvent } from "../utils/securityLogger.js";
 
 const logger = getLogger("realtime.websocket");
 
-const rateLimitState = new WeakMap<WebSocket, { count: number; windowStart: number }>();
+const ipRateLimits = new Map<string, { count: number; windowStart: number }>();
+const globalMsgBucket = { count: 0, windowStart: Date.now() };
+const socketLiveness = new WeakMap<WebSocket, boolean>();
+const idleTimeouts = new WeakMap<WebSocket, NodeJS.Timeout>();
+
+const perIp = new Map<string, number>();
+let totalConnections = 0;
 
 export function attachWebSocketServer(server: Server): WebSocketServer {
-  const wss = new WebSocketServer({ server });
+  const wss = new WebSocketServer({
+    server,
+    maxPayload: WS_MAX_PAYLOAD_BYTES,
+    verifyClient: (info, done) => {
+      const { ALLOWED_ORIGINS } = config;
+      const origin = info.origin;
+      const originOk = ALLOWED_ORIGINS.length === 0 || (origin && ALLOWED_ORIGINS.includes(origin));
+      const ip = getClientIp(info.req);
+      if (!originOk) {
+        logSecurityEvent("rejected_origin", { ip, origin });
+        logger.warn("websocket upgrade rejected: origin not allowed", { origin });
+        return done(false, 1008, "origin not allowed");
+      }
+
+      if (totalConnections >= LIMITS.MAX_CONNECTIONS) {
+        logSecurityEvent("rate_limit_trip", { ip, details: "server connection cap reached", totalConnections });
+        logger.warn("websocket upgrade rejected: server full", { ip: anonymizeIp(ip), totalConnections });
+        return done(false, 1013, "server full");
+      }
+
+      const currentIpConnections = perIp.get(ip) ?? 0;
+      if (currentIpConnections >= LIMITS.MAX_CONNECTIONS_PER_IP) {
+        logSecurityEvent("rate_limit_trip", { ip, details: "IP connection cap reached", currentIpConnections });
+        logger.warn("websocket upgrade rejected: too many connections from IP", { ip: anonymizeIp(ip), currentIpConnections });
+        return done(false, 1013, "too many connections");
+      }
+
+      done(true);
+    }
+  });
+
+  const pingInterval = setInterval(() => {
+    wss.clients.forEach((socket) => {
+      if (socketLiveness.get(socket) === false) {
+        logger.info("reaping dead socket via heartbeat");
+        return socket.terminate();
+      }
+      socketLiveness.set(socket, false);
+      socket.ping();
+    });
+  }, WS_PING_INTERVAL_MS);
+
+  wss.on("close", () => {
+    clearInterval(pingInterval);
+  });
 
   wss.on("connection", (socket, request) => {
-    void handleConnection(socket, request);
+    const ip = getClientIp(request);
+
+    totalConnections++;
+    perIp.set(ip, (perIp.get(ip) ?? 0) + 1);
+
+    socketLiveness.set(socket, true);
+    socket.on("pong", () => {
+      socketLiveness.set(socket, true);
+    });
+    
+    // Catch oversized WS frames / range errors
+    socket.on("error", (err) => {
+      const errMsg = err.message || "";
+      if (errMsg.includes("Max payload size exceeded") || errMsg.includes("payload")) {
+        logSecurityEvent("malformed_frame", { ip, details: "oversized WS frame", error: errMsg });
+      }
+    });
+
+    resetIdleTimeout(socket);
+
+    socket.on("close", () => {
+      const handle = idleTimeouts.get(socket);
+      if (handle) {
+        clearTimeout(handle);
+        idleTimeouts.delete(socket);
+      }
+
+      totalConnections = Math.max(0, totalConnections - 1);
+      const count = perIp.get(ip) ?? 1;
+      if (count <= 1) {
+        perIp.delete(ip);
+        ipRateLimits.delete(ip);
+      } else {
+        perIp.set(ip, count - 1);
+      }
+    });
+
+    void handleConnection(socket, request, ip);
   });
 
   return wss;
 }
 
-async function handleConnection(socket: WebSocket, request: IncomingMessage): Promise<void> {
-  const identity = await resolveIdentity(request);
+function resetIdleTimeout(socket: WebSocket): void {
+  const existing = idleTimeouts.get(socket);
+  if (existing) {
+    clearTimeout(existing);
+  }
+
+  const handle = setTimeout(() => {
+    logger.info("terminating idle socket");
+    socket.terminate();
+  }, WS_IDLE_TIMEOUT_MS);
+
+  idleTimeouts.set(socket, handle);
+}
+
+async function handleConnection(socket: WebSocket, request: IncomingMessage, ip: string): Promise<void> {
+  const identity = await resolveIdentity(request, ip);
 
   // If this authenticated player has a pending reconnect, resume instead of starting fresh.
   if (!identity.isGuest) {
@@ -51,7 +166,7 @@ async function handleConnection(socket: WebSocket, request: IncomingMessage): Pr
         logger.info("player reconnected but room ended during grace window", { playerId: identity.playerId });
       }
 
-      wireSocketEvents(socket, identity);
+      wireSocketEvents(socket, identity, ip);
       return;
     }
   }
@@ -66,34 +181,67 @@ async function handleConnection(socket: WebSocket, request: IncomingMessage): Pr
     isGuest: identity.isGuest
   });
 
-  wireSocketEvents(socket, identity);
+  wireSocketEvents(socket, identity, ip);
 
   logger.info("player connected", {
     playerId: identity.playerId,
-    isGuest: identity.isGuest
+    isGuest: identity.isGuest,
+    ip
   });
 }
 
-function wireSocketEvents(socket: WebSocket, identity: ConnectionIdentity): void {
-  rateLimitState.set(socket, { count: 0, windowStart: Date.now() });
-
+function wireSocketEvents(socket: WebSocket, identity: ConnectionIdentity, ip: string): void {
   socket.on("message", (raw) => {
-    const state = rateLimitState.get(socket) ?? { count: 0, windowStart: Date.now() };
+    resetIdleTimeout(socket);
 
-    if (Date.now() - state.windowStart > WS_RATE_LIMIT_WINDOW_MS) {
-      state.count = 0;
-      state.windowStart = Date.now();
+    // 1. Global message rate limiting
+    if (Date.now() - globalMsgBucket.windowStart > WS_RATE_LIMIT_WINDOW_MS) {
+      globalMsgBucket.count = 0;
+      globalMsgBucket.windowStart = Date.now();
     }
-
-    state.count += 1;
-    rateLimitState.set(socket, state);
-
-    if (state.count > WS_RATE_LIMIT_MAX) {
-      socket.send(JSON.stringify({ type: "error", code: "rate_limited", message: "Too many messages. Slow down." }));
+    globalMsgBucket.count++;
+    if (globalMsgBucket.count > WS_GLOBAL_MSG_BUDGET) {
+      socket.send(
+        JSON.stringify({
+          type: MESSAGE_TYPES.ERROR,
+          code: ERROR_CODES.RATE_LIMITED,
+          message: "Server is under high load. Please try again later."
+        })
+      );
       return;
     }
 
-    dispatch(socket, identity.playerId, raw);
+    // 2. Per-IP message rate limiting
+    let ipBucket = ipRateLimits.get(ip);
+    if (!ipBucket || Date.now() - ipBucket.windowStart > WS_RATE_LIMIT_WINDOW_MS) {
+      ipBucket = { count: 0, windowStart: Date.now() };
+    }
+    ipBucket.count++;
+    ipRateLimits.set(ip, ipBucket);
+
+    const isAbuse = ipBucket.count > WS_RATE_LIMIT_MAX_PER_IP;
+    const isSustainedAbuse = ipBucket.count > Math.floor(WS_RATE_LIMIT_MAX_PER_IP * 1.5);
+
+    if (isSustainedAbuse) {
+      logSecurityEvent("rate_limit_trip", { ip, details: "sustained WS message abuse", playerId: identity.playerId });
+      logger.warn("terminating socket due to sustained message rate abuse", { ip: anonymizeIp(ip), playerId: identity.playerId });
+      socket.close(1008, "rate limited");
+      return;
+    }
+
+    if (isAbuse) {
+      logSecurityEvent("rate_limit_trip", { ip, details: "WS message rate limit exceeded", playerId: identity.playerId });
+      socket.send(
+        JSON.stringify({
+          type: MESSAGE_TYPES.ERROR,
+          code: ERROR_CODES.RATE_LIMITED,
+          message: "Too many messages. Slow down."
+        })
+      );
+      return;
+    }
+
+    dispatch(socket, identity.playerId, raw, ip);
   });
 
   socket.on("close", () => {
@@ -138,7 +286,7 @@ function wireSocketEvents(socket: WebSocket, identity: ConnectionIdentity): void
   });
 }
 
-async function resolveIdentity(request: IncomingMessage): Promise<ConnectionIdentity> {
+async function resolveIdentity(request: IncomingMessage, ip: string): Promise<ConnectionIdentity> {
   const token = getTokenFromRequest(request);
   if (!token) {
     return buildGuestIdentity();
@@ -158,6 +306,7 @@ async function resolveIdentity(request: IncomingMessage): Promise<ConnectionIden
       isGuest: false
     };
   } catch (error) {
+    logSecurityEvent("auth_failure", { ip, details: "WS token validation failed" });
     logger.warn("websocket auth failed", {
       error: error instanceof Error ? error.message : String(error)
     });
@@ -166,6 +315,7 @@ async function resolveIdentity(request: IncomingMessage): Promise<ConnectionIden
 }
 
 function getTokenFromRequest(request: IncomingMessage): string | null {
+  // TODO(frontend): move WS token off the URL query string (F-04)
   const url = new URL(request.url ?? "/", "http://localhost");
   return url.searchParams.get("token")?.trim() || null;
 }

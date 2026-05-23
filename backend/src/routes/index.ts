@@ -3,10 +3,11 @@ import { authRouter } from "./auth.routes.js";
 import { healthRouter } from "./health.routes.js";
 import { leaderboardRouter } from "./leaderboard.routes.js";
 import { playersRouter } from "./players.routes.js";
+import { publicReadLimiter } from "../middlewares/rateLimit.middleware.js";
 
 export const apiRouter = Router();
 
 apiRouter.use(authRouter);
 apiRouter.use(healthRouter);
-apiRouter.use(leaderboardRouter);
-apiRouter.use(playersRouter);
+apiRouter.use(publicReadLimiter, leaderboardRouter);
+apiRouter.use(publicReadLimiter, playersRouter);

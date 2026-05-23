@@ -1,73 +1,81 @@
-# Graph Report - .  (2026-04-28)
+# Graph Report - chain-reaction  (2026-05-22)
 
 ## Corpus Check
-- Corpus is ~24,887 words - fits in a single context window. You may not need a graph.
+- 105 files · ~101,142 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 107 nodes · 86 edges · 35 communities detected
-- Extraction: 80% EXTRACTED · 20% INFERRED · 0% AMBIGUOUS · INFERRED: 17 edges (avg confidence: 0.82)
+- 331 nodes · 452 edges · 42 communities detected
+- Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 54 edges (avg confidence: 0.81)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Architecture & Doc Index|Architecture & Doc Index]]
-- [[_COMMUNITY_Connection Lifecycle & Protocol Messages|Connection Lifecycle & Protocol Messages]]
-- [[_COMMUNITY_Game Logic Core & State Flow|Game Logic Core & State Flow]]
-- [[_COMMUNITY_Backend State & Persistence Boundary|Backend State & Persistence Boundary]]
-- [[_COMMUNITY_Backend Setup & Code Quality|Backend Setup & Code Quality]]
-- [[_COMMUNITY_Message Validation Pipeline|Message Validation Pipeline]]
-- [[_COMMUNITY_Testing & Run Commands|Testing & Run Commands]]
-- [[_COMMUNITY_Database Schema|Database Schema]]
-- [[_COMMUNITY_Constants & Error Codes|Constants & Error Codes]]
-- [[_COMMUNITY_Database Module Structure|Database Module Structure]]
-- [[_COMMUNITY_Critical Mass Concept|Critical Mass Concept]]
-- [[_COMMUNITY_Explosion & Ownership Transfer|Explosion & Ownership Transfer]]
-- [[_COMMUNITY_Graphify Query Tool|Graphify Query Tool]]
-- [[_COMMUNITY_Frontend Responsibilities|Frontend Responsibilities]]
-- [[_COMMUNITY_Non-Goals|Non-Goals]]
-- [[_COMMUNITY_Backend Reading Order|Backend Reading Order]]
-- [[_COMMUNITY_Project Directory Map|Project Directory Map]]
-- [[_COMMUNITY_File Naming Convention|File Naming Convention]]
-- [[_COMMUNITY_Async Style Convention|Async Style Convention]]
-- [[_COMMUNITY_Database Migrations|Database Migrations]]
-- [[_COMMUNITY_Frontend Gotchas|Frontend Gotchas]]
-- [[_COMMUNITY_Move Rules|Move Rules]]
-- [[_COMMUNITY_Win Condition|Win Condition]]
-- [[_COMMUNITY_Board Creation|Board Creation]]
-- [[_COMMUNITY_Cell Term|Cell Term]]
-- [[_COMMUNITY_Board Term|Board Term]]
-- [[_COMMUNITY_Orb Term|Orb Term]]
-- [[_COMMUNITY_Owner Term|Owner Term]]
-- [[_COMMUNITY_Cascade Term|Cascade Term]]
-- [[_COMMUNITY_Player Index Term|Player Index Term]]
-- [[_COMMUNITY_Bucket Term|Bucket Term]]
-- [[_COMMUNITY_SendBroadcast Terms|Send/Broadcast Terms]]
-- [[_COMMUNITY_Forbidden Words|Forbidden Words]]
-- [[_COMMUNITY_leaveQueue Message|leaveQueue Message]]
-- [[_COMMUNITY_Commit Rules|Commit Rules]]
+- [[_COMMUNITY_Community 0|Community 0]]
+- [[_COMMUNITY_Community 1|Community 1]]
+- [[_COMMUNITY_Community 2|Community 2]]
+- [[_COMMUNITY_Community 3|Community 3]]
+- [[_COMMUNITY_Community 4|Community 4]]
+- [[_COMMUNITY_Community 5|Community 5]]
+- [[_COMMUNITY_Community 6|Community 6]]
+- [[_COMMUNITY_Community 7|Community 7]]
+- [[_COMMUNITY_Community 8|Community 8]]
+- [[_COMMUNITY_Community 10|Community 10]]
+- [[_COMMUNITY_Community 11|Community 11]]
+- [[_COMMUNITY_Community 12|Community 12]]
+- [[_COMMUNITY_Community 13|Community 13]]
+- [[_COMMUNITY_Community 15|Community 15]]
+- [[_COMMUNITY_Community 16|Community 16]]
+- [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 32|Community 32]]
+- [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 54|Community 54]]
+- [[_COMMUNITY_Community 55|Community 55]]
+- [[_COMMUNITY_Community 56|Community 56]]
+- [[_COMMUNITY_Community 57|Community 57]]
+- [[_COMMUNITY_Community 58|Community 58]]
+- [[_COMMUNITY_Community 59|Community 59]]
+- [[_COMMUNITY_Community 60|Community 60]]
+- [[_COMMUNITY_Community 61|Community 61]]
+- [[_COMMUNITY_Community 62|Community 62]]
+- [[_COMMUNITY_Community 63|Community 63]]
+- [[_COMMUNITY_Community 64|Community 64]]
+- [[_COMMUNITY_Community 65|Community 65]]
+- [[_COMMUNITY_Community 66|Community 66]]
+- [[_COMMUNITY_Community 67|Community 67]]
+- [[_COMMUNITY_Community 68|Community 68]]
+- [[_COMMUNITY_Community 69|Community 69]]
+- [[_COMMUNITY_Community 70|Community 70]]
+- [[_COMMUNITY_Community 71|Community 71]]
+- [[_COMMUNITY_Community 72|Community 72]]
+- [[_COMMUNITY_Community 73|Community 73]]
+- [[_COMMUNITY_Community 74|Community 74]]
+- [[_COMMUNITY_Community 75|Community 75]]
+- [[_COMMUNITY_Community 76|Community 76]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Context File Index` - 9 edges
-2. `Production-Grade Node.js Backend Setup Guide` - 7 edges
-3. `useGameWebSocket Hook (state ownership)` - 6 edges
-4. `applyMove() function` - 6 edges
-5. `In-Memory State Maps (players/queues/rooms/playerRooms)` - 5 edges
-6. `Backend Layering Convention` - 5 edges
-7. `Connection-to-Cleanup Lifecycle` - 4 edges
-8. `Repository Pattern Hard Rules` - 4 edges
-9. `Rule: Server Authority` - 4 edges
-10. `System Overview (Frontend, Backend, DB)` - 3 edges
+1. `dispatch()` - 10 edges
+2. `handleMove()` - 9 edges
+3. `eliminateAndBroadcast()` - 9 edges
+4. `Context File Index` - 9 edges
+5. `endGame()` - 7 edges
+6. `send()` - 7 edges
+7. `envelope()` - 7 edges
+8. `Production-Grade Node.js Backend Setup Guide` - 7 edges
+9. `handleJoinQueue()` - 6 edges
+10. `resolveIdentity()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Graphify Knowledge Graph Instructions` --conceptually_related_to--> `Chain Reaction Claude Context Overview`  [INFERRED]
-  GEMINI.md → docs/CLAUDE.md
-- `Routes/Controllers/Services/Repositories Layering` --semantically_similar_to--> `Backend Layering Convention`  [INFERRED] [semantically similar]
-  docs/BACKEND_SETUP_GUIDE.md → docs/CONVENTIONS.md
-- `Connection-to-Game State Flow` --shares_data_with--> `In-Memory State Maps (players/queues/rooms/playerRooms)`  [INFERRED]
-  docs/BACKEND.md → docs/ARCHITECTURE.md
-- `In-Memory State Maps (players/queues/rooms/playerRooms)` --rationale_for--> `Rule: State Boundary (memory vs DB)`  [INFERRED]
-  docs/ARCHITECTURE.md → docs/RULES.md
-- `TypeScript & tsconfig.json Setup` --semantically_similar_to--> `TypeScript Strictness Convention`  [INFERRED] [semantically similar]
-  docs/BACKEND_SETUP_GUIDE.md → docs/CONVENTIONS.md
+- `dispatch()` --calls--> `logSecurityEvent()`  [INFERRED]
+  backend\src\router.ts → backend\src\utils\securityLogger.ts
+- `dispatch()` --calls--> `validateMessage()`  [INFERRED]
+  backend\src\router.ts → backend\src\schemas\messages.schemas.ts
+- `dispatch()` --calls--> `handleJoinQueue()`  [INFERRED]
+  backend\src\router.ts → backend\src\handlers\queue.handlers.ts
+- `dispatch()` --calls--> `handleLeaveQueue()`  [INFERRED]
+  backend\src\router.ts → backend\src\handlers\queue.handlers.ts
+- `dispatch()` --calls--> `handleCreateRoom()`  [INFERRED]
+  backend\src\router.ts → backend\src\handlers\room.handlers.ts
 
 ## Hyperedges (group relationships)
 - **Client-to-Server Protocol Messages** — protocol_msg_join_queue, protocol_msg_leave_queue, protocol_msg_make_move, protocol_msg_leave_game [EXTRACTED 1.00]
@@ -76,212 +84,250 @@
 
 ## Communities
 
-### Community 0 - "Architecture & Doc Index"
-Cohesion: 0.15
-Nodes (15): Database Boundary (post-M7), Fly.io Deployment Plan, System Overview (Frontend, Backend, DB), Backend File Map, Context File Index, Backend Layering Convention, DB Status: post-M7 only, error WebSocket Frame Shape (+7 more)
+### Community 0 - "Community 0"
+Cohesion: 0.08
+Nodes (15): ApiError, getBearerToken(), requireAuth(), buildAuthResult(), throwInvalidCredentials(), anonymizeIp(), getClientIp(), errorMiddleware() (+7 more)
 
-### Community 1 - "Connection Lifecycle & Protocol Messages"
+### Community 1 - "Community 1"
+Cohesion: 0.07
+Nodes (31): Database Boundary (post-M7), Fly.io Deployment Plan, System Overview (Frontend, Backend, DB), Backend File Map, Adding a New Message Type Steps, Production-Grade Node.js Backend Setup Guide, Context File Index, ApiError Throw/Catch in Router Pattern (+23 more)
+
+### Community 2 - "Community 2"
+Cohesion: 0.15
+Nodes (11): applyMove(), createBoard(), getCriticalMass(), getNeighbors(), createRoom(), getQueueKey(), handleJoinQueue(), handleLeaveQueue() (+3 more)
+
+### Community 3 - "Community 3"
+Cohesion: 0.12
+Nodes (20): Connection-to-Cleanup Lifecycle, Frontend Phase Machine, Chain Reaction Claude Context Overview, Frontend onmessage Error Handling, When to Send error vs Silently Drop, Frontend Component Tree (page.tsx), GameBoard Rendering Contract, useGameWebSocket Hook (state ownership) (+12 more)
+
+### Community 4 - "Community 4"
+Cohesion: 0.11
+Nodes (19): Backend Responsibilities, game/gameLogic.ts pure module, In-Memory State Maps (players/queues/rooms/playerRooms), Backend Critical Invariants, Connection-to-Game State Flow, Wire (snake_case) vs Internal (camelCase) Format, Repository Pattern Hard Rules, Provider Swap Rule (+11 more)
+
+### Community 5 - "Community 5"
+Cohesion: 0.24
+Nodes (16): broadcast(), advanceTurn(), broadcastGameState(), computeAuthDeltas(), destroyRoom(), eliminateAndBroadcast(), endGame(), getRoomForPlayer() (+8 more)
+
+### Community 6 - "Community 6"
 Cohesion: 0.16
-Nodes (15): Connection-to-Cleanup Lifecycle, Frontend Phase Machine, Frontend onmessage Error Handling, When to Send error vs Silently Drop, Frontend Component Tree (page.tsx), useGameWebSocket Hook (state ownership), connected message, game_over message (+7 more)
+Nodes (2): stopRoomReaper(), gracefulShutdown()
 
-### Community 2 - "Game Logic Core & State Flow"
+### Community 7 - "Community 7"
 Cohesion: 0.15
-Nodes (13): Connection-to-Game State Flow, Chain Reaction Claude Context Overview, GameBoard Rendering Contract, applyMove() function, getCriticalMass() function, getNeighbors() function, Game Logic Invariants, isEliminated() function (+5 more)
+Nodes (7): ApiClientError, apiRequest(), clearStoredAccessToken(), getStoredAccessToken(), setStoredAccessToken(), handleSubmit(), buildWebSocketUrl()
 
-### Community 3 - "Backend State & Persistence Boundary"
-Cohesion: 0.18
-Nodes (12): Backend Responsibilities, game/gameLogic.ts pure module, In-Memory State Maps (players/queues/rooms/playerRooms), Backend Critical Invariants, Wire (snake_case) vs Internal (camelCase) Format, Repository Pattern Hard Rules, Provider Swap Rule, Elimination Rule with Grace Period (+4 more)
+### Community 8 - "Community 8"
+Cohesion: 0.23
+Nodes (9): chainSound(), clickSound(), createSoundEngine(), envelope(), errorSound(), explodeSound(), placeSound(), turnSound() (+1 more)
 
-### Community 4 - "Backend Setup & Code Quality"
-Cohesion: 0.2
-Nodes (10): Production-Grade Node.js Backend Setup Guide, ApiError Throw/Catch in Router Pattern, Winston Named Child Loggers, TypeScript Strictness Convention, Server-Side ApiError Dispatch Pattern, Rule: Code Quality Baseline (strict TS, no any, lint), ApiError and ApiResponse Pattern, tsx watch Dev Runner (+2 more)
+### Community 10 - "Community 10"
+Cohesion: 0.31
+Nodes (7): send(), sendGameStateToPlayer(), buildGuestIdentity(), getTokenFromRequest(), handleConnection(), resolveIdentity(), wireSocketEvents()
 
-### Community 5 - "Message Validation Pipeline"
+### Community 11 - "Community 11"
+Cohesion: 0.53
+Nodes (4): flashNotice(), onCreateRoom(), onJoinRoom(), onPlay()
+
+### Community 12 - "Community 12"
+Cohesion: 0.53
+Nodes (4): handleConfirm(), handleInput(), handleKeyDown(), setCharAt()
+
+### Community 13 - "Community 13"
 Cohesion: 0.5
-Nodes (5): Adding a New Message Type Steps, Zod Validation at Boundary, Protocol Single Source of Truth Rule, Rule: Message Validation via Zod, Zod Input Validation
+Nodes (2): cellKey(), diffBoards()
 
-### Community 6 - "Testing & Run Commands"
+### Community 15 - "Community 15"
 Cohesion: 0.67
 Nodes (3): Backend Run Commands (npm run dev, smoke:logic), Standalone Smoke Test (process.argv guard), Rule: smoke:logic Testing Path
 
-### Community 7 - "Database Schema"
+### Community 16 - "Community 16"
 Cohesion: 0.67
 Nodes (3): match_players table schema, matches table schema, players table schema
 
-### Community 8 - "Constants & Error Codes"
-Cohesion: 1.0
-Nodes (2): Centralized Constants (LIMITS, MESSAGE_TYPES, ERROR_CODES), Error Codes Table
-
-### Community 9 - "Database Module Structure"
+### Community 30 - "Community 30"
 Cohesion: 1.0
 Nodes (2): Planned db/ Directory Layout, Repository Interface (matchesRepo etc)
 
-### Community 10 - "Critical Mass Concept"
+### Community 31 - "Community 31"
+Cohesion: 1.0
+Nodes (2): Centralized Constants (LIMITS, MESSAGE_TYPES, ERROR_CODES), Error Codes Table
+
+### Community 32 - "Community 32"
 Cohesion: 1.0
 Nodes (2): Critical Mass Rule, Critical Mass term
 
-### Community 11 - "Explosion & Ownership Transfer"
+### Community 33 - "Community 33"
 Cohesion: 1.0
 Nodes (2): Ownership Transfer on Explosion, Explosion term
 
-### Community 12 - "Graphify Query Tool"
+### Community 54 - "Community 54"
 Cohesion: 1.0
 Nodes (1): graphify query/path/explain CLI
 
-### Community 13 - "Frontend Responsibilities"
+### Community 55 - "Community 55"
 Cohesion: 1.0
 Nodes (1): Frontend Responsibilities
 
-### Community 14 - "Non-Goals"
+### Community 56 - "Community 56"
 Cohesion: 1.0
 Nodes (1): Non-goals for M1-M7
 
-### Community 15 - "Backend Reading Order"
+### Community 57 - "Community 57"
 Cohesion: 1.0
 Nodes (1): Backend Reading Order
 
-### Community 16 - "Project Directory Map"
+### Community 58 - "Community 58"
 Cohesion: 1.0
 Nodes (1): Project Directory Map
 
-### Community 17 - "File Naming Convention"
+### Community 59 - "Community 59"
 Cohesion: 1.0
 Nodes (1): File Naming Conventions
 
-### Community 18 - "Async Style Convention"
+### Community 60 - "Community 60"
 Cohesion: 1.0
 Nodes (1): async/await Style
 
-### Community 19 - "Database Migrations"
+### Community 61 - "Community 61"
 Cohesion: 1.0
 Nodes (1): Migrations (forward-only SQL files)
 
-### Community 20 - "Frontend Gotchas"
+### Community 62 - "Community 62"
 Cohesion: 1.0
 Nodes (1): Frontend Common Gotchas
 
-### Community 21 - "Move Rules"
+### Community 63 - "Community 63"
 Cohesion: 1.0
 Nodes (1): Move Rule (click empty/own cell)
 
-### Community 22 - "Win Condition"
+### Community 64 - "Community 64"
 Cohesion: 1.0
 Nodes (1): Win Condition (one survivor)
 
-### Community 23 - "Board Creation"
+### Community 65 - "Community 65"
 Cohesion: 1.0
 Nodes (1): createBoard() function
 
-### Community 24 - "Cell Term"
+### Community 66 - "Community 66"
 Cohesion: 1.0
 Nodes (1): Cell term
 
-### Community 25 - "Board Term"
+### Community 67 - "Community 67"
 Cohesion: 1.0
 Nodes (1): Board term
 
-### Community 26 - "Orb Term"
+### Community 68 - "Community 68"
 Cohesion: 1.0
 Nodes (1): Orb term
 
-### Community 27 - "Owner Term"
+### Community 69 - "Community 69"
 Cohesion: 1.0
 Nodes (1): Owner term
 
-### Community 28 - "Cascade Term"
+### Community 70 - "Community 70"
 Cohesion: 1.0
 Nodes (1): Cascade / Chain Reaction term
 
-### Community 29 - "Player Index Term"
+### Community 71 - "Community 71"
 Cohesion: 1.0
 Nodes (1): Player Index vs Player ID
 
-### Community 30 - "Bucket Term"
+### Community 72 - "Community 72"
 Cohesion: 1.0
 Nodes (1): Bucket / Queue Key
 
-### Community 31 - "Send/Broadcast Terms"
+### Community 73 - "Community 73"
 Cohesion: 1.0
 Nodes (1): Frame / Broadcast / Send
 
-### Community 32 - "Forbidden Words"
+### Community 74 - "Community 74"
 Cohesion: 1.0
 Nodes (1): Words We Don't Use (match/lobby/session/game)
 
-### Community 33 - "leaveQueue Message"
+### Community 75 - "Community 75"
 Cohesion: 1.0
 Nodes (1): leave_queue message
 
-### Community 34 - "Commit Rules"
+### Community 76 - "Community 76"
 Cohesion: 1.0
 Nodes (1): Rule: Conventional Commits
 
 ## Knowledge Gaps
 - **61 isolated node(s):** `Graphify Knowledge Graph Instructions`, `graphify query/path/explain CLI`, `Frontend Responsibilities`, `game/gameLogic.ts pure module`, `Database Boundary (post-M7)` (+56 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Constants & Error Codes`** (2 nodes): `Centralized Constants (LIMITS, MESSAGE_TYPES, ERROR_CODES)`, `Error Codes Table`
+- **Thin community `Community 6`** (16 nodes): `seed.ts`, `recompute-scores.ts`, `app.ts`, `config.ts`, `players.ts`, `scores.ts`, `index.ts`, `logger.ts`, `prisma.ts`, `scoring.ts`, `stopRoomReaper()`, `gracefulShutdown()`, `getLogger()`, `createPrismaClient()`, `main()`, `main()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Database Module Structure`** (2 nodes): `Planned db/ Directory Layout`, `Repository Interface (matchesRepo etc)`
+- **Thin community `Community 13`** (5 nodes): `capacityFor()`, `cellKey()`, `diffBoards()`, `tallyOrbs()`, `board.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Critical Mass Concept`** (2 nodes): `Critical Mass Rule`, `Critical Mass term`
+- **Thin community `Community 30`** (2 nodes): `Planned db/ Directory Layout`, `Repository Interface (matchesRepo etc)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Explosion & Ownership Transfer`** (2 nodes): `Ownership Transfer on Explosion`, `Explosion term`
+- **Thin community `Community 31`** (2 nodes): `Centralized Constants (LIMITS, MESSAGE_TYPES, ERROR_CODES)`, `Error Codes Table`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Graphify Query Tool`** (1 nodes): `graphify query/path/explain CLI`
+- **Thin community `Community 32`** (2 nodes): `Critical Mass Rule`, `Critical Mass term`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Frontend Responsibilities`** (1 nodes): `Frontend Responsibilities`
+- **Thin community `Community 33`** (2 nodes): `Ownership Transfer on Explosion`, `Explosion term`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Non-Goals`** (1 nodes): `Non-goals for M1-M7`
+- **Thin community `Community 54`** (1 nodes): `graphify query/path/explain CLI`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Backend Reading Order`** (1 nodes): `Backend Reading Order`
+- **Thin community `Community 55`** (1 nodes): `Frontend Responsibilities`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Project Directory Map`** (1 nodes): `Project Directory Map`
+- **Thin community `Community 56`** (1 nodes): `Non-goals for M1-M7`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `File Naming Convention`** (1 nodes): `File Naming Conventions`
+- **Thin community `Community 57`** (1 nodes): `Backend Reading Order`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Async Style Convention`** (1 nodes): `async/await Style`
+- **Thin community `Community 58`** (1 nodes): `Project Directory Map`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Database Migrations`** (1 nodes): `Migrations (forward-only SQL files)`
+- **Thin community `Community 59`** (1 nodes): `File Naming Conventions`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Frontend Gotchas`** (1 nodes): `Frontend Common Gotchas`
+- **Thin community `Community 60`** (1 nodes): `async/await Style`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Move Rules`** (1 nodes): `Move Rule (click empty/own cell)`
+- **Thin community `Community 61`** (1 nodes): `Migrations (forward-only SQL files)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Win Condition`** (1 nodes): `Win Condition (one survivor)`
+- **Thin community `Community 62`** (1 nodes): `Frontend Common Gotchas`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Board Creation`** (1 nodes): `createBoard() function`
+- **Thin community `Community 63`** (1 nodes): `Move Rule (click empty/own cell)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Cell Term`** (1 nodes): `Cell term`
+- **Thin community `Community 64`** (1 nodes): `Win Condition (one survivor)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Board Term`** (1 nodes): `Board term`
+- **Thin community `Community 65`** (1 nodes): `createBoard() function`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Orb Term`** (1 nodes): `Orb term`
+- **Thin community `Community 66`** (1 nodes): `Cell term`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Owner Term`** (1 nodes): `Owner term`
+- **Thin community `Community 67`** (1 nodes): `Board term`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Cascade Term`** (1 nodes): `Cascade / Chain Reaction term`
+- **Thin community `Community 68`** (1 nodes): `Orb term`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Player Index Term`** (1 nodes): `Player Index vs Player ID`
+- **Thin community `Community 69`** (1 nodes): `Owner term`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Bucket Term`** (1 nodes): `Bucket / Queue Key`
+- **Thin community `Community 70`** (1 nodes): `Cascade / Chain Reaction term`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Send/Broadcast Terms`** (1 nodes): `Frame / Broadcast / Send`
+- **Thin community `Community 71`** (1 nodes): `Player Index vs Player ID`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Forbidden Words`** (1 nodes): `Words We Don't Use (match/lobby/session/game)`
+- **Thin community `Community 72`** (1 nodes): `Bucket / Queue Key`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `leaveQueue Message`** (1 nodes): `leave_queue message`
+- **Thin community `Community 73`** (1 nodes): `Frame / Broadcast / Send`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Commit Rules`** (1 nodes): `Rule: Conventional Commits`
+- **Thin community `Community 74`** (1 nodes): `Words We Don't Use (match/lobby/session/game)`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 75`** (1 nodes): `leave_queue message`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 76`** (1 nodes): `Rule: Conventional Commits`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `In-Memory State Maps (players/queues/rooms/playerRooms)` connect `Backend State & Persistence Boundary` to `Game Logic Core & State Flow`?**
-  _High betweenness centrality (0.250) - this node is a cross-community bridge._
-- **Why does `Connection-to-Game State Flow` connect `Game Logic Core & State Flow` to `Backend State & Persistence Boundary`?**
-  _High betweenness centrality (0.208) - this node is a cross-community bridge._
-- **Are the 2 inferred relationships involving `In-Memory State Maps (players/queues/rooms/playerRooms)` (e.g. with `Connection-to-Game State Flow` and `Rule: State Boundary (memory vs DB)`) actually correct?**
-  _`In-Memory State Maps (players/queues/rooms/playerRooms)` has 2 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `applyMove() function` connect `Community 4` to `Community 3`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Are the 9 inferred relationships involving `dispatch()` (e.g. with `logSecurityEvent()` and `validateMessage()`) actually correct?**
+  _`dispatch()` has 9 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 2 inferred relationships involving `handleMove()` (e.g. with `dispatch()` and `applyMove()`) actually correct?**
+  _`handleMove()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Graphify Knowledge Graph Instructions`, `graphify query/path/explain CLI`, `Frontend Responsibilities` to the rest of the system?**
   _61 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Community 0` be split into smaller, more focused modules?**
+  _Cohesion score 0.08 - nodes in this community are weakly interconnected._
+- **Should `Community 1` be split into smaller, more focused modules?**
+  _Cohesion score 0.07 - nodes in this community are weakly interconnected._
+- **Should `Community 3` be split into smaller, more focused modules?**
+  _Cohesion score 0.12 - nodes in this community are weakly interconnected._

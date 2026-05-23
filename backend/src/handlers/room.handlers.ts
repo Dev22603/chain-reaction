@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { ERROR_CODES, GAME_MODES, MESSAGE_TYPES } from "../constants/app.constants.js";
+import { ERROR_CODES, GAME_MODES, LIMITS, MESSAGE_TYPES } from "../constants/app.constants.js";
+import { SERVER_MESSAGES } from "../constants/app.messages.js";
 import { createBoard } from "../game/gameLogic.js";
 import { getLogger } from "../lib/logger.js";
 import { connections, players, playerRooms, roomCodes, rooms } from "../state/memory.js";
@@ -23,6 +24,10 @@ function generateInviteCode(): string {
 export function handleCreateRoom(playerId: string, payload: CreateRoomMessage): void {
   if (playerRooms.has(playerId)) {
     return;
+  }
+
+  if (rooms.size >= LIMITS.MAX_ROOMS) {
+    throw new ApiError(ERROR_CODES.SERVER_BUSY, SERVER_MESSAGES.SERVER_BUSY);
   }
 
   const identity = connections.get(playerId);
@@ -53,6 +58,7 @@ export function handleCreateRoom(playerId: string, payload: CreateRoomMessage): 
     currentTurn: 0,
     turnCount: 0,
     startedAt: new Date(),
+    status: "lobby",
     forfeitedPlayerIds: new Set()
   };
 
@@ -113,6 +119,7 @@ export function handleJoinRoomByCode(playerId: string, payload: JoinRoomByCodeMe
   logger.info("player joined private room", { roomId, playerId, playerCount: room.players.length });
 
   if (room.players.length === room.maxPlayers) {
+    room.status = "active";
     broadcast(room, {
       type: MESSAGE_TYPES.GAME_START,
       roomId: room.id,

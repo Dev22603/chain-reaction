@@ -7,13 +7,20 @@ import { ApiError } from "./api_error.js";
 
 export function signAccessToken(payload: AuthTokenPayload): string {
   return jwt.sign(payload, config.JWT_SECRET, {
-    expiresIn: config.JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"]
+    algorithm: "HS256",
+    expiresIn: config.JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"],
+    issuer: config.JWT_ISSUER,
+    audience: config.JWT_AUDIENCE
   });
 }
 
 export function verifyAccessToken(token: string): AuthTokenPayload {
   try {
-    const decoded = jwt.verify(token, config.JWT_SECRET);
+    const decoded = jwt.verify(token, config.JWT_SECRET, {
+      algorithms: ["HS256"],
+      issuer: config.JWT_ISSUER,
+      audience: config.JWT_AUDIENCE
+    });
     if (!isAuthTokenPayload(decoded)) {
       throw new Error("Invalid token payload");
     }

@@ -1,8 +1,21 @@
-import { ERROR_CODES, MESSAGE_TYPES } from "../constants/app.constants.js";
+import {
+  ERROR_CODES,
+  MESSAGE_TYPES,
+  ROOM_IDLE_TTL_MS,
+  RANKED_VELOCITY_LIMIT,
+  RANKED_VELOCITY_WINDOW_MS
+} from "../constants/app.constants.js";
 import { matchesRepo, scoresRepo } from "../db/index.js";
 import { applyMove, isEliminated } from "../game/gameLogic.js";
 import { getLogger } from "../lib/logger.js";
-import { players, playerRooms, roomCodes, rooms } from "../state/memory.js";
+import {
+  pendingReconnects,
+  players,
+  playerRooms,
+  rankedCompletions,
+  roomCodes,
+  rooms
+} from "../state/memory.js";
 import type { PlayerIndex, Room } from "../types/game.js";
 import type { MakeMoveMessage } from "../types/protocol.js";
 import type { ScoreDeltas } from "../types/scoring.js";
@@ -12,7 +25,7 @@ const logger = getLogger("game.handlers");
 
 export function handleMove(playerId: string, payload: MakeMoveMessage): void {
   const room = getRoomForPlayer(playerId);
-  if (!room) {
+  if (!room || room.status !== "active") {
     return;
   }
 
@@ -98,9 +111,20 @@ function eliminateAndBroadcast(playerId: string): void {
   leavingPlayer.eliminatedTurn ??= room.turnCount;
   room.forfeitedPlayerIds.add(leavingPlayer.id);
 
+  if (room.status !== "active") {
+    destroyRoom(room);
+    return;
+  }
+
   const winner = getWinner(room);
   if (winner) {
     endGame(room, winner);
+    return;
+  }
+
+  const alive = room.players.filter((player) => !player.eliminated);
+  if (alive.length === 0) {
+    destroyRoom(room);
     return;
   }
 
@@ -159,7 +183,60 @@ function computeAuthDeltas(room: Room, winnerId: string): ScoreDeltas {
   return deltas;
 }
 
+export function destroyRoom(room: Room): void {
+  rooms.delete(room.id);
+  if (room.inviteCode) {
+    roomCodes.delete(room.inviteCode);
+  }
+  for (const player of room.players) {
+    playerRooms.delete(player.id);
+    const pending = pendingReconnects.get(player.id);
+    if (pending) {
+      clearTimeout(pending.timeoutHandle);
+      pendingReconnects.delete(player.id);
+    }
+  }
+}
+
+let reaperInterval: NodeJS.Timeout | null = null;
+
+export function startRoomReaper(): void {
+  if (reaperInterval) return;
+
+  reaperInterval = setInterval(() => {
+    logger.info("running periodic room reaper");
+    const now = Date.now();
+    for (const room of Array.from(rooms.values())) {
+      // Check 1: no connected sockets
+      const hasConnectedPlayers = room.players.some((p) => players.has(p.id));
+      if (!hasConnectedPlayers) {
+        logger.info("reaper: destroying room with no connected players", { roomId: room.id });
+        destroyRoom(room);
+        continue;
+      }
+
+      // Check 2: private rooms unfilled past TTL
+      if (room.isPrivate && room.players.length < room.maxPlayers) {
+        const age = now - room.startedAt.getTime();
+        if (age > ROOM_IDLE_TTL_MS) {
+          logger.info("reaper: destroying unfilled private room past TTL", { roomId: room.id, ageMs: age });
+          destroyRoom(room);
+        }
+      }
+    }
+  }, 60_000);
+}
+
+export function stopRoomReaper(): void {
+  if (reaperInterval) {
+    clearInterval(reaperInterval);
+    reaperInterval = null;
+    logger.info("stopped periodic room reaper");
+  }
+}
+
 function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>): void {
+  room.status = "finished";
   const scoreDeltas = computeAuthDeltas(room, winner.id);
 
   broadcast(room, {
@@ -185,13 +262,7 @@ function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>):
     forfeitedPlayerIds: new Set(room.forfeitedPlayerIds)
   };
 
-  rooms.delete(room.id);
-  if (room.inviteCode) {
-    roomCodes.delete(room.inviteCode);
-  }
-  for (const player of room.players) {
-    playerRooms.delete(player.id);
-  }
+  destroyRoom(room);
 
   persistFinishedMatch(roomSnapshot, winner.id).catch((error: unknown) => {
     logger.error("finished match persistence failed", {
@@ -223,8 +294,8 @@ async function persistFinishedMatch(
   winnerId: string
 ): Promise<void> {
   const winner = room.players.find((p) => p.id === winnerId);
-  if (!winner || winner.isGuest) {
-    logger.info("skipping match persistence: winner is a guest", {
+  if (!winner) {
+    logger.info("skipping match persistence: winner not found", {
       roomId: room.id
     });
     return;
@@ -238,12 +309,11 @@ async function persistFinishedMatch(
     return;
   }
 
-  const participants = authParticipants.map((player, _index) => {
-    const globalIndex = room.players.indexOf(player);
+  const participants = room.players.map((player) => {
     return {
       playerId: player.id,
       displayName: player.name,
-      playerIndex: globalIndex,
+      playerIndex: room.players.indexOf(player),
       eliminatedTurn: player.id === winnerId ? null : player.eliminatedTurn,
       forfeited: room.forfeitedPlayerIds.has(player.id)
     };
@@ -262,11 +332,42 @@ async function persistFinishedMatch(
     participants
   });
 
-  await scoresRepo.applyMatchResult({
-    winnerId,
-    participants: participants.map((participant) => ({
-      playerId: participant.playerId,
-      forfeited: participant.forfeited
-    }))
-  });
+  if (room.mode === "ranked" && authParticipants.length >= 2 && !winner.isGuest) {
+    const now = Date.now();
+    let isCapped = false;
+
+    for (const p of authParticipants) {
+      const timestamps = rankedCompletions.get(p.id) ?? [];
+      const validTimestamps = timestamps.filter((t) => now - t < RANKED_VELOCITY_WINDOW_MS);
+      if (validTimestamps.length >= RANKED_VELOCITY_LIMIT) {
+        isCapped = true;
+        logger.warn("Ranked velocity cap exceeded for player, skipping leaderboard update", {
+          playerId: p.id,
+          roomId: room.id
+        });
+      }
+    }
+
+    for (const p of authParticipants) {
+      const timestamps = rankedCompletions.get(p.id) ?? [];
+      const validTimestamps = timestamps.filter((t) => now - t < RANKED_VELOCITY_WINDOW_MS);
+      validTimestamps.push(now);
+      rankedCompletions.set(p.id, validTimestamps);
+    }
+
+    if (isCapped) {
+      logger.info("skipping scoresRepo.applyMatchResult due to velocity cap", {
+        roomId: room.id
+      });
+      return;
+    }
+
+    await scoresRepo.applyMatchResult({
+      winnerId,
+      participants: authParticipants.map((participant) => ({
+        playerId: participant.id,
+        forfeited: room.forfeitedPlayerIds.has(participant.id)
+      }))
+    });
+  }
 }
