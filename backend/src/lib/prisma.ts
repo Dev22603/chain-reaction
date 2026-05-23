@@ -4,7 +4,7 @@ import { config } from "../constants/config.js";
 import { PrismaClient } from "../generated/prisma/client.js";
 
 const createPrismaClient = () => {
-  const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+  const pool = new pg.Pool({ connectionString: config.DATABASE_URL });
   const adapter = new PrismaPg(pool);
 
   return new PrismaClient({

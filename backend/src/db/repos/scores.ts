@@ -1,3 +1,4 @@
+import { SCORING_POINTS } from "../../constants/app.constants.js";
 import { prisma } from "../../lib/prisma.js";
 import type { ApplyMatchResultInput, LeaderboardEntry, ScoreDeltas } from "../../types/scoring.js";
 
@@ -30,7 +31,7 @@ export const scoresRepo = {
     }
 
     for (const participant of input.participants) {
-      deltas[participant.playerId] = participant.playerId === input.winnerId ? 3 : 1;
+      deltas[participant.playerId] = participant.playerId === input.winnerId ? SCORING_POINTS.WIN : SCORING_POINTS.LOSS;
     }
 
     await prisma.$transaction(
@@ -43,7 +44,7 @@ export const scoresRepo = {
           },
           create: {
             playerId: participant.playerId,
-            score: won ? 3 : 1,
+            score: won ? SCORING_POINTS.WIN : SCORING_POINTS.LOSS,
             wins: won ? 1 : 0,
             losses: won ? 0 : 1,
             gamesPlayed: 1,
@@ -51,7 +52,7 @@ export const scoresRepo = {
           },
           update: {
             score: {
-              increment: won ? 3 : 1
+              increment: won ? SCORING_POINTS.WIN : SCORING_POINTS.LOSS
             },
             wins: {
               increment: won ? 1 : 0

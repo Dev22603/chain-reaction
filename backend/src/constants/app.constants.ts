@@ -42,6 +42,7 @@ export const ERROR_CODES = {
   NOT_AUTHENTICATED: "not_authenticated",
   AUTH_TOKEN_EXPIRED: "auth_token_expired",
   NOT_AUTHORIZED: "not_authorized",
+  NOT_FOUND: "not_found",
   PLAYER_NOT_FOUND: "player_not_found",
   ROOM_NOT_FOUND: "room_not_found",
   ROOM_CODE_INVALID: "room_code_invalid",
@@ -53,6 +54,11 @@ export const ERROR_CODES = {
   MATCH_NOT_SAVED: "match_not_saved",
   RATE_LIMITED: "rate_limited",
   SERVER_BUSY: "server_busy"
+} as const;
+
+export const SCORING_POINTS = {
+  WIN: 3,
+  LOSS: 1
 } as const;
 
 export const WS_RATE_LIMIT_MAX = 60;
