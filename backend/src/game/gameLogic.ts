@@ -8,32 +8,36 @@ export function createBoard(rows: number, cols: number): Board {
   );
 }
 
+// ⚡ Bolt: Removed array allocation and higher-order functions from getNeighbors
+// in favor of direct mutation for better performance in hot loops.
 export function getNeighbors(
   row: number,
   col: number,
   rows: number,
   cols: number
 ): Array<[number, number]> {
-  const candidates: Array<[number, number]> = [
-    [row - 1, col],
-    [row + 1, col],
-    [row, col - 1],
-    [row, col + 1]
-  ];
-
-  return candidates.filter(
-    ([nextRow, nextCol]) =>
-      nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols
-  );
+  const neighbors: Array<[number, number]> = [];
+  if (row > 0) neighbors.push([row - 1, col]);
+  if (row < rows - 1) neighbors.push([row + 1, col]);
+  if (col > 0) neighbors.push([row, col - 1]);
+  if (col < cols - 1) neighbors.push([row, col + 1]);
+  return neighbors;
 }
 
+// ⚡ Bolt: Computed critical mass mathematically instead of allocating
+// an array of neighbors just to check its length, significantly reducing GC overhead.
 export function getCriticalMass(
   row: number,
   col: number,
   rows: number,
   cols: number
 ): number {
-  return getNeighbors(row, col, rows, cols).length;
+  let mass = 4;
+  if (row === 0) mass -= 1;
+  if (row === rows - 1) mass -= 1;
+  if (col === 0) mass -= 1;
+  if (col === cols - 1) mass -= 1;
+  return mass;
 }
 
 export function applyMove(
