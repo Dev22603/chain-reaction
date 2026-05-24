@@ -4,7 +4,8 @@
       "mcp__claude_ai_Figma__get_metadata",
       "Bash(npx tsc *)",
       "Bash(git -C /d/College/Github_Projects/chain-reaction/frontend diff HEAD -- src/components/dialogs/CreateRoomDialog.tsx src/components/dialogs/DialogShell.tsx)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(npm run *)"
     ]
   }
 }
