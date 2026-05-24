@@ -101,7 +101,7 @@ export default function Home() {
   const disconnected = game.connectionState !== "open" && game.connectionState !== "connecting";
 
   return (
-    <main className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col gap-6 px-4 pb-7 sm:px-8 lg:px-10">
+    <main className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col gap-3 px-4 pb-3 sm:px-8 lg:px-10">
       {disconnected ? (
         <div
           role="status"

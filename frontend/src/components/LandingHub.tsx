@@ -64,17 +64,17 @@ export function LandingHub({
   );
 
   return (
-    <div className="relative mx-auto grid w-full max-w-[860px] place-items-center gap-8 pt-2 pb-12 sm:gap-10 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]">
-      <AtomicHero className="relative h-[150px] w-[280px] sm:h-[180px] sm:w-[340px]" />
+    <div className="relative mx-auto grid w-full max-w-[860px] place-items-center gap-3 py-3 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]">
+      <AtomicHero className="relative h-[88px] w-[165px] sm:h-[100px] sm:w-[190px]" />
 
       <div className="grid gap-3 text-center">
         <h1
-          className="font-display text-[clamp(3.4rem,11vw,6.5rem)] leading-[0.95] tracking-tight text-white game-text-shadow [animation:hero-drop_0.7s_cubic-bezier(0.2,0.8,0.4,1)_both]"
+          className="font-display text-[clamp(1.7rem,4.5vw,4.5rem)] leading-none tracking-tight text-white game-text-shadow whitespace-nowrap [animation:hero-drop_0.7s_cubic-bezier(0.2,0.8,0.4,1)_both]"
           aria-label="Chain Reaction"
         >
-          <span className="block text-white">CHAIN</span>
+          CHAIN{" "}
           <span
-            className="block bg-gradient-to-b from-uranium via-reactor to-plasma bg-clip-text text-transparent"
+            className="bg-gradient-to-b from-uranium via-reactor to-plasma bg-clip-text text-transparent"
             style={{ WebkitTextStroke: "0.5px rgba(255,255,255,0.08)" }}
           >
             REACTION
@@ -85,7 +85,7 @@ export function LandingHub({
         </p>
       </div>
 
-      <div className="grid w-full gap-3">
+      <div className="mx-auto grid w-full max-w-[460px] gap-3">
         <p className="text-center font-display text-xs tracking-[0.2em] text-fg-muted sm:text-sm">
           HOW MANY PLAYERS?
         </p>
@@ -141,7 +141,7 @@ export function LandingHub({
               onInteract?.();
               setCreateOpen(true);
             }}
-            className="group relative grid place-items-center gap-2 rounded-2xl border-2 border-line bg-surface/40 px-5 py-4 font-display text-xl tracking-wide text-fg transition-colors hover:border-reactor hover:text-white sm:text-2xl"
+            className="group relative grid place-items-center gap-2 rounded-2xl border-2 border-line bg-surface/40 px-5 py-3 font-display text-xl tracking-wide text-fg transition-colors hover:border-reactor hover:text-white sm:py-4 sm:text-2xl"
           >
             <Users size={20} strokeWidth={2.5} aria-hidden="true" />
             <span>CREATE</span>
@@ -153,7 +153,7 @@ export function LandingHub({
               onInteract?.();
               setJoinOpen(true);
             }}
-            className="group relative grid place-items-center gap-2 rounded-2xl border-2 border-line bg-surface/40 px-5 py-4 font-display text-xl tracking-wide text-fg transition-colors hover:border-cherenkov hover:text-white sm:text-2xl"
+            className="group relative grid place-items-center gap-2 rounded-2xl border-2 border-line bg-surface/40 px-5 py-3 font-display text-xl tracking-wide text-fg transition-colors hover:border-cherenkov hover:text-white sm:py-4 sm:text-2xl"
           >
             <LogIn size={20} strokeWidth={2.5} aria-hidden="true" />
             <span>JOIN</span>
@@ -165,7 +165,7 @@ export function LandingHub({
           onClick={handlePlay}
           disabled={!connectionReady}
           aria-disabled={!connectionReady}
-          className="game-btn-shadow group relative grid w-full grid-flow-col items-center justify-center gap-3 rounded-3xl bg-gradient-to-b from-uranium via-reactor to-[#d23a1a] px-8 py-5 font-display text-3xl tracking-wide text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-50 sm:py-6 sm:text-4xl [animation:button-bounce-in_0.5s_cubic-bezier(0.2,0.8,0.4,1)_0.15s_both]"
+          className="game-btn-shadow group relative grid w-full grid-flow-col items-center justify-center gap-3 rounded-3xl bg-gradient-to-b from-uranium via-reactor to-[#d23a1a] px-8 py-4 font-display text-3xl tracking-wide text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-50 sm:py-5 sm:text-4xl [animation:button-bounce-in_0.5s_cubic-bezier(0.2,0.8,0.4,1)_0.15s_both]"
         >
           <Play
             size={28}
