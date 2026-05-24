@@ -12,77 +12,67 @@ const PASSWORD_SALT_ROUNDS = 12;
 const DUMMY_HASH = "$2b$12$4lpQHVrnzc9xN9kLolJIMu3rGeYx60oB1JYyZqEdzvqVTpPRiVQHC";
 
 export const authService = {
-  async signup(input: SignupInput): Promise<AuthResult> {
-    const existing = await playersRepo.findByEmail(input.email);
-    if (existing) {
-      throw new ApiError(ERROR_CODES.EMAIL_TAKEN, SERVER_MESSAGES.EMAIL_TAKEN, [], 409);
-    }
+	async signup(input: SignupInput): Promise<AuthResult> {
+		const existing = await playersRepo.findByEmail(input.email);
+		if (existing) {
+			throw new ApiError(ERROR_CODES.EMAIL_TAKEN, SERVER_MESSAGES.EMAIL_TAKEN, [], 409);
+		}
 
-    const passwordHash = await bcrypt.hash(input.password, PASSWORD_SALT_ROUNDS);
-    const player = await playersRepo.createAccount({
-      id: randomUUID(),
-      displayName: input.displayName,
-      email: input.email,
-      passwordHash
-    });
+		const passwordHash = await bcrypt.hash(input.password, PASSWORD_SALT_ROUNDS);
+		const player = await playersRepo.createAccount({
+			id: randomUUID(),
+			displayName: input.displayName,
+			email: input.email,
+			passwordHash,
+		});
 
-    return buildAuthResult(toPublicPlayer(player));
-  },
+		return buildAuthResult(toPublicPlayer(player));
+	},
 
-  async login(input: LoginInput): Promise<AuthResult> {
-    const player = await playersRepo.findByEmail(input.email);
-    const passwordHash = player?.passwordHash ?? DUMMY_HASH;
+	async login(input: LoginInput): Promise<AuthResult> {
+		const player = await playersRepo.findByEmail(input.email);
+		const passwordHash = player?.passwordHash ?? DUMMY_HASH;
 
-    const validPassword = await bcrypt.compare(input.password, passwordHash);
-    if (!player || !player.passwordHash || !validPassword) {
-      throwInvalidCredentials();
-    }
+		const validPassword = await bcrypt.compare(input.password, passwordHash);
+		if (!player || !player.passwordHash || !validPassword) {
+			throwInvalidCredentials();
+		}
 
-    return buildAuthResult(toPublicPlayer(player));
-  },
+		return buildAuthResult(toPublicPlayer(player));
+	},
 
-  async getMe(playerId: string): Promise<PublicPlayer> {
-    const player = await playersRepo.findById(playerId);
-    if (!player?.email) {
-      throw new ApiError(
-        ERROR_CODES.NOT_AUTHENTICATED,
-        SERVER_MESSAGES.NOT_AUTHENTICATED,
-        [],
-        401
-      );
-    }
+	async getMe(playerId: string): Promise<PublicPlayer> {
+		const player = await playersRepo.findById(playerId);
+		if (!player?.email) {
+			throw new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.NOT_AUTHENTICATED, [], 401);
+		}
 
-    return toPublicPlayer(player);
-  }
+		return toPublicPlayer(player);
+	},
 };
 
 function buildAuthResult(player: PublicPlayer): AuthResult {
-  if (!player.email) {
-    throwInvalidCredentials();
-  }
+	if (!player.email) {
+		throwInvalidCredentials();
+	}
 
-  return {
-    player,
-    accessToken: signAccessToken({
-      sub: player.id,
-      email: player.email
-    })
-  };
+	return {
+		player,
+		accessToken: signAccessToken({
+			sub: player.id,
+			email: player.email,
+		}),
+	};
 }
 
 function toPublicPlayer(player: { id: string; displayName: string; email: string | null }): PublicPlayer {
-  return {
-    id: player.id,
-    displayName: player.displayName,
-    email: player.email
-  };
+	return {
+		id: player.id,
+		displayName: player.displayName,
+		email: player.email,
+	};
 }
 
 function throwInvalidCredentials(): never {
-  throw new ApiError(
-    ERROR_CODES.INVALID_CREDENTIALS,
-    SERVER_MESSAGES.INVALID_CREDENTIALS,
-    [],
-    401
-  );
+	throw new ApiError(ERROR_CODES.INVALID_CREDENTIALS, SERVER_MESSAGES.INVALID_CREDENTIALS, [], 401);
 }

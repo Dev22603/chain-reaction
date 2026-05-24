@@ -246,15 +246,15 @@ Deferred:
 
 ## Risk Register
 
-| Risk | Where It Shows Up | Mitigation |
-|---|---|---|
-| Protocol drift | `PROTOCOL.md`, backend types, frontend types | Update all three together |
-| Infinite cascade loop | `applyMove` | Safety counter plus smoke case |
-| Wrong ownership during cascade | `applyMove` | Use exploding cell owner at explosion time |
-| Stuck turn after elimination | `advanceTurn` | Skip eliminated players and test leave flow |
-| Phantom room or queue entries | cleanup handlers | Centralize cleanup through handlers |
-| Stale board rendering | React state updates | Replace `gameState` object from messages |
-| Hidden invalid client payloads | router | Zod at boundary, `ApiError` response |
+| Risk                           | Where It Shows Up                            | Mitigation                                  |
+| ------------------------------ | -------------------------------------------- | ------------------------------------------- |
+| Protocol drift                 | `PROTOCOL.md`, backend types, frontend types | Update all three together                   |
+| Infinite cascade loop          | `applyMove`                                  | Safety counter plus smoke case              |
+| Wrong ownership during cascade | `applyMove`                                  | Use exploding cell owner at explosion time  |
+| Stuck turn after elimination   | `advanceTurn`                                | Skip eliminated players and test leave flow |
+| Phantom room or queue entries  | cleanup handlers                             | Centralize cleanup through handlers         |
+| Stale board rendering          | React state updates                          | Replace `gameState` object from messages    |
+| Hidden invalid client payloads | router                                       | Zod at boundary, `ApiError` response        |
 
 ## Post-M7 Persistence And Scoring Plan
 

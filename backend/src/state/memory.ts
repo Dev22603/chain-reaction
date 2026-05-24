@@ -3,9 +3,9 @@ import type { ConnectionIdentity } from "../types/connection.js";
 import type { Player, Room } from "../types/game.js";
 
 export interface PendingReconnect {
-  roomId: string;
-  expiresAt: number;
-  timeoutHandle: ReturnType<typeof setTimeout>;
+	roomId: string;
+	expiresAt: number;
+	timeoutHandle: ReturnType<typeof setTimeout>;
 }
 
 export const players = new Map<string, WebSocket>();

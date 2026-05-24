@@ -1,11 +1,11 @@
-# Graph Report - chain-reaction  (2026-05-22)
+# Graph Report - chain-reaction  (2026-05-24)
 
 ## Corpus Check
-- 105 files · ~101,142 words
+- 105 files · ~79,902 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 331 nodes · 452 edges · 42 communities detected
+- 331 nodes · 453 edges · 42 communities detected
 - Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 54 edges (avg confidence: 0.81)
 - Token cost: 0 input · 0 output
 
@@ -19,8 +19,8 @@
 - [[_COMMUNITY_Community 6|Community 6]]
 - [[_COMMUNITY_Community 7|Community 7]]
 - [[_COMMUNITY_Community 8|Community 8]]
+- [[_COMMUNITY_Community 9|Community 9]]
 - [[_COMMUNITY_Community 10|Community 10]]
-- [[_COMMUNITY_Community 11|Community 11]]
 - [[_COMMUNITY_Community 12|Community 12]]
 - [[_COMMUNITY_Community 13|Community 13]]
 - [[_COMMUNITY_Community 15|Community 15]]
@@ -85,16 +85,16 @@
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.08
-Nodes (15): ApiError, getBearerToken(), requireAuth(), buildAuthResult(), throwInvalidCredentials(), anonymizeIp(), getClientIp(), errorMiddleware() (+7 more)
-
-### Community 1 - "Community 1"
 Cohesion: 0.07
 Nodes (31): Database Boundary (post-M7), Fly.io Deployment Plan, System Overview (Frontend, Backend, DB), Backend File Map, Adding a New Message Type Steps, Production-Grade Node.js Backend Setup Guide, Context File Index, ApiError Throw/Catch in Router Pattern (+23 more)
 
+### Community 1 - "Community 1"
+Cohesion: 0.11
+Nodes (7): getBearerToken(), requireAuth(), buildAuthResult(), throwInvalidCredentials(), isAuthTokenPayload(), signAccessToken(), verifyAccessToken()
+
 ### Community 2 - "Community 2"
-Cohesion: 0.15
-Nodes (11): applyMove(), createBoard(), getCriticalMass(), getNeighbors(), createRoom(), getQueueKey(), handleJoinQueue(), handleLeaveQueue() (+3 more)
+Cohesion: 0.14
+Nodes (9): ApiError, getSchemaForType(), validateMessage(), getQueueKey(), handleJoinQueue(), handleLeaveQueue(), removeFromAllQueues(), generateInviteCode() (+1 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.12
@@ -109,24 +109,24 @@ Cohesion: 0.24
 Nodes (16): broadcast(), advanceTurn(), broadcastGameState(), computeAuthDeltas(), destroyRoom(), eliminateAndBroadcast(), endGame(), getRoomForPlayer() (+8 more)
 
 ### Community 6 - "Community 6"
+Cohesion: 0.19
+Nodes (12): send(), anonymizeIp(), getClientIp(), errorMiddleware(), sendGameStateToPlayer(), rateLimitHandler(), logSecurityEvent(), buildGuestIdentity() (+4 more)
+
+### Community 7 - "Community 7"
 Cohesion: 0.16
 Nodes (2): stopRoomReaper(), gracefulShutdown()
 
-### Community 7 - "Community 7"
+### Community 8 - "Community 8"
 Cohesion: 0.15
 Nodes (7): ApiClientError, apiRequest(), clearStoredAccessToken(), getStoredAccessToken(), setStoredAccessToken(), handleSubmit(), buildWebSocketUrl()
 
-### Community 8 - "Community 8"
+### Community 9 - "Community 9"
 Cohesion: 0.23
-Nodes (9): chainSound(), clickSound(), createSoundEngine(), envelope(), errorSound(), explodeSound(), placeSound(), turnSound() (+1 more)
+Nodes (9): applyMove(), createBoard(), getCriticalMass(), getNeighbors(), flashNotice(), onCreateRoom(), onJoinRoom(), onPlay() (+1 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.31
-Nodes (7): send(), sendGameStateToPlayer(), buildGuestIdentity(), getTokenFromRequest(), handleConnection(), resolveIdentity(), wireSocketEvents()
-
-### Community 11 - "Community 11"
-Cohesion: 0.53
-Nodes (4): flashNotice(), onCreateRoom(), onJoinRoom(), onPlay()
+Cohesion: 0.23
+Nodes (9): chainSound(), clickSound(), createSoundEngine(), envelope(), errorSound(), explodeSound(), placeSound(), turnSound() (+1 more)
 
 ### Community 12 - "Community 12"
 Cohesion: 0.53
@@ -255,7 +255,7 @@ Nodes (1): Rule: Conventional Commits
 ## Knowledge Gaps
 - **61 isolated node(s):** `Graphify Knowledge Graph Instructions`, `graphify query/path/explain CLI`, `Frontend Responsibilities`, `game/gameLogic.ts pure module`, `Database Boundary (post-M7)` (+56 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Community 6`** (16 nodes): `seed.ts`, `recompute-scores.ts`, `app.ts`, `config.ts`, `players.ts`, `scores.ts`, `index.ts`, `logger.ts`, `prisma.ts`, `scoring.ts`, `stopRoomReaper()`, `gracefulShutdown()`, `getLogger()`, `createPrismaClient()`, `main()`, `main()`
+- **Thin community `Community 7`** (16 nodes): `seed.ts`, `recompute-scores.ts`, `app.ts`, `config.ts`, `players.ts`, `scores.ts`, `index.ts`, `logger.ts`, `prisma.ts`, `scoring.ts`, `stopRoomReaper()`, `gracefulShutdown()`, `getLogger()`, `createPrismaClient()`, `main()`, `main()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 13`** (5 nodes): `capacityFor()`, `cellKey()`, `diffBoards()`, `tallyOrbs()`, `board.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -326,8 +326,8 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `Graphify Knowledge Graph Instructions`, `graphify query/path/explain CLI`, `Frontend Responsibilities` to the rest of the system?**
   _61 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.08 - nodes in this community are weakly interconnected._
-- **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.07 - nodes in this community are weakly interconnected._
-- **Should `Community 3` be split into smaller, more focused modules?**
-  _Cohesion score 0.12 - nodes in this community are weakly interconnected._
+- **Should `Community 1` be split into smaller, more focused modules?**
+  _Cohesion score 0.11 - nodes in this community are weakly interconnected._
+- **Should `Community 2` be split into smaller, more focused modules?**
+  _Cohesion score 0.14 - nodes in this community are weakly interconnected._

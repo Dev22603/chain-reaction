@@ -1,27 +1,27 @@
 export const SERVER_MESSAGES = {
-  INTERNAL_ERROR: "Something went wrong.",
-  VALIDATION_FAILED: "Validation failed.",
-  DATABASE_UNAVAILABLE: "Database is not configured.",
-  EMAIL_TAKEN: "Email is already registered.",
-  INVALID_CREDENTIALS: "Invalid email or password.",
-  NOT_AUTHENTICATED: "Authentication is required.",
-  RANKED_REQUIRES_AUTH: "Login is required to join ranked queue.",
-  PLAYER_NOT_FOUND: "Player was not found.",
-  SERVER_BUSY: "Server is at capacity. Please try again later."
+	INTERNAL_ERROR: "Something went wrong.",
+	VALIDATION_FAILED: "Validation failed.",
+	DATABASE_UNAVAILABLE: "Database is not configured.",
+	EMAIL_TAKEN: "Email is already registered.",
+	INVALID_CREDENTIALS: "Invalid email or password.",
+	NOT_AUTHENTICATED: "Authentication is required.",
+	RANKED_REQUIRES_AUTH: "Login is required to join ranked queue.",
+	PLAYER_NOT_FOUND: "Player was not found.",
+	SERVER_BUSY: "Server is at capacity. Please try again later.",
 } as const;
 
 export const AUTH_VALIDATION_ERRORS = {
-  EMAIL_INVALID: "email must be valid",
-  PASSWORD_MIN: "password must be at least 8 characters",
-  PASSWORD_MAX: "password must be 200 characters or less",
-  DISPLAY_NAME_REQUIRED: "displayName is required",
-  DISPLAY_NAME_MAX: "displayName must be 100 characters or less"
+	EMAIL_INVALID: "email must be valid",
+	PASSWORD_MIN: "password must be at least 8 characters",
+	PASSWORD_MAX: "password must be 200 characters or less",
+	DISPLAY_NAME_REQUIRED: "displayName is required",
+	DISPLAY_NAME_MAX: "displayName must be 100 characters or less",
 } as const;
 
 export const QUEUE_VALIDATION_ERRORS = {
-  PLAYER_NAME_REQUIRED: "playerName is required",
-  PLAYER_NAME_MAX: "playerName must be 100 characters or less",
-  GRID_ROWS_RANGE: "gridRows must be between 3 and 20",
-  GRID_COLS_RANGE: "gridCols must be between 3 and 20",
-  MAX_PLAYERS_RANGE: "maxPlayers must be between 2 and 4"
+	PLAYER_NAME_REQUIRED: "playerName is required",
+	PLAYER_NAME_MAX: "playerName must be 100 characters or less",
+	GRID_ROWS_RANGE: "gridRows must be between 3 and 20",
+	GRID_COLS_RANGE: "gridCols must be between 3 and 20",
+	MAX_PLAYERS_RANGE: "maxPlayers must be between 2 and 4",
 } as const;

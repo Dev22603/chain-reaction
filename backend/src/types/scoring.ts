@@ -1,21 +1,21 @@
 export interface LeaderboardEntry {
-  playerId: string;
-  displayName: string;
-  score: number;
-  wins: number;
-  losses: number;
-  gamesPlayed: number;
-  forfeits: number;
+	playerId: string;
+	displayName: string;
+	score: number;
+	wins: number;
+	losses: number;
+	gamesPlayed: number;
+	forfeits: number;
 }
 
 export interface MatchScoreParticipant {
-  playerId: string;
-  forfeited: boolean;
+	playerId: string;
+	forfeited: boolean;
 }
 
 export interface ApplyMatchResultInput {
-  winnerId: string;
-  participants: MatchScoreParticipant[];
+	winnerId: string;
+	participants: MatchScoreParticipant[];
 }
 
 export type ScoreDeltas = Record<string, number>;

@@ -75,7 +75,7 @@
       "source_file": "backend\\prisma\\seed.ts",
       "source_location": "L1",
       "id": "backend_prisma_seed_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "seed.ts"
     },
     {
@@ -84,7 +84,7 @@
       "source_file": "backend\\prisma\\seed.ts",
       "source_location": "L3",
       "id": "seed_main",
-      "community": 6,
+      "community": 7,
       "norm_label": "main()"
     },
     {
@@ -93,7 +93,7 @@
       "source_file": "backend\\scripts\\recompute-scores.ts",
       "source_location": "L1",
       "id": "backend_scripts_recompute_scores_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "recompute-scores.ts"
     },
     {
@@ -102,7 +102,7 @@
       "source_file": "backend\\scripts\\recompute-scores.ts",
       "source_location": "L10",
       "id": "recompute_scores_main",
-      "community": 6,
+      "community": 7,
       "norm_label": "main()"
     },
     {
@@ -111,7 +111,7 @@
       "source_file": "backend\\src\\app.ts",
       "source_location": "L1",
       "id": "backend_src_app_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "app.ts"
     },
     {
@@ -120,7 +120,7 @@
       "source_file": "backend\\src\\index.ts",
       "source_location": "L1",
       "id": "backend_src_index_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "index.ts"
     },
     {
@@ -129,7 +129,7 @@
       "source_file": "backend\\src\\index.ts",
       "source_location": "L24",
       "id": "index_gracefulshutdown",
-      "community": 6,
+      "community": 7,
       "norm_label": "gracefulshutdown()"
     },
     {
@@ -138,7 +138,7 @@
       "source_file": "backend\\src\\router.ts",
       "source_location": "L1",
       "id": "backend_src_router_ts",
-      "community": 0,
+      "community": 2,
       "norm_label": "router.ts"
     },
     {
@@ -156,7 +156,7 @@
       "source_file": "backend\\src\\constants\\app.constants.ts",
       "source_location": "L1",
       "id": "backend_src_constants_app_constants_ts",
-      "community": 0,
+      "community": 2,
       "norm_label": "app.constants.ts"
     },
     {
@@ -165,7 +165,7 @@
       "source_file": "backend\\src\\constants\\app.messages.ts",
       "source_location": "L1",
       "id": "backend_src_constants_app_messages_ts",
-      "community": 0,
+      "community": 2,
       "norm_label": "app.messages.ts"
     },
     {
@@ -174,7 +174,7 @@
       "source_file": "backend\\src\\constants\\config.ts",
       "source_location": "L1",
       "id": "backend_src_constants_config_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "config.ts"
     },
     {
@@ -183,7 +183,7 @@
       "source_file": "backend\\src\\controllers\\auth.controller.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_auth_controller_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "auth.controller.ts"
     },
     {
@@ -192,7 +192,7 @@
       "source_file": "backend\\src\\controllers\\health.controller.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_health_controller_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "health.controller.ts"
     },
     {
@@ -201,7 +201,7 @@
       "source_file": "backend\\src\\controllers\\leaderboard.controller.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_leaderboard_controller_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "leaderboard.controller.ts"
     },
     {
@@ -210,7 +210,7 @@
       "source_file": "backend\\src\\controllers\\players.controller.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_players_controller_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "players.controller.ts"
     },
     {
@@ -219,7 +219,7 @@
       "source_file": "backend\\src\\controllers\\players.controller.ts",
       "source_location": "L26",
       "id": "players_controller_getplayerid",
-      "community": 0,
+      "community": 1,
       "norm_label": "getplayerid()"
     },
     {
@@ -228,7 +228,7 @@
       "source_file": "backend\\src\\db\\index.ts",
       "source_location": "L1",
       "id": "backend_src_db_index_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "index.ts"
     },
     {
@@ -246,7 +246,7 @@
       "source_file": "backend\\src\\db\\repos\\players.ts",
       "source_location": "L1",
       "id": "backend_src_db_repos_players_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "players.ts"
     },
     {
@@ -255,7 +255,7 @@
       "source_file": "backend\\src\\db\\repos\\scores.ts",
       "source_location": "L1",
       "id": "backend_src_db_repos_scores_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "scores.ts"
     },
     {
@@ -264,52 +264,52 @@
       "source_file": "backend\\src\\game\\gameLogic.ts",
       "source_location": "L1",
       "id": "backend_src_game_gamelogic_ts",
-      "community": 2,
+      "community": 9,
       "norm_label": "gamelogic.ts"
     },
     {
       "label": "createBoard()",
       "file_type": "code",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L5",
+      "source_location": "L4",
       "id": "gamelogic_createboard",
-      "community": 2,
+      "community": 9,
       "norm_label": "createboard()"
     },
     {
       "label": "getNeighbors()",
       "file_type": "code",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L11",
+      "source_location": "L10",
       "id": "gamelogic_getneighbors",
-      "community": 2,
+      "community": 9,
       "norm_label": "getneighbors()"
     },
     {
       "label": "getCriticalMass()",
       "file_type": "code",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L30",
+      "source_location": "L29",
       "id": "gamelogic_getcriticalmass",
-      "community": 2,
+      "community": 9,
       "norm_label": "getcriticalmass()"
     },
     {
       "label": "applyMove()",
       "file_type": "code",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L39",
+      "source_location": "L38",
       "id": "gamelogic_applymove",
-      "community": 2,
+      "community": 9,
       "norm_label": "applymove()"
     },
     {
       "label": "isEliminated()",
       "file_type": "code",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L111",
+      "source_location": "L110",
       "id": "gamelogic_iseliminated",
-      "community": 2,
+      "community": 9,
       "norm_label": "iseliminated()"
     },
     {
@@ -327,7 +327,7 @@
       "source_file": "backend\\src\\generated\\prisma\\client.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_client_ts",
-      "community": 9,
+      "community": 11,
       "norm_label": "client.ts"
     },
     {
@@ -336,7 +336,7 @@
       "source_file": "backend\\src\\generated\\prisma\\commonInputTypes.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_commoninputtypes_ts",
-      "community": 9,
+      "community": 11,
       "norm_label": "commoninputtypes.ts"
     },
     {
@@ -345,7 +345,7 @@
       "source_file": "backend\\src\\generated\\prisma\\enums.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_enums_ts",
-      "community": 9,
+      "community": 11,
       "norm_label": "enums.ts"
     },
     {
@@ -354,7 +354,7 @@
       "source_file": "backend\\src\\generated\\prisma\\models.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_models_ts",
-      "community": 9,
+      "community": 11,
       "norm_label": "models.ts"
     },
     {
@@ -363,7 +363,7 @@
       "source_file": "backend\\src\\generated\\prisma\\internal\\class.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_internal_class_ts",
-      "community": 9,
+      "community": 11,
       "norm_label": "class.ts"
     },
     {
@@ -372,7 +372,7 @@
       "source_file": "backend\\src\\generated\\prisma\\internal\\class.ts",
       "source_location": "L41",
       "id": "class_decodebase64aswasm",
-      "community": 9,
+      "community": 11,
       "norm_label": "decodebase64aswasm()"
     },
     {
@@ -381,7 +381,7 @@
       "source_file": "backend\\src\\generated\\prisma\\internal\\class.ts",
       "source_location": "L232",
       "id": "class_getprismaclientclass",
-      "community": 9,
+      "community": 11,
       "norm_label": "getprismaclientclass()"
     },
     {
@@ -390,7 +390,7 @@
       "source_file": "backend\\src\\generated\\prisma\\internal\\prismaNamespace.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_internal_prismanamespace_ts",
-      "community": 9,
+      "community": 11,
       "norm_label": "prismanamespace.ts"
     },
     {
@@ -408,7 +408,7 @@
       "source_file": "backend\\src\\generated\\prisma\\models\\Match.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_models_match_ts",
-      "community": 9,
+      "community": 11,
       "norm_label": "match.ts"
     },
     {
@@ -417,7 +417,7 @@
       "source_file": "backend\\src\\generated\\prisma\\models\\MatchPlayer.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_models_matchplayer_ts",
-      "community": 9,
+      "community": 11,
       "norm_label": "matchplayer.ts"
     },
     {
@@ -426,7 +426,7 @@
       "source_file": "backend\\src\\generated\\prisma\\models\\Player.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_models_player_ts",
-      "community": 9,
+      "community": 11,
       "norm_label": "player.ts"
     },
     {
@@ -435,7 +435,7 @@
       "source_file": "backend\\src\\generated\\prisma\\models\\PlayerScore.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_models_playerscore_ts",
-      "community": 9,
+      "community": 11,
       "norm_label": "playerscore.ts"
     },
     {
@@ -480,7 +480,7 @@
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
       "source_location": "L80",
       "id": "game_handlers_sendgamestatetoplayer",
-      "community": 10,
+      "community": 6,
       "norm_label": "sendgamestatetoplayer()"
     },
     {
@@ -570,7 +570,7 @@
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
       "source_location": "L230",
       "id": "game_handlers_stoproomreaper",
-      "community": 6,
+      "community": 7,
       "norm_label": "stoproomreaper()"
     },
     {
@@ -660,7 +660,7 @@
       "source_file": "backend\\src\\handlers\\queue.handlers.ts",
       "source_location": "L100",
       "id": "queue_handlers_createroom",
-      "community": 2,
+      "community": 9,
       "norm_label": "createroom()"
     },
     {
@@ -705,7 +705,7 @@
       "source_file": "backend\\src\\lib\\logger.ts",
       "source_location": "L1",
       "id": "backend_src_lib_logger_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "logger.ts"
     },
     {
@@ -714,7 +714,7 @@
       "source_file": "backend\\src\\lib\\logger.ts",
       "source_location": "L13",
       "id": "logger_getlogger",
-      "community": 6,
+      "community": 7,
       "norm_label": "getlogger()"
     },
     {
@@ -723,7 +723,7 @@
       "source_file": "backend\\src\\lib\\prisma.ts",
       "source_location": "L1",
       "id": "backend_src_lib_prisma_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "prisma.ts"
     },
     {
@@ -732,7 +732,7 @@
       "source_file": "backend\\src\\lib\\prisma.ts",
       "source_location": "L6",
       "id": "prisma_createprismaclient",
-      "community": 6,
+      "community": 7,
       "norm_label": "createprismaclient()"
     },
     {
@@ -741,7 +741,7 @@
       "source_file": "backend\\src\\middlewares\\async_handler.ts",
       "source_location": "L1",
       "id": "backend_src_middlewares_async_handler_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "async_handler.ts"
     },
     {
@@ -750,7 +750,7 @@
       "source_file": "backend\\src\\middlewares\\async_handler.ts",
       "source_location": "L9",
       "id": "async_handler_asynchandler",
-      "community": 0,
+      "community": 1,
       "norm_label": "asynchandler()"
     },
     {
@@ -759,7 +759,7 @@
       "source_file": "backend\\src\\middlewares\\auth.middleware.ts",
       "source_location": "L1",
       "id": "backend_src_middlewares_auth_middleware_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "auth.middleware.ts"
     },
     {
@@ -768,7 +768,7 @@
       "source_file": "backend\\src\\middlewares\\auth.middleware.ts",
       "source_location": "L8",
       "id": "auth_middleware_requireauth",
-      "community": 0,
+      "community": 1,
       "norm_label": "requireauth()"
     },
     {
@@ -777,7 +777,7 @@
       "source_file": "backend\\src\\middlewares\\auth.middleware.ts",
       "source_location": "L19",
       "id": "auth_middleware_getbearertoken",
-      "community": 0,
+      "community": 1,
       "norm_label": "getbearertoken()"
     },
     {
@@ -786,7 +786,7 @@
       "source_file": "backend\\src\\middlewares\\error.middleware.ts",
       "source_location": "L1",
       "id": "backend_src_middlewares_error_middleware_ts",
-      "community": 0,
+      "community": 2,
       "norm_label": "error.middleware.ts"
     },
     {
@@ -795,7 +795,7 @@
       "source_file": "backend\\src\\middlewares\\error.middleware.ts",
       "source_location": "L12",
       "id": "error_middleware_errormiddleware",
-      "community": 0,
+      "community": 6,
       "norm_label": "errormiddleware()"
     },
     {
@@ -804,7 +804,7 @@
       "source_file": "backend\\src\\middlewares\\rateLimit.middleware.ts",
       "source_location": "L1",
       "id": "backend_src_middlewares_ratelimit_middleware_ts",
-      "community": 0,
+      "community": 6,
       "norm_label": "ratelimit.middleware.ts"
     },
     {
@@ -813,7 +813,7 @@
       "source_file": "backend\\src\\middlewares\\rateLimit.middleware.ts",
       "source_location": "L6",
       "id": "ratelimit_middleware_ratelimithandler",
-      "community": 0,
+      "community": 6,
       "norm_label": "ratelimithandler()"
     },
     {
@@ -822,7 +822,7 @@
       "source_file": "backend\\src\\realtime\\websocket.ts",
       "source_location": "L1",
       "id": "backend_src_realtime_websocket_ts",
-      "community": 10,
+      "community": 6,
       "norm_label": "websocket.ts"
     },
     {
@@ -831,7 +831,7 @@
       "source_file": "backend\\src\\realtime\\websocket.ts",
       "source_location": "L41",
       "id": "websocket_attachwebsocketserver",
-      "community": 10,
+      "community": 6,
       "norm_label": "attachwebsocketserver()"
     },
     {
@@ -840,7 +840,7 @@
       "source_file": "backend\\src\\realtime\\websocket.ts",
       "source_location": "L132",
       "id": "websocket_resetidletimeout",
-      "community": 10,
+      "community": 6,
       "norm_label": "resetidletimeout()"
     },
     {
@@ -849,7 +849,7 @@
       "source_file": "backend\\src\\realtime\\websocket.ts",
       "source_location": "L146",
       "id": "websocket_handleconnection",
-      "community": 10,
+      "community": 6,
       "norm_label": "handleconnection()"
     },
     {
@@ -858,7 +858,7 @@
       "source_file": "backend\\src\\realtime\\websocket.ts",
       "source_location": "L193",
       "id": "websocket_wiresocketevents",
-      "community": 10,
+      "community": 6,
       "norm_label": "wiresocketevents()"
     },
     {
@@ -867,7 +867,7 @@
       "source_file": "backend\\src\\realtime\\websocket.ts",
       "source_location": "L289",
       "id": "websocket_resolveidentity",
-      "community": 10,
+      "community": 6,
       "norm_label": "resolveidentity()"
     },
     {
@@ -876,7 +876,7 @@
       "source_file": "backend\\src\\realtime\\websocket.ts",
       "source_location": "L317",
       "id": "websocket_gettokenfromrequest",
-      "community": 10,
+      "community": 6,
       "norm_label": "gettokenfromrequest()"
     },
     {
@@ -885,7 +885,7 @@
       "source_file": "backend\\src\\realtime\\websocket.ts",
       "source_location": "L323",
       "id": "websocket_buildguestidentity",
-      "community": 10,
+      "community": 6,
       "norm_label": "buildguestidentity()"
     },
     {
@@ -894,7 +894,7 @@
       "source_file": "backend\\src\\routes\\auth.routes.ts",
       "source_location": "L1",
       "id": "backend_src_routes_auth_routes_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "auth.routes.ts"
     },
     {
@@ -903,7 +903,7 @@
       "source_file": "backend\\src\\routes\\health.routes.ts",
       "source_location": "L1",
       "id": "backend_src_routes_health_routes_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "health.routes.ts"
     },
     {
@@ -912,7 +912,7 @@
       "source_file": "backend\\src\\routes\\index.ts",
       "source_location": "L1",
       "id": "backend_src_routes_index_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "index.ts"
     },
     {
@@ -921,7 +921,7 @@
       "source_file": "backend\\src\\routes\\leaderboard.routes.ts",
       "source_location": "L1",
       "id": "backend_src_routes_leaderboard_routes_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "leaderboard.routes.ts"
     },
     {
@@ -930,7 +930,7 @@
       "source_file": "backend\\src\\routes\\players.routes.ts",
       "source_location": "L1",
       "id": "backend_src_routes_players_routes_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "players.routes.ts"
     },
     {
@@ -939,7 +939,7 @@
       "source_file": "backend\\src\\schemas\\auth.schemas.ts",
       "source_location": "L1",
       "id": "backend_src_schemas_auth_schemas_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "auth.schemas.ts"
     },
     {
@@ -948,7 +948,7 @@
       "source_file": "backend\\src\\schemas\\messages.schemas.ts",
       "source_location": "L1",
       "id": "backend_src_schemas_messages_schemas_ts",
-      "community": 0,
+      "community": 2,
       "norm_label": "messages.schemas.ts"
     },
     {
@@ -957,7 +957,7 @@
       "source_file": "backend\\src\\schemas\\messages.schemas.ts",
       "source_location": "L86",
       "id": "messages_schemas_validatemessage",
-      "community": 0,
+      "community": 2,
       "norm_label": "validatemessage()"
     },
     {
@@ -966,7 +966,7 @@
       "source_file": "backend\\src\\schemas\\messages.schemas.ts",
       "source_location": "L109",
       "id": "messages_schemas_getschemafortype",
-      "community": 0,
+      "community": 2,
       "norm_label": "getschemafortype()"
     },
     {
@@ -975,7 +975,7 @@
       "source_file": "backend\\src\\services\\auth.service.ts",
       "source_location": "L1",
       "id": "backend_src_services_auth_service_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "auth.service.ts"
     },
     {
@@ -984,7 +984,7 @@
       "source_file": "backend\\src\\services\\auth.service.ts",
       "source_location": "L59",
       "id": "auth_service_buildauthresult",
-      "community": 0,
+      "community": 1,
       "norm_label": "buildauthresult()"
     },
     {
@@ -993,7 +993,7 @@
       "source_file": "backend\\src\\services\\auth.service.ts",
       "source_location": "L73",
       "id": "auth_service_topublicplayer",
-      "community": 0,
+      "community": 1,
       "norm_label": "topublicplayer()"
     },
     {
@@ -1002,7 +1002,7 @@
       "source_file": "backend\\src\\services\\auth.service.ts",
       "source_location": "L81",
       "id": "auth_service_throwinvalidcredentials",
-      "community": 0,
+      "community": 1,
       "norm_label": "throwinvalidcredentials()"
     },
     {
@@ -1011,7 +1011,7 @@
       "source_file": "backend\\src\\services\\leaderboard.service.ts",
       "source_location": "L1",
       "id": "backend_src_services_leaderboard_service_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "leaderboard.service.ts"
     },
     {
@@ -1020,7 +1020,7 @@
       "source_file": "backend\\src\\services\\leaderboard.service.ts",
       "source_location": "L13",
       "id": "leaderboard_service_normalizelimit",
-      "community": 0,
+      "community": 1,
       "norm_label": "normalizelimit()"
     },
     {
@@ -1029,7 +1029,7 @@
       "source_file": "backend\\src\\services\\players.service.ts",
       "source_location": "L1",
       "id": "backend_src_services_players_service_ts",
-      "community": 0,
+      "community": 2,
       "norm_label": "players.service.ts"
     },
     {
@@ -1038,7 +1038,7 @@
       "source_file": "backend\\src\\services\\players.service.ts",
       "source_location": "L27",
       "id": "players_service_normalizelimit",
-      "community": 0,
+      "community": 2,
       "norm_label": "normalizelimit()"
     },
     {
@@ -1056,7 +1056,7 @@
       "source_file": "backend\\src\\types\\auth.ts",
       "source_location": "L1",
       "id": "backend_src_types_auth_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "auth.ts"
     },
     {
@@ -1110,7 +1110,7 @@
       "source_file": "backend\\src\\types\\scoring.ts",
       "source_location": "L1",
       "id": "backend_src_types_scoring_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "scoring.ts"
     },
     {
@@ -1119,7 +1119,7 @@
       "source_file": "backend\\src\\utils\\api_error.ts",
       "source_location": "L1",
       "id": "backend_src_utils_api_error_ts",
-      "community": 0,
+      "community": 2,
       "norm_label": "api_error.ts"
     },
     {
@@ -1128,7 +1128,7 @@
       "source_file": "backend\\src\\utils\\api_error.ts",
       "source_location": "L1",
       "id": "api_error_apierror",
-      "community": 0,
+      "community": 2,
       "norm_label": "apierror"
     },
     {
@@ -1137,7 +1137,7 @@
       "source_file": "backend\\src\\utils\\api_error.ts",
       "source_location": "L2",
       "id": "api_error_apierror_constructor",
-      "community": 0,
+      "community": 2,
       "norm_label": ".constructor()"
     },
     {
@@ -1146,7 +1146,7 @@
       "source_file": "backend\\src\\utils\\api_response.ts",
       "source_location": "L1",
       "id": "backend_src_utils_api_response_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "api_response.ts"
     },
     {
@@ -1155,7 +1155,7 @@
       "source_file": "backend\\src\\utils\\api_response.ts",
       "source_location": "L6",
       "id": "api_response_apiresponse",
-      "community": 0,
+      "community": 1,
       "norm_label": "apiresponse()"
     },
     {
@@ -1173,7 +1173,7 @@
       "source_file": "backend\\src\\utils\\broadcast.ts",
       "source_location": "L6",
       "id": "broadcast_send",
-      "community": 10,
+      "community": 6,
       "norm_label": "send()"
     },
     {
@@ -1191,7 +1191,7 @@
       "source_file": "backend\\src\\utils\\clientIp.ts",
       "source_location": "L1",
       "id": "backend_src_utils_clientip_ts",
-      "community": 0,
+      "community": 6,
       "norm_label": "clientip.ts"
     },
     {
@@ -1200,7 +1200,7 @@
       "source_file": "backend\\src\\utils\\clientIp.ts",
       "source_location": "L13",
       "id": "clientip_getclientip",
-      "community": 0,
+      "community": 6,
       "norm_label": "getclientip()"
     },
     {
@@ -1209,7 +1209,7 @@
       "source_file": "backend\\src\\utils\\clientIp.ts",
       "source_location": "L40",
       "id": "clientip_anonymizeip",
-      "community": 0,
+      "community": 6,
       "norm_label": "anonymizeip()"
     },
     {
@@ -1218,7 +1218,7 @@
       "source_file": "backend\\src\\utils\\jwt.ts",
       "source_location": "L1",
       "id": "backend_src_utils_jwt_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "jwt.ts"
     },
     {
@@ -1227,7 +1227,7 @@
       "source_file": "backend\\src\\utils\\jwt.ts",
       "source_location": "L8",
       "id": "jwt_signaccesstoken",
-      "community": 0,
+      "community": 1,
       "norm_label": "signaccesstoken()"
     },
     {
@@ -1236,7 +1236,7 @@
       "source_file": "backend\\src\\utils\\jwt.ts",
       "source_location": "L17",
       "id": "jwt_verifyaccesstoken",
-      "community": 0,
+      "community": 1,
       "norm_label": "verifyaccesstoken()"
     },
     {
@@ -1245,7 +1245,7 @@
       "source_file": "backend\\src\\utils\\jwt.ts",
       "source_location": "L48",
       "id": "jwt_isauthtokenpayload",
-      "community": 0,
+      "community": 1,
       "norm_label": "isauthtokenpayload()"
     },
     {
@@ -1254,7 +1254,7 @@
       "source_file": "backend\\src\\utils\\securityLogger.ts",
       "source_location": "L1",
       "id": "backend_src_utils_securitylogger_ts",
-      "community": 0,
+      "community": 6,
       "norm_label": "securitylogger.ts"
     },
     {
@@ -1263,7 +1263,7 @@
       "source_file": "backend\\src\\utils\\securityLogger.ts",
       "source_location": "L18",
       "id": "securitylogger_logsecurityevent",
-      "community": 0,
+      "community": 6,
       "norm_label": "logsecurityevent()"
     },
     {
@@ -1335,7 +1335,7 @@
       "source_file": "frontend\\src\\app\\page.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_page_tsx",
-      "community": 11,
+      "community": 9,
       "norm_label": "page.tsx"
     },
     {
@@ -1344,7 +1344,7 @@
       "source_file": "frontend\\src\\app\\page.tsx",
       "source_location": "L17",
       "id": "page_makeguestname",
-      "community": 11,
+      "community": 9,
       "norm_label": "makeguestname()"
     },
     {
@@ -1353,7 +1353,7 @@
       "source_file": "frontend\\src\\app\\page.tsx",
       "source_location": "L59",
       "id": "page_flashnotice",
-      "community": 11,
+      "community": 9,
       "norm_label": "flashnotice()"
     },
     {
@@ -1362,7 +1362,7 @@
       "source_file": "frontend\\src\\app\\page.tsx",
       "source_location": "L65",
       "id": "page_onplay",
-      "community": 11,
+      "community": 9,
       "norm_label": "onplay()"
     },
     {
@@ -1371,7 +1371,7 @@
       "source_file": "frontend\\src\\app\\page.tsx",
       "source_location": "L79",
       "id": "page_oncreateroom",
-      "community": 11,
+      "community": 9,
       "norm_label": "oncreateroom()"
     },
     {
@@ -1380,7 +1380,7 @@
       "source_file": "frontend\\src\\app\\page.tsx",
       "source_location": "L92",
       "id": "page_onjoinroom",
-      "community": 11,
+      "community": 9,
       "norm_label": "onjoinroom()"
     },
     {
@@ -1479,7 +1479,7 @@
       "source_file": "frontend\\src\\components\\AuthPanel.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_authpanel_tsx",
-      "community": 7,
+      "community": 8,
       "norm_label": "authpanel.tsx"
     },
     {
@@ -1488,7 +1488,7 @@
       "source_file": "frontend\\src\\components\\AuthPanel.tsx",
       "source_location": "L26",
       "id": "authpanel_handlesubmit",
-      "community": 7,
+      "community": 8,
       "norm_label": "handlesubmit()"
     },
     {
@@ -1758,7 +1758,7 @@
       "source_file": "frontend\\src\\hooks\\useGameWebSocket.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_usegamewebsocket_ts",
-      "community": 7,
+      "community": 8,
       "norm_label": "usegamewebsocket.ts"
     },
     {
@@ -1767,7 +1767,7 @@
       "source_file": "frontend\\src\\hooks\\useGameWebSocket.ts",
       "source_location": "L22",
       "id": "usegamewebsocket_buildwebsocketurl",
-      "community": 7,
+      "community": 8,
       "norm_label": "buildwebsocketurl()"
     },
     {
@@ -1776,7 +1776,7 @@
       "source_file": "frontend\\src\\hooks\\useGameWebSocket.ts",
       "source_location": "L32",
       "id": "usegamewebsocket_usegamewebsocket",
-      "community": 7,
+      "community": 8,
       "norm_label": "usegamewebsocket()"
     },
     {
@@ -1785,7 +1785,7 @@
       "source_file": "frontend\\src\\hooks\\useSounds.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_usesounds_ts",
-      "community": 8,
+      "community": 10,
       "norm_label": "usesounds.ts"
     },
     {
@@ -1794,7 +1794,7 @@
       "source_file": "frontend\\src\\hooks\\useSounds.ts",
       "source_location": "L6",
       "id": "usesounds_usesounds",
-      "community": 8,
+      "community": 10,
       "norm_label": "usesounds()"
     },
     {
@@ -1803,7 +1803,7 @@
       "source_file": "frontend\\src\\lib\\api.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_api_ts",
-      "community": 7,
+      "community": 8,
       "norm_label": "api.ts"
     },
     {
@@ -1812,7 +1812,7 @@
       "source_file": "frontend\\src\\lib\\api.ts",
       "source_location": "L12",
       "id": "api_apiclienterror",
-      "community": 7,
+      "community": 8,
       "norm_label": "apiclienterror"
     },
     {
@@ -1821,7 +1821,7 @@
       "source_file": "frontend\\src\\lib\\api.ts",
       "source_location": "L13",
       "id": "api_apiclienterror_constructor",
-      "community": 7,
+      "community": 8,
       "norm_label": ".constructor()"
     },
     {
@@ -1830,7 +1830,7 @@
       "source_file": "frontend\\src\\lib\\api.ts",
       "source_location": "L86",
       "id": "api_apirequest",
-      "community": 7,
+      "community": 8,
       "norm_label": "apirequest()"
     },
     {
@@ -1839,7 +1839,7 @@
       "source_file": "frontend\\src\\lib\\api.ts",
       "source_location": "L170",
       "id": "api_readjson",
-      "community": 7,
+      "community": 8,
       "norm_label": "readjson()"
     },
     {
@@ -1848,7 +1848,7 @@
       "source_file": "frontend\\src\\lib\\auth.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_auth_ts",
-      "community": 7,
+      "community": 8,
       "norm_label": "auth.ts"
     },
     {
@@ -1857,7 +1857,7 @@
       "source_file": "frontend\\src\\lib\\auth.ts",
       "source_location": "L3",
       "id": "auth_getstoredaccesstoken",
-      "community": 7,
+      "community": 8,
       "norm_label": "getstoredaccesstoken()"
     },
     {
@@ -1866,7 +1866,7 @@
       "source_file": "frontend\\src\\lib\\auth.ts",
       "source_location": "L11",
       "id": "auth_setstoredaccesstoken",
-      "community": 7,
+      "community": 8,
       "norm_label": "setstoredaccesstoken()"
     },
     {
@@ -1875,7 +1875,7 @@
       "source_file": "frontend\\src\\lib\\auth.ts",
       "source_location": "L15",
       "id": "auth_clearstoredaccesstoken",
-      "community": 7,
+      "community": 8,
       "norm_label": "clearstoredaccesstoken()"
     },
     {
@@ -1965,7 +1965,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_sounds_ts",
-      "community": 8,
+      "community": 10,
       "norm_label": "sounds.ts"
     },
     {
@@ -1974,7 +1974,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L24",
       "id": "sounds_ensurecontext",
-      "community": 8,
+      "community": 10,
       "norm_label": "ensurecontext()"
     },
     {
@@ -1983,7 +1983,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L42",
       "id": "sounds_envelope",
-      "community": 8,
+      "community": 10,
       "norm_label": "envelope()"
     },
     {
@@ -1992,7 +1992,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L49",
       "id": "sounds_placesound",
-      "community": 8,
+      "community": 10,
       "norm_label": "placesound()"
     },
     {
@@ -2001,7 +2001,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L67",
       "id": "sounds_explodesound",
-      "community": 8,
+      "community": 10,
       "norm_label": "explodesound()"
     },
     {
@@ -2010,7 +2010,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L98",
       "id": "sounds_chainsound",
-      "community": 8,
+      "community": 10,
       "norm_label": "chainsound()"
     },
     {
@@ -2019,7 +2019,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L118",
       "id": "sounds_winsound",
-      "community": 8,
+      "community": 10,
       "norm_label": "winsound()"
     },
     {
@@ -2028,7 +2028,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L134",
       "id": "sounds_clicksound",
-      "community": 8,
+      "community": 10,
       "norm_label": "clicksound()"
     },
     {
@@ -2037,7 +2037,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L147",
       "id": "sounds_turnsound",
-      "community": 8,
+      "community": 10,
       "norm_label": "turnsound()"
     },
     {
@@ -2046,7 +2046,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L159",
       "id": "sounds_errorsound",
-      "community": 8,
+      "community": 10,
       "norm_label": "errorsound()"
     },
     {
@@ -2055,7 +2055,7 @@
       "source_file": "frontend\\src\\lib\\sounds.ts",
       "source_location": "L172",
       "id": "sounds_createsoundengine",
-      "community": 8,
+      "community": 10,
       "norm_label": "createsoundengine()"
     },
     {
@@ -2102,7 +2102,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "system overview (frontend, backend, db)",
       "id": "architecture_system_overview"
     },
@@ -2154,7 +2154,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "database boundary (post-m7)",
       "id": "architecture_database_boundary"
     },
@@ -2206,7 +2206,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "fly.io deployment plan",
       "id": "architecture_deployment_fly"
     },
@@ -2232,7 +2232,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "backend file map",
       "id": "backend_file_map"
     },
@@ -2271,7 +2271,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "adding a new message type steps",
       "id": "backend_new_message_steps"
     },
@@ -2310,7 +2310,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "production-grade node.js backend setup guide",
       "id": "backend_setup_guide"
     },
@@ -2323,7 +2323,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "routes/controllers/services/repositories layering",
       "id": "setup_layered_architecture"
     },
@@ -2336,7 +2336,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "typescript & tsconfig.json setup",
       "id": "setup_typescript_tsconfig"
     },
@@ -2349,7 +2349,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "tsx watch dev runner",
       "id": "setup_tsx_dev_runner"
     },
@@ -2362,7 +2362,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "prisma v7 orm setup",
       "id": "setup_prisma_orm"
     },
@@ -2375,7 +2375,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "winston logger setup",
       "id": "setup_winston_logger"
     },
@@ -2388,7 +2388,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "zod input validation",
       "id": "setup_zod_validation"
     },
@@ -2401,7 +2401,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "apierror and apiresponse pattern",
       "id": "setup_api_error_response"
     },
@@ -2440,7 +2440,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "context file index",
       "id": "claudemd_context_index"
     },
@@ -2453,7 +2453,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "backend layering convention",
       "id": "conventions_layering"
     },
@@ -2492,7 +2492,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "apierror throw/catch in router pattern",
       "id": "conventions_api_error_pattern"
     },
@@ -2505,7 +2505,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "zod validation at boundary",
       "id": "conventions_zod_validation"
     },
@@ -2518,7 +2518,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "winston named child loggers",
       "id": "conventions_named_loggers"
     },
@@ -2544,7 +2544,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "typescript strictness convention",
       "id": "conventions_typescript_strictness"
     },
@@ -2570,7 +2570,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "db status: post-m7 only",
       "id": "database_status_postm7"
     },
@@ -2687,7 +2687,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "error websocket frame shape",
       "id": "errors_error_frame"
     },
@@ -2726,7 +2726,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "server-side apierror dispatch pattern",
       "id": "errors_server_handling"
     },
@@ -2752,7 +2752,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "frontend file map",
       "id": "frontend_file_map"
     },
@@ -2817,7 +2817,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "gamelogic.ts purity rule",
       "id": "gamelogic_purity_rule"
     },
@@ -3181,7 +3181,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "handler / router / schema / repository / mapper",
       "id": "glossary_handler_router_schema"
     },
@@ -3207,7 +3207,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "protocol single source of truth rule",
       "id": "protocol_single_source_of_truth"
     },
@@ -3220,7 +3220,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "websocket json transport",
       "id": "protocol_transport"
     },
@@ -3350,7 +3350,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "error message",
       "id": "protocol_msg_error"
     },
@@ -3389,7 +3389,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "rule: game logic purity",
       "id": "rules_game_logic_purity"
     },
@@ -3402,7 +3402,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "rule: message validation via zod",
       "id": "rules_message_validation"
     },
@@ -3441,7 +3441,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 0,
       "norm_label": "rule: code quality baseline (strict ts, no any, lint)",
       "id": "rules_code_quality"
     },
@@ -3927,6 +3927,18 @@
       "_tgt": "broadcast_send",
       "source": "router_dispatch",
       "target": "broadcast_send"
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "backend\\src\\db\\repos\\scores.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "backend_src_db_repos_scores_ts",
+      "_tgt": "backend_src_constants_app_constants_ts",
+      "source": "backend_src_constants_app_constants_ts",
+      "target": "backend_src_db_repos_scores_ts",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -4508,7 +4520,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\db\\repos\\scores.ts",
-      "source_location": "L1",
+      "source_location": "L2",
       "weight": 1.0,
       "_src": "backend_src_db_repos_scores_ts",
       "_tgt": "backend_src_lib_prisma_ts",
@@ -4520,7 +4532,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\db\\repos\\scores.ts",
-      "source_location": "L2",
+      "source_location": "L3",
       "weight": 1.0,
       "_src": "backend_src_db_repos_scores_ts",
       "_tgt": "backend_src_types_scoring_ts",
@@ -4544,7 +4556,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L5",
+      "source_location": "L4",
       "weight": 1.0,
       "_src": "backend_src_game_gamelogic_ts",
       "_tgt": "gamelogic_createboard",
@@ -4556,7 +4568,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L11",
+      "source_location": "L10",
       "weight": 1.0,
       "_src": "backend_src_game_gamelogic_ts",
       "_tgt": "gamelogic_getneighbors",
@@ -4568,7 +4580,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L30",
+      "source_location": "L29",
       "weight": 1.0,
       "_src": "backend_src_game_gamelogic_ts",
       "_tgt": "gamelogic_getcriticalmass",
@@ -4580,7 +4592,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L39",
+      "source_location": "L38",
       "weight": 1.0,
       "_src": "backend_src_game_gamelogic_ts",
       "_tgt": "gamelogic_applymove",
@@ -4592,7 +4604,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L111",
+      "source_location": "L110",
       "weight": 1.0,
       "_src": "backend_src_game_gamelogic_ts",
       "_tgt": "gamelogic_iseliminated",
@@ -4664,7 +4676,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L36",
+      "source_location": "L35",
       "weight": 1.0,
       "_src": "gamelogic_getcriticalmass",
       "_tgt": "gamelogic_getneighbors",
@@ -4676,7 +4688,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L91",
+      "source_location": "L90",
       "weight": 1.0,
       "_src": "gamelogic_applymove",
       "_tgt": "gamelogic_getneighbors",
@@ -4688,7 +4700,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L64",
+      "source_location": "L63",
       "weight": 1.0,
       "_src": "gamelogic_applymove",
       "_tgt": "gamelogic_getcriticalmass",

@@ -6,20 +6,20 @@ import { ApiError } from "../utils/api_error.js";
 import { verifyAccessToken } from "../utils/jwt.js";
 
 export const requireAuth: RequestHandler = (request, response, next) => {
-  const token = getBearerToken(request.headers.authorization);
-  if (!token) {
-    next(new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.NOT_AUTHENTICATED, [], 401));
-    return;
-  }
+	const token = getBearerToken(request.headers.authorization);
+	if (!token) {
+		next(new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.NOT_AUTHENTICATED, [], 401));
+		return;
+	}
 
-  response.locals.auth = verifyAccessToken(token) satisfies AuthTokenPayload;
-  next();
+	response.locals.auth = verifyAccessToken(token) satisfies AuthTokenPayload;
+	next();
 };
 
 function getBearerToken(header: string | undefined): string | null {
-  if (!header?.startsWith("Bearer ")) {
-    return null;
-  }
+	if (!header?.startsWith("Bearer ")) {
+		return null;
+	}
 
-  return header.slice("Bearer ".length).trim() || null;
+	return header.slice("Bearer ".length).trim() || null;
 }

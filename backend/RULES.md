@@ -30,26 +30,26 @@ Merged source of truth for coding standards across `backend/` and `frontend/`. R
 - Never trust a `make_move` payload beyond `{row, col}`. The server reads `currentTurn`, `board[row][col].owner`, and its own state to validate.
 - Chain reactions run on the server. `applyMove` lives in `backend/src/game/gameLogic.ts`; the frontend only renders the resulting `board`.
 
-*Why: clients can be tampered with, and one authoritative simulation prevents N-client divergence.*
+_Why: clients can be tampered with, and one authoritative simulation prevents N-client divergence._
 
 ### Game logic purity
 
 `backend/src/game/gameLogic.ts` must not import `ws`, `http`, `fs`, the logger, the DB client, or anything from `state/`, `handlers/`, `lib/`, or `db/`. Pure functions only — inputs in, new or mutated state out.
 
-*Why: the same module runs in the smoke test, the live server, and any future replay/AI use case. Any I/O breaks that.*
+_Why: the same module runs in the smoke test, the live server, and any future replay/AI use case. Any I/O breaks that._
 
 ### No business logic in the WS message router
 
 `router.ts` parses and dispatches. Each message type maps to a `handleX` function in `handlers/`. Routers do not read state, mutate rooms, or build broadcasts.
 
-*Why: keeps the router readable and individually testable.*
+_Why: keeps the router readable and individually testable._
 
 ### State boundary
 
 - Active game state lives in memory (the `rooms` Map in `state/memory.ts`). Only finished matches hit the DB.
 - No writes per move.
 
-*Why: move-rate writes destroy latency and Postgres bills. Match results are the durable artifact.*
+_Why: move-rate writes destroy latency and Postgres bills. Match results are the durable artifact._
 
 ### Repository boundary
 
@@ -57,13 +57,13 @@ Merged source of truth for coding standards across `backend/` and `frontend/`. R
 - Prisma is imported only by repository/client code. Handlers, services, controllers, and game logic call repository methods, never Prisma directly.
 - DB failures must log and degrade gracefully; they must not prevent `game_over` from reaching players.
 
-*Why: persistence stays swappable, reviewable, and decoupled from gameplay.*
+_Why: persistence stays swappable, reviewable, and decoupled from gameplay._
 
 ### Protocol coupling
 
 When adding or renaming a WebSocket message, update [../docs/PROTOCOL.md](../docs/PROTOCOL.md), `backend/src/types/protocol.ts`, and `frontend/src/lib/types.ts` in the same commit. No silent protocol changes.
 
-*Why: drift between the contract and either side is the most common source of real-time bugs.*
+_Why: drift between the contract and either side is the most common source of real-time bugs._
 
 ---
 
@@ -150,10 +150,10 @@ frontend/src/
 ### In-memory state (backend)
 
 ```ts
-export const players     = new Map<string, WebSocket>();   // playerId -> socket
-export const queues      = new Map<string, Player[]>();    // "RxCxN"  -> bucket
-export const rooms       = new Map<string, Room>();        // roomId   -> room
-export const playerRooms = new Map<string, string>();      // playerId -> roomId
+export const players = new Map<string, WebSocket>(); // playerId -> socket
+export const queues = new Map<string, Player[]>(); // "RxCxN"  -> bucket
+export const rooms = new Map<string, Room>(); // roomId   -> room
+export const playerRooms = new Map<string, string>(); // playerId -> roomId
 ```
 
 ---
@@ -184,10 +184,14 @@ Mappers in `utils/mappers.ts` translate between DB rows and internal objects.
 ```ts
 // utils/api_error.ts
 export class ApiError extends Error {
-  constructor(public code: string, message: string, public errors: string[] = []) {
-    super(message);
-    Error.captureStackTrace(this, this.constructor);
-  }
+	constructor(
+		public code: string,
+		message: string,
+		public errors: string[] = [],
+	) {
+		super(message);
+		Error.captureStackTrace(this, this.constructor);
+	}
 }
 ```
 
@@ -211,11 +215,15 @@ Don't:
 import { z } from "zod";
 
 export const JoinQueueSchema = z.object({
-  type: z.literal("join_queue"),
-  gridRows: z.number().int().min(3).max(20),
-  gridCols: z.number().int().min(3).max(20),
-  maxPlayers: z.number().int().min(2).max(4),
-  playerName: z.string().min(1).max(100).transform(s => s.trim()),
+	type: z.literal("join_queue"),
+	gridRows: z.number().int().min(3).max(20),
+	gridCols: z.number().int().min(3).max(20),
+	maxPlayers: z.number().int().min(2).max(4),
+	playerName: z
+		.string()
+		.min(1)
+		.max(100)
+		.transform((s) => s.trim()),
 });
 ```
 
@@ -232,7 +240,7 @@ export const JoinQueueSchema = z.object({
 import { getLogger } from "../lib/logger";
 const logger = getLogger("game.handlers");
 
-logger.info("game started", { roomId, players: room.players.map(p => p.name) });
+logger.info("game started", { roomId, players: room.players.map((p) => p.name) });
 logger.error("DB error - recordFinished", { error: (err as Error).message });
 ```
 
@@ -286,9 +294,9 @@ Code-side rules:
 
 - Handlers/services import only from `backend/src/db/index.ts`:
 
-  ```ts
-  import { matchesRepo, playersRepo, scoresRepo } from "../db/index.js";
-  ```
+    ```ts
+    import { matchesRepo, playersRepo, scoresRepo } from "../db/index.js";
+    ```
 
 - The Prisma client singleton lives in `backend/src/lib/prisma.ts`.
 - Schema source of truth is `backend/prisma/schema.prisma`.

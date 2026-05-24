@@ -14,25 +14,24 @@ app.set("trust proxy", 1);
 
 // Add security headers via helmet
 app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'none'"],
-      },
-    },
-  })
+	helmet({
+		contentSecurityPolicy: {
+			directives: {
+				defaultSrc: ["'none'"],
+			},
+		},
+	}),
 );
 
 if (config.ALLOWED_ORIGINS.length === 0) {
-  logger.warn("ALLOWED_ORIGINS is empty. All origins are allowed (development mode only).");
+	logger.warn("ALLOWED_ORIGINS is empty. All origins are allowed (development mode only).");
 }
 
 app.use(
-  cors({
-    origin: config.ALLOWED_ORIGINS.length ? config.ALLOWED_ORIGINS : true,
-  })
+	cors({
+		origin: config.ALLOWED_ORIGINS.length ? config.ALLOWED_ORIGINS : true,
+	}),
 );
 app.use(express.json());
 app.use("/api", apiRouter);
 app.use(errorMiddleware);
-

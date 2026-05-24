@@ -10,18 +10,18 @@ Real-time multiplayer Chain Reaction. Server-authoritative gameplay over WebSock
 
 ## When to read what
 
-| Need | File |
-|------|------|
-| Coding rules, layering, error/validation patterns, file maps, repo boundary, "where to add things" | [RULES.md](./RULES.md) |
-| Approved milestones (M0–M9), build strategy, risk register | [PLAN.md](./PLAN.md) |
-| Atomic build checklist by milestone | [TODO.md](./TODO.md) |
-| What the product does (overview of all features) | [../docs/PRD.md](../docs/PRD.md) |
-| Chain reaction rules: critical mass, cascades, ownership, elimination, win | [../docs/GAMEPLAY.md](../docs/GAMEPLAY.md) |
-| Queue buckets, room creation, match lifecycle, forfeit/disconnect | [../docs/MATCHMAKING.md](../docs/MATCHMAKING.md) |
-| WebSocket frame contract, error frame, error codes | [../docs/PROTOCOL.md](../docs/PROTOCOL.md) |
-| Finished-match persistence, scoring policy, leaderboard | [../docs/PERSISTENCE.md](../docs/PERSISTENCE.md) |
-| Frontend phases, screens, what the user sees | [../docs/EXPERIENCE.md](../docs/EXPERIENCE.md) |
-| Canonical names: room, bucket, myIndex, grace period, etc. | [../docs/GLOSSARY.md](../docs/GLOSSARY.md) |
+| Need                                                                                               | File                                             |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Coding rules, layering, error/validation patterns, file maps, repo boundary, "where to add things" | [RULES.md](./RULES.md)                           |
+| Approved milestones (M0–M9), build strategy, risk register                                         | [PLAN.md](./PLAN.md)                             |
+| Atomic build checklist by milestone                                                                | [TODO.md](./TODO.md)                             |
+| What the product does (overview of all features)                                                   | [../docs/PRD.md](../docs/PRD.md)                 |
+| Chain reaction rules: critical mass, cascades, ownership, elimination, win                         | [../docs/GAMEPLAY.md](../docs/GAMEPLAY.md)       |
+| Queue buckets, room creation, match lifecycle, forfeit/disconnect                                  | [../docs/MATCHMAKING.md](../docs/MATCHMAKING.md) |
+| WebSocket frame contract, error frame, error codes                                                 | [../docs/PROTOCOL.md](../docs/PROTOCOL.md)       |
+| Finished-match persistence, scoring policy, leaderboard                                            | [../docs/PERSISTENCE.md](../docs/PERSISTENCE.md) |
+| Frontend phases, screens, what the user sees                                                       | [../docs/EXPERIENCE.md](../docs/EXPERIENCE.md)   |
+| Canonical names: room, bucket, myIndex, grace period, etc.                                         | [../docs/GLOSSARY.md](../docs/GLOSSARY.md)       |
 
 ## Layout
 
