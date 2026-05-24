@@ -97,101 +97,124 @@ export default function Home() {
     game.joinRoomByCode(code, playerName);
   };
 
+  // Rematch: re-queue with the same settings derived from the finished game state
+  const onRematch = () => {
+    if (!game.gameState) return;
+    const rows = game.gameState.board.length;
+    const cols = game.gameState.board[0]?.length ?? DEFAULT_GRID.cols;
+    const maxPlayers = game.gameState.players.length;
+    const mode = game.gameMode ?? "casual";
+    game.reset();
+    game.joinQueue({ mode, gridRows: rows, gridCols: cols, maxPlayers, playerName });
+  };
+
   const errorVisible = Boolean(game.lastError) || Boolean(softNotice);
   const disconnected = game.connectionState !== "open" && game.connectionState !== "connecting";
 
+  const isPlaying = game.phase === "playing";
+
   return (
-    <main className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col gap-3 px-4 pb-3 sm:px-8 lg:px-10">
-      {disconnected ? (
-        <div
-          role="status"
-          className="flex items-start gap-3 border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1"
-        >
-          <WifiOff size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
-          <span className="font-mono leading-relaxed">
-            Reactor offline — reconnecting to the backend. Gameplay paused until the link is back.
-          </span>
+    <>
+      {/* ── Full-screen game overlay (covers TopBar) ── */}
+      {isPlaying && game.gameState ? (
+        <div className="fixed inset-0 z-50 bg-bg">
+          <GameBoard
+            gameState={game.gameState}
+            playerId={game.playerId}
+            onMove={game.makeMove}
+            onLeaveGame={game.leaveGame}
+            onPlace={(intensity) => sounds.play("place", { intensity })}
+            onExplode={(intensity) => sounds.play("explode", { intensity })}
+            onChain={(intensity) => sounds.play("chain", { intensity })}
+            muted={sounds.muted}
+            onToggleMute={() => {
+              sounds.resume();
+              sounds.toggleMute();
+            }}
+            roomCode={game.roomCode}
+          />
         </div>
       ) : null}
 
-      {errorVisible ? (
-        <div className="grid gap-2">
-          {game.lastError ? (
-            <div
-              role="alert"
-              className="flex items-start gap-3 border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1 [animation:panel-rise_0.4s_ease-out_both]"
-            >
-              <AlertTriangle size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
-              <span className="font-mono leading-relaxed">{game.lastError.message}</span>
-            </div>
-          ) : null}
-          {softNotice ? (
-            <div
-              role="status"
-              className="flex items-start gap-3 border border-cherenkov/40 bg-cherenkov/5 px-4 py-3 text-sm text-cherenkov [animation:panel-rise_0.4s_ease-out_both]"
-            >
-              <Sparkles size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
-              <span className="font-mono leading-relaxed">{softNotice}</span>
-            </div>
-          ) : null}
+      {isPlaying && !game.gameState ? (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-bg">
+          <Card className="grid w-[min(420px,90vw)] gap-4 p-10 text-center [animation:panel-rise_0.5s_ease-out_both]">
+            <CardCorners />
+            <h1 className="font-display text-4xl tracking-tight text-fg">
+              Starting game
+              <span className="ml-1 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-cherenkov">
+                _
+              </span>
+            </h1>
+          </Card>
         </div>
       ) : null}
 
-      {game.phase === "lobby" ? (
-        <LandingHub
-          isAuthenticated={auth.isAuthenticated}
-          displayName={auth.player?.displayName ?? guestName}
-          connectionReady={game.connectionState === "open"}
-          onInteract={() => sounds.play("click")}
-          onPlay={onPlay}
-          onCreateRoom={onCreateRoom}
-          onJoinRoom={onJoinRoom}
-        />
-      ) : null}
-
-      {game.phase === "queued" ? (
-        <QueueScreen info={game.queuedInfo} code={game.roomCode} onCancel={game.leaveQueue} />
-      ) : null}
-
-      {game.phase === "playing" && game.gameState ? (
-        <GameBoard
-          gameState={game.gameState}
-          playerId={game.playerId}
-          onMove={game.makeMove}
-          onLeaveGame={game.leaveGame}
-          onPlace={(intensity) => sounds.play("place", { intensity })}
-          onExplode={(intensity) => sounds.play("explode", { intensity })}
-          onChain={(intensity) => sounds.play("chain", { intensity })}
-          muted={sounds.muted}
-          onToggleMute={() => {
-            sounds.resume();
-            sounds.toggleMute();
-          }}
-        />
-      ) : null}
-
-      {game.phase === "playing" && !game.gameState ? (
-        <Card className="mx-auto mt-[10vh] grid w-[min(420px,100%)] gap-4 p-10 text-center [animation:panel-rise_0.5s_ease-out_both]">
-          <CardCorners />
-          <h1 className="font-display text-4xl tracking-tight text-fg">
-            Starting game
-            <span className="ml-1 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-cherenkov">
-              _
+      {/* ── Standard scrollable layout (lobby / queue / gameover) ── */}
+      <main className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col gap-3 px-4 pb-3 sm:px-8 lg:px-10">
+        {disconnected ? (
+          <div
+            role="status"
+            className="flex items-start gap-3 border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1"
+          >
+            <WifiOff size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+            <span className="font-mono leading-relaxed">
+              Reactor offline — reconnecting to the backend. Gameplay paused until the link is back.
             </span>
-          </h1>
-        </Card>
-      ) : null}
+          </div>
+        ) : null}
 
-      {game.phase === "gameover" ? (
-        <GameOver
-          winner={game.winner}
-          mode={game.gameMode}
-          winnerIndex={game.gameState?.players.findIndex((player) => player.id === game.winner?.id) ?? null}
-          players={game.gameState?.players ?? null}
-          scoreDeltas={game.scoreDeltas}
-          onPlayAgain={game.reset}
-        />
-      ) : null}
-    </main>
+        {errorVisible ? (
+          <div className="grid gap-2">
+            {game.lastError ? (
+              <div
+                role="alert"
+                className="flex items-start gap-3 border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1 [animation:panel-rise_0.4s_ease-out_both]"
+              >
+                <AlertTriangle size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+                <span className="font-mono leading-relaxed">{game.lastError.message}</span>
+              </div>
+            ) : null}
+            {softNotice ? (
+              <div
+                role="status"
+                className="flex items-start gap-3 border border-cherenkov/40 bg-cherenkov/5 px-4 py-3 text-sm text-cherenkov [animation:panel-rise_0.4s_ease-out_both]"
+              >
+                <Sparkles size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
+                <span className="font-mono leading-relaxed">{softNotice}</span>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+
+        {game.phase === "lobby" ? (
+          <LandingHub
+            isAuthenticated={auth.isAuthenticated}
+            displayName={auth.player?.displayName ?? guestName}
+            connectionReady={game.connectionState === "open"}
+            onInteract={() => sounds.play("click")}
+            onPlay={onPlay}
+            onCreateRoom={onCreateRoom}
+            onJoinRoom={onJoinRoom}
+          />
+        ) : null}
+
+        {game.phase === "queued" ? (
+          <QueueScreen info={game.queuedInfo} code={game.roomCode} onCancel={game.leaveQueue} />
+        ) : null}
+
+        {game.phase === "gameover" ? (
+          <GameOver
+            winner={game.winner}
+            mode={game.gameMode}
+            winnerIndex={game.gameState?.players.findIndex((p) => p.id === game.winner?.id) ?? null}
+            players={game.gameState?.players ?? null}
+            scoreDeltas={game.scoreDeltas}
+            onPlayAgain={game.reset}
+            onRematch={onRematch}
+          />
+        ) : null}
+      </main>
+    </>
   );
 }

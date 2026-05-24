@@ -15,6 +15,7 @@ interface GameOverProps {
   players?: Player[] | null;
   scoreDeltas?: Record<string, number> | null;
   onPlayAgain: () => void;
+  onRematch?: () => void;
 }
 
 export function GameOver({
@@ -23,7 +24,8 @@ export function GameOver({
   winnerIndex = null,
   players = null,
   scoreDeltas = null,
-  onPlayAgain
+  onPlayAgain,
+  onRematch,
 }: GameOverProps) {
   const color = winnerIndex === null ? "#ff5b2e" : PLAYER_COLORS[winnerIndex] ?? "#ff5b2e";
   const confetti = useMemo(
@@ -137,19 +139,29 @@ export function GameOver({
         </ul>
       ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-        <Button variant="primary" size="lg" onClick={onPlayAgain}>
-          <RotateCcw size={16} aria-hidden="true" strokeWidth={2.5} />
-          New Round
-        </Button>
-        <Link
-          href="/leaderboard"
-          className="relative inline-flex min-h-14 select-none items-center justify-center gap-2 border border-line bg-surface/60 px-5 py-3 font-display text-xs uppercase tracking-[0.14em] text-fg-soft backdrop-blur transition-[transform,box-shadow,background,color,border-color] duration-200 ease-out hover:border-cherenkov hover:text-cherenkov hover:shadow-cherenkov active:translate-y-px sm:px-6 sm:text-sm"
+      <div className="grid gap-3 sm:grid-cols-2">
+        {onRematch ? (
+          <Button variant="ghost" size="lg" onClick={onRematch}>
+            <RotateCcw size={16} aria-hidden="true" strokeWidth={2.5} />
+            Rematch
+          </Button>
+        ) : null}
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={onPlayAgain}
+          className={onRematch ? "" : "sm:col-span-2"}
         >
-          <Trophy size={16} aria-hidden="true" strokeWidth={2.5} />
-          Leaderboard
-        </Link>
+          Back to Lobby
+        </Button>
       </div>
+      <Link
+        href="/leaderboard"
+        className="flex items-center justify-center gap-2 font-body text-xs font-semibold text-fg-muted transition-colors hover:text-cherenkov"
+      >
+        <Trophy size={12} aria-hidden="true" strokeWidth={2.5} />
+        View leaderboard
+      </Link>
     </Card>
   );
 }

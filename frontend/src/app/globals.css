@@ -322,3 +322,98 @@ body::before {
     0 4px 0 rgba(0, 0, 0, 0.4),
     0 8px 24px rgba(0, 0, 0, 0.35);
 }
+
+/* ─── Full-viewport game shell ───────────────────────────────────────── */
+
+.game-shell {
+  height: 100svh;
+  width: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(6px, 1.2svh, 14px) clamp(8px, 1.8vw, 18px);
+  gap: clamp(5px, 0.9svh, 10px);
+  overflow: hidden;
+}
+
+.game-board-container {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  container-type: size;
+  position: relative;
+}
+
+/* ─── Invite code tiles (QueueScreen private room) ───────────────────── */
+
+.invite-code-tiles {
+  display: flex;
+  gap: clamp(5px, 1vw, 9px);
+  justify-content: center;
+}
+
+.invite-code-tile {
+  display: grid;
+  place-items: center;
+  width: clamp(38px, 7.5vw, 56px);
+  height: clamp(46px, 9vw, 68px);
+  border-radius: 8px;
+  background: rgba(42, 216, 255, 0.06);
+  border: 2px solid rgba(42, 216, 255, 0.4);
+  box-shadow: 0 0 18px rgba(42, 216, 255, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  font-family: var(--font-display);
+  font-size: clamp(20px, 4vw, 32px);
+  color: var(--color-cherenkov);
+  animation: invite-tile-in 0.35s cubic-bezier(0.2, 0.8, 0.4, 1) both;
+}
+
+@keyframes invite-tile-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.82); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─── Board code popover (in-game "Show code" button) ───────────────── */
+
+.board-code-popover-content {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 210px;
+  background: rgba(10, 4, 32, 0.97);
+  border: 1.5px solid rgba(42, 216, 255, 0.38);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(14px);
+  animation: dialog-rise 0.15s ease-out both;
+  z-index: 100;
+}
+
+.board-code-popover-tiles {
+  display: flex;
+  gap: 4px;
+}
+
+.board-code-popover-tile {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  height: 36px;
+  border-radius: 6px;
+  background: rgba(42, 216, 255, 0.08);
+  border: 1.5px solid rgba(42, 216, 255, 0.38);
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--color-cherenkov);
+}
+
+.board-code-slot {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+  transition: background 0.3s;
+}
+.board-code-slot.on {
+  background: var(--color-cherenkov);
+  box-shadow: 0 0 6px rgba(42, 216, 255, 0.5);
+}
