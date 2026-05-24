@@ -11,7 +11,12 @@ export function capacityFor(row: number, col: number, rows: number, cols: number
 export interface BoardCellEffect {
   id: number;
   exploded: boolean;
+  merged: boolean;
   takeover: boolean;
+  previousCount: number;
+  nextCount: number;
+  previousOwner: number | null;
+  nextOwner: number | null;
 }
 
 export interface BoardDiff {
@@ -23,6 +28,24 @@ export interface BoardDiff {
 
 export function cellKey(row: number, col: number) {
   return `${row}-${col}`;
+}
+
+export interface NeighborDirection {
+  rowDelta: number;
+  colDelta: number;
+}
+
+export function neighborDirections(row: number, col: number, rows: number, cols: number): NeighborDirection[] {
+  return [
+    { rowDelta: -1, colDelta: 0 },
+    { rowDelta: 1, colDelta: 0 },
+    { rowDelta: 0, colDelta: -1 },
+    { rowDelta: 0, colDelta: 1 }
+  ].filter(({ rowDelta, colDelta }) => {
+    const nextRow = row + rowDelta;
+    const nextCol = col + colDelta;
+    return nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols;
+  });
 }
 
 export function diffBoards(
@@ -52,11 +75,21 @@ export function diffBoards(
         before.owner !== null && cur.owner !== null && before.owner !== cur.owner;
       const cleared = before.count > 0 && cur.count === 0;
       const dropped = cur.count < before.count;
+      const merged = cur.owner !== null && cur.count > before.count;
       const exploded = cleared || (dropped && before.count >= 2);
       const takeover = ownerChanged && !exploded;
 
-      if (exploded || takeover) {
-        effects.set(cellKey(r, c), { id: nextEffectId(), exploded, takeover });
+      if (exploded || merged || takeover) {
+        effects.set(cellKey(r, c), {
+          id: nextEffectId(),
+          exploded,
+          merged,
+          takeover,
+          previousCount: before.count,
+          nextCount: cur.count,
+          previousOwner: before.owner,
+          nextOwner: cur.owner
+        });
         if (exploded) explodedCount += 1;
         if (takeover) takeoverCount += 1;
       }

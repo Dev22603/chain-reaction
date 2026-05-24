@@ -1,6 +1,8 @@
 "use client";
 
+import { memo } from "react";
 import type { CSSProperties } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { BoardCellEffect } from "@/lib/board";
 import { cn } from "@/lib/cn";
 import type { Cell as CellModel } from "@/lib/types";
@@ -13,11 +15,12 @@ interface CellProps {
   legal: boolean;
   highlight: boolean;
   effect: BoardCellEffect | null;
+  effectColor: string;
   onPlay: () => void;
   ariaLabel: string;
 }
 
-export function Cell({
+export const Cell = memo(function Cell({
   cell,
   capacity,
   color,
@@ -25,11 +28,13 @@ export function Cell({
   legal,
   highlight,
   effect,
+  effectColor,
   onPlay,
   ariaLabel
 }: CellProps) {
   const filled = cell.count > 0;
   const critical = filled && cell.count >= capacity - 1;
+  const overloaded = filled && cell.count >= capacity;
 
   return (
     <button
@@ -50,46 +55,35 @@ export function Cell({
         } as CSSProperties & Record<"--cell-color", string>
       }
     >
-      {filled ? <AtomCluster count={cell.count} color={color} critical={critical} /> : null}
-
-      {effect?.exploded ? (
-        <span
-          key={`shock-${effect.id}`}
-          className="pointer-events-none absolute inset-0 grid place-items-center"
-          aria-hidden="true"
-        >
-          <span
-            className="absolute h-full w-full rounded-full border-2 [animation:shockwave_0.55s_cubic-bezier(0.2,0.8,0.4,1)_forwards]"
-            style={{ borderColor: color, boxShadow: `0 0 24px ${color}` }}
-          />
-          {Array.from({ length: 6 }, (_, i) => {
-            const angle = (i * Math.PI * 2) / 6;
-            const dx = Math.cos(angle) * 36;
-            const dy = Math.sin(angle) * 36;
-            return (
-              <span
-                key={i}
-                className="absolute h-1.5 w-1.5 rounded-full [animation:burst-particle_0.6s_ease-out_forwards]"
-                style={{
-                  background: color,
-                  boxShadow: `0 0 8px ${color}`,
-                  ["--dx" as string]: `${dx}px`,
-                  ["--dy" as string]: `${dy}px`
-                }}
-              />
-            );
-          })}
-        </span>
-      ) : null}
-
-      {effect?.takeover ? (
-        <span
-          key={`flash-${effect.id}`}
-          className="pointer-events-none absolute inset-0 [animation:flash-cell_0.5s_ease-out_forwards]"
-          style={{ color }}
-          aria-hidden="true"
+      {filled ? (
+        <AtomCluster
+          count={cell.count}
+          capacity={capacity}
+          color={color}
+          critical={critical}
+          overloaded={overloaded}
+          mergeId={effect?.merged ? effect.id : null}
         />
       ) : null}
+
+      <AnimatePresence>
+        {effect?.exploded ? <ExplosionBloom key={`shock-${effect.id}`} color={effectColor} /> : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {effect?.takeover || effect?.merged ? (
+          <motion.span
+            key={`flash-${effect.id}`}
+            className="pointer-events-none absolute inset-0"
+            style={{ backgroundColor: color }}
+            initial={{ opacity: effect.takeover ? 0.36 : 0.22 }}
+            animate={{ opacity: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: "spring", stiffness: 170, damping: 24, mass: 0.6 }}
+            aria-hidden="true"
+          />
+        ) : null}
+      </AnimatePresence>
 
       {legal && !filled ? (
         <span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
@@ -104,61 +98,212 @@ export function Cell({
       ) : null}
     </button>
   );
+});
+
+interface AtomSpec {
+  phase: number;
+  radius: number;
+  size: number;
+  direction: 1 | -1;
+  speedOffset: number;
 }
 
-const ATOM_POSITIONS: Record<number, ReadonlyArray<{ x: string; y: string; size: string }>> = {
-  1: [{ x: "0%", y: "0%", size: "48%" }],
-  2: [
-    { x: "-22%", y: "0%", size: "38%" },
-    { x: "22%", y: "0%", size: "38%" }
-  ],
-  3: [
-    { x: "0%", y: "-22%", size: "34%" },
-    { x: "-22%", y: "16%", size: "34%" },
-    { x: "22%", y: "16%", size: "34%" }
-  ],
-  4: [
-    { x: "-22%", y: "-22%", size: "32%" },
-    { x: "22%", y: "-22%", size: "32%" },
-    { x: "-22%", y: "22%", size: "32%" },
-    { x: "22%", y: "22%", size: "32%" }
-  ]
-};
+const ATOM_PHASES = [18, 151, 274, 329];
+const ATOM_RADIUS_BY_COUNT = [0, 10, 18, 21, 22];
+const ATOM_SIZE_BY_COUNT = [0, 44, 35, 30, 27];
 
-function AtomCluster({ count, color, critical }: { count: number; color: string; critical: boolean }) {
-  const positions = ATOM_POSITIONS[Math.min(count, 4)] ?? [];
+const AtomCluster = memo(function AtomCluster({
+  count,
+  capacity,
+  color,
+  critical,
+  overloaded,
+  mergeId
+}: {
+  count: number;
+  capacity: number;
+  color: string;
+  critical: boolean;
+  overloaded: boolean;
+  mergeId: number | null;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+  const visibleCount = Math.min(count, 4);
+  const atoms = Array.from({ length: visibleCount }, (_, i): AtomSpec => {
+    const radius = ATOM_RADIUS_BY_COUNT[visibleCount] ?? 20;
+    return {
+      phase: (ATOM_PHASES[i] + visibleCount * 23 + i * 11) % 360,
+      radius,
+      size: ATOM_SIZE_BY_COUNT[visibleCount] ?? 28,
+      direction: (i + visibleCount) % 2 === 0 ? 1 : -1,
+      speedOffset: i * 0.12 + (i % 2) * 0.08
+    };
+  });
+  const load = Math.min(1.25, count / Math.max(1, capacity));
+  const baseDuration = overloaded ? 0.28 : critical ? 0.48 : 3.2 - load * 1.45;
+  const pulseDuration = critical ? 0.46 : 1.8;
 
   return (
     <span className="pointer-events-none absolute inset-0 grid place-items-center" aria-hidden="true">
-      <span className="atom-cluster">
-        {positions.map((p, i) => (
-          <span
-            key={i}
-            className={cn("atom", critical ? "atom-critical" : "atom-idle")}
-            style={
-              {
-                "--cell-color": color,
-                "--tx": p.x,
-                "--ty": p.y,
-                "--as": p.size,
-                animationDelay: `${i * 0.04}s`
-              } as CSSProperties & Record<"--cell-color" | "--tx" | "--ty" | "--as", string>
-            }
-          />
-        ))}
+      <motion.span
+        className={cn("atom-cluster", critical && "atom-cluster-critical")}
+        initial={{ opacity: 0, scale: 0.78 }}
+        animate={{
+          opacity: 1,
+          scale: critical && !shouldReduceMotion ? [1, 1.035, 0.99, 1.055, 1] : 1
+        }}
+        transition={{
+          scale: {
+            duration: overloaded ? 0.3 : pulseDuration,
+            repeat: shouldReduceMotion ? 0 : Infinity,
+            ease: "easeInOut"
+          },
+          opacity: { duration: 0.16 }
+        }}
+      >
+        {atoms.map((atom, i) => {
+          const duration = Math.max(0.24, baseDuration - atom.speedOffset);
+          return (
+            <motion.span
+              key={i}
+              className="atom-orbit"
+              initial={{ rotate: atom.phase }}
+              animate={{ rotate: shouldReduceMotion ? atom.phase : atom.phase + atom.direction * 360 }}
+              transition={{
+                duration,
+                repeat: shouldReduceMotion ? 0 : Infinity,
+                ease: "linear"
+              }}
+            >
+              <motion.span
+                className="atom-position"
+                style={{
+                  left: `${50 + atom.radius}%`,
+                  top: "50%",
+                  width: `${atom.size}%`,
+                  height: `${atom.size}%`
+                }}
+                initial={{ x: "-50%", y: "-50%", scale: 0.18, opacity: 0 }}
+                animate={{
+                  x: "-50%",
+                  y: "-50%",
+                  scale: critical && !shouldReduceMotion ? [1, 1.12, 0.95, 1.07, 1] : 1,
+                  opacity: 1,
+                  filter:
+                    critical && !shouldReduceMotion
+                      ? [
+                          "brightness(1) saturate(1)",
+                          "brightness(1.7) saturate(1.35)",
+                          "brightness(1.1) saturate(1.1)"
+                        ]
+                      : "brightness(1) saturate(1)"
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: mergeId ? 360 : 230,
+                  damping: mergeId ? 18 : 24,
+                  mass: 0.48,
+                  scale: {
+                    duration: overloaded ? 0.22 : critical ? 0.42 : 1.7 + i * 0.11,
+                    repeat: critical && !shouldReduceMotion ? Infinity : 0,
+                    ease: "easeInOut"
+                  },
+                  filter: {
+                    duration: overloaded ? 0.22 : critical ? 0.42 : 1.7,
+                    repeat: critical && !shouldReduceMotion ? Infinity : 0,
+                    ease: "easeInOut"
+                  }
+                }}
+              >
+                <motion.span
+                  className="atom"
+                  style={{ color }}
+                  animate={{
+                    color,
+                    boxShadow: [
+                      `0 0 10px ${color}, 0 0 24px ${color}88, inset 0 0 8px rgba(255,255,255,0.35)`,
+                      `0 0 16px ${color}, 0 0 38px ${color}aa, inset 0 0 10px rgba(255,255,255,0.48)`,
+                      `0 0 10px ${color}, 0 0 24px ${color}88, inset 0 0 8px rgba(255,255,255,0.35)`
+                    ]
+                  }}
+                  transition={{
+                    color: { type: "spring", stiffness: 180, damping: 22 },
+                    boxShadow: {
+                      duration: critical ? 0.42 : 1.8,
+                      repeat: critical && !shouldReduceMotion ? Infinity : 0,
+                      ease: "easeInOut"
+                    }
+                  }}
+                />
+              </motion.span>
+            </motion.span>
+          );
+        })}
         {count > 4 ? (
-          <span
+          <motion.span
+            key="overflow-count"
             className="absolute bottom-[4%] right-[8%] font-display tracking-[0.04em]"
             style={{
               color,
               fontSize: "clamp(8px, 1.4vw, 12px)",
               textShadow: `0 0 8px ${color}`
             }}
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 18 }}
           >
             {count}
-          </span>
+          </motion.span>
         ) : null}
-      </span>
+      </motion.span>
+    </span>
+  );
+});
+
+function ExplosionBloom({ color }: { color: string }) {
+  const particles = Array.from({ length: 8 }, (_, i) => {
+    const angle = (i * Math.PI * 2) / 8;
+    const distance = i % 2 === 0 ? 42 : 32;
+    return {
+      x: Math.cos(angle) * distance,
+      y: Math.sin(angle) * distance
+    };
+  });
+
+  return (
+    <span className="pointer-events-none absolute inset-0 z-10 grid place-items-center" aria-hidden="true">
+      {[0, 1].map((ring) => (
+        <motion.span
+          key={ring}
+          className="absolute h-full w-full rounded-full border-2"
+          style={{ borderColor: color, boxShadow: `0 0 24px ${color}` }}
+          initial={{ scale: 0.18, opacity: 0.7, borderWidth: 4 }}
+          animate={{ scale: 2.25 + ring * 0.28, opacity: 0, borderWidth: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            duration: 0.72,
+            delay: ring * 0.055,
+            ease: [0.16, 0.84, 0.32, 1]
+          }}
+        />
+      ))}
+      {particles.map((particle, i) => (
+        <motion.span
+          key={i}
+          className="absolute h-1.5 w-1.5 rounded-full"
+          style={{ backgroundColor: color, boxShadow: `0 0 10px ${color}` }}
+          initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
+          animate={{ x: particle.x, y: particle.y, scale: 0, opacity: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 170,
+            damping: 24,
+            mass: 0.42,
+            delay: i * 0.008
+          }}
+        />
+      ))}
     </span>
   );
 }
