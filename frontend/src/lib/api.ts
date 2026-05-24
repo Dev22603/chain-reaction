@@ -142,6 +142,14 @@ export const authApi = {
     return apiRequest<{ player: PublicPlayer }>("/auth/me", {
       auth: true
     });
+  },
+
+  updateDisplayName(displayName: string) {
+    return apiRequest<{ player: PublicPlayer }>("/auth/me", {
+      method: "PATCH",
+      auth: true,
+      body: JSON.stringify({ displayName })
+    });
   }
 };
 

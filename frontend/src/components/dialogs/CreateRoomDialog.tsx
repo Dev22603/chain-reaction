@@ -65,44 +65,51 @@ export function CreateRoomDialog({
       width="lg"
       accent="reactor"
     >
-      <div className="grid gap-6 p-6 sm:p-8">
-        <header className="grid gap-2">
-          <div className="flex items-start justify-between gap-3">
-            <h2 id="create-room-title" className="font-display text-4xl leading-[0.95] tracking-tight text-white game-text-shadow sm:text-5xl">
-              CREATE
-              <br />
-              <span className="text-reactor">A ROOM</span>
-            </h2>
-            <button
-              type="button"
-              onClick={onClose}
-              className="grid h-9 w-9 place-items-center rounded-full border-2 border-line text-fg-muted transition-colors hover:border-reactor hover:text-reactor"
-              aria-label="Close dialog"
-            >
-              <X size={16} aria-hidden="true" />
-            </button>
-          </div>
-          <p className="max-w-md font-body text-sm text-fg-soft sm:text-base">
-            Pick your settings and share the code with friends — no signup needed.
-          </p>
+      <div className="grid gap-3.5 p-4 sm:p-5">
+        {/* ── Header: single row title + close ── */}
+        <header className="flex items-center justify-between gap-3">
+          <h2
+            id="create-room-title"
+            className="font-display text-2xl leading-none tracking-tight text-white game-text-shadow sm:text-3xl"
+          >
+            CREATE <span className="text-reactor">ROOM</span>
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="grid h-8 w-8 place-items-center rounded-full border-2 border-line text-fg-muted transition-colors hover:border-reactor hover:text-reactor"
+            aria-label="Close dialog"
+          >
+            <X size={14} aria-hidden="true" />
+          </button>
         </header>
 
-        <section className="grid gap-4 rounded-2xl border-2 border-line bg-bg-soft/40 p-5">
-          <p className="font-display text-sm text-fg-soft">
-            Players
-          </p>
-          <div className="flex items-center justify-between gap-4">
+        {/* ── Players: horizontal stepper, no giant digit ── */}
+        <section className="grid gap-2.5 rounded-xl border-2 border-line bg-bg-soft/40 p-3.5">
+          <div className="flex items-center justify-between">
+            <p className="font-display text-[11px] tracking-[0.22em] text-fg-muted">
+              PLAYERS
+            </p>
+            <span className="font-body text-xs font-semibold text-fg-muted">
+              {players === 2 ? "1v1" : `${players}-way`}
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => adjustPlayers(-1)}
               disabled={players <= 2}
-              className="grid h-12 w-12 place-items-center rounded-full border-2 border-line bg-bg/60 text-fg transition-colors hover:border-reactor hover:text-reactor disabled:opacity-30"
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 border-line bg-bg/60 text-fg transition-colors hover:border-reactor hover:text-reactor disabled:opacity-30"
               aria-label="Decrease players"
             >
-              <Minus size={18} strokeWidth={3} aria-hidden="true" />
+              <Minus size={16} strokeWidth={3} aria-hidden="true" />
             </button>
-            <div className="grid flex-1 place-items-center">
-              <span className="font-display text-7xl leading-none text-white game-text-shadow sm:text-8xl">
+            <div className="relative grid h-10 flex-1 place-items-center overflow-hidden rounded-lg bg-bg/40">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-reactor/60 to-transparent"
+              />
+              <span className="font-display text-3xl leading-none text-white game-text-shadow">
                 {players}
               </span>
             </div>
@@ -110,10 +117,10 @@ export function CreateRoomDialog({
               type="button"
               onClick={() => adjustPlayers(1)}
               disabled={players >= 8}
-              className="grid h-12 w-12 place-items-center rounded-full border-2 border-line bg-bg/60 text-fg transition-colors hover:border-reactor hover:text-reactor disabled:opacity-30"
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 border-line bg-bg/60 text-fg transition-colors hover:border-reactor hover:text-reactor disabled:opacity-30"
               aria-label="Increase players"
             >
-              <Plus size={18} strokeWidth={3} aria-hidden="true" />
+              <Plus size={16} strokeWidth={3} aria-hidden="true" />
             </button>
           </div>
           <div className="grid grid-cols-7 gap-1">
@@ -126,7 +133,7 @@ export function CreateRoomDialog({
                   onInteract?.();
                 }}
                 className={
-                  "h-2 rounded-full transition-colors " +
+                  "h-1.5 rounded-full transition-colors " +
                   (value <= players ? "bg-reactor" : "bg-line")
                 }
                 aria-label={`Set ${value} players`}
@@ -135,10 +142,11 @@ export function CreateRoomDialog({
           </div>
         </section>
 
-        <section className="grid gap-4 rounded-2xl border-2 border-line bg-bg-soft/40 p-5">
+        {/* ── Board: presets + inline tiny preview ── */}
+        <section className="grid gap-2.5 rounded-xl border-2 border-line bg-bg-soft/40 p-3.5">
           <div className="flex items-center justify-between gap-3">
-            <p className="font-display text-sm text-fg-soft">
-              Board
+            <p className="font-display text-[11px] tracking-[0.22em] text-fg-muted">
+              BOARD
             </p>
             <button
               type="button"
@@ -146,15 +154,15 @@ export function CreateRoomDialog({
                 setAdvanced((v) => !v);
                 onInteract?.();
               }}
-              className="inline-flex items-center gap-1.5 rounded-full border border-line bg-bg/50 px-3 py-1 font-body text-xs font-semibold text-fg-muted transition-colors hover:border-cherenkov hover:text-cherenkov"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line bg-bg/50 px-2.5 py-0.5 font-body text-[11px] font-semibold text-fg-muted transition-colors hover:border-cherenkov hover:text-cherenkov"
             >
-              <Settings2 size={12} aria-hidden="true" />
+              <Settings2 size={11} aria-hidden="true" />
               {advanced ? "Presets" : "Custom"}
             </button>
           </div>
 
           {!advanced ? (
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <div className="grid grid-cols-4 gap-1.5">
               {BOARD_PRESETS.map((preset) => {
                 const active = matchingPreset?.label === preset.label;
                 return (
@@ -167,65 +175,55 @@ export function CreateRoomDialog({
                       onInteract?.();
                     }}
                     className={
-                      "grid gap-1 rounded-xl border-2 px-3 py-3 text-left transition-colors " +
+                      "grid gap-0.5 rounded-lg border-2 px-2 py-1.5 text-left transition-colors " +
                       (active
                         ? "border-cherenkov bg-cherenkov/10 text-cherenkov shadow-cherenkov"
                         : "border-line bg-bg/40 text-fg-soft hover:border-line-2 hover:text-fg")
                     }
                   >
-                    <span className="font-display text-sm">
+                    <span className="font-display text-[13px] leading-tight">
                       {preset.label}
                     </span>
-                    <span className="font-body text-xs font-semibold opacity-70">
-                      {preset.gridRows} × {preset.gridCols}
+                    <span className="font-body text-[10px] font-semibold opacity-70">
+                      {preset.gridRows}×{preset.gridCols}
                     </span>
                   </button>
                 );
               })}
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
-              <NumberField
-                label="Rows"
-                value={gridRows}
-                onChange={setGridRows}
-                min={3}
-                max={20}
-              />
-              <NumberField
-                label="Cols"
-                value={gridCols}
-                onChange={setGridCols}
-                min={3}
-                max={20}
-              />
+            <div className="grid grid-cols-2 gap-2">
+              <NumberField label="Rows" value={gridRows} onChange={setGridRows} min={3} max={20} />
+              <NumberField label="Cols" value={gridCols} onChange={setGridCols} min={3} max={20} />
             </div>
           )}
 
           <BoardPreview rows={gridRows} cols={gridCols} />
         </section>
 
-        <footer className="flex flex-col-reverse items-stretch justify-between gap-3 sm:flex-row sm:items-center">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-full border-2 border-line bg-surface/60 px-5 py-3 font-display text-sm text-fg-soft transition-colors hover:border-fg-muted hover:text-fg"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleConfirm}
-            className="game-btn-shadow inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-b from-reactor-glow to-reactor px-6 py-3.5 font-display text-lg text-white game-text-shadow sm:min-w-[260px]"
-          >
-            <Check size={18} strokeWidth={3} aria-hidden="true" />
-            Create room
-          </button>
+        {/* ── Footer: single row ── */}
+        <footer className="flex items-center justify-between gap-3 pt-0.5">
+          <span className="font-mono text-[11px] text-fg-muted">
+            6-char code to share
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-full border-2 border-line bg-surface/60 px-4 py-2 font-display text-xs text-fg-soft transition-colors hover:border-fg-muted hover:text-fg"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleConfirm}
+              className="game-btn-shadow inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-b from-reactor-glow to-reactor px-5 py-2.5 font-display text-sm text-white game-text-shadow"
+            >
+              <Check size={14} strokeWidth={3} aria-hidden="true" />
+              Create room
+            </button>
+          </div>
         </footer>
-
-        <p className="border-t border-line/60 pt-4 text-center font-body text-xs text-fg-muted">
-          You&apos;ll get a 6-character code to share.
-        </p>
       </div>
     </DialogShell>
   );
@@ -245,9 +243,9 @@ function NumberField({
   max: number;
 }) {
   return (
-    <label className="grid gap-2">
-      <span className="font-body text-sm font-semibold text-fg-muted">
-        {label}
+    <label className="grid gap-1">
+      <span className="font-display text-[10px] tracking-[0.2em] text-fg-muted">
+        {label.toUpperCase()}
       </span>
       <input
         type="number"
@@ -258,7 +256,7 @@ function NumberField({
           const next = Number(event.target.value);
           if (!Number.isNaN(next)) onChange(Math.min(max, Math.max(min, next)));
         }}
-        className="min-h-12 rounded-xl border-2 border-line bg-bg px-4 font-body text-lg font-semibold text-fg focus:border-cherenkov focus:outline-none"
+        className="h-9 rounded-lg border-2 border-line bg-bg px-3 font-body text-base font-semibold text-fg focus:border-cherenkov focus:outline-none"
       />
     </label>
   );
@@ -266,27 +264,29 @@ function NumberField({
 
 function BoardPreview({ rows, cols }: { rows: number; cols: number }) {
   return (
-    <div className="grid gap-2">
+    <div className="flex items-center gap-2.5 rounded-lg border border-line/60 bg-black/40 px-2.5 py-1.5">
       <div
-        className="relative aspect-[16/9] overflow-hidden rounded-xl border-2 border-line bg-black/50"
+        className="relative h-9 w-16 shrink-0 overflow-hidden rounded border border-line/80"
         aria-hidden="true"
       >
         <div
-          className="absolute inset-0 opacity-50"
+          className="absolute inset-0 opacity-60"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(37,211,255,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,91,46,0.18) 1px, transparent 1px)",
+              "linear-gradient(rgba(37,211,255,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(255,91,46,0.22) 1px, transparent 1px)",
             backgroundSize: `calc(100% / ${cols}) calc(100% / ${rows})`
           }}
         />
-        <span className="absolute left-[18%] top-[24%] h-3 w-3 rounded-full bg-p1 shadow-[0_0_22px_rgba(255,59,107,0.85)]" />
-        <span className="absolute left-[52%] top-[42%] h-2.5 w-2.5 rounded-full bg-p2 shadow-[0_0_22px_rgba(37,211,255,0.85)]" />
-        <span className="absolute bottom-[20%] right-[18%] h-2 w-2 rounded-full bg-uranium shadow-[0_0_18px_rgba(255,210,63,0.8)]" />
+        <span className="absolute left-[20%] top-[28%] h-1.5 w-1.5 rounded-full bg-p1 shadow-[0_0_10px_rgba(255,59,107,0.85)]" />
+        <span className="absolute left-[58%] top-[48%] h-1.5 w-1.5 rounded-full bg-p2 shadow-[0_0_10px_rgba(37,211,255,0.85)]" />
+        <span className="absolute bottom-[22%] right-[20%] h-1 w-1 rounded-full bg-uranium shadow-[0_0_8px_rgba(255,210,63,0.8)]" />
       </div>
-      <div className="flex items-center justify-between font-body text-xs font-semibold text-fg-muted">
-        <span>Preview</span>
-        <span className="text-cherenkov">{rows} × {cols} board</span>
+      <div className="flex-1 font-body text-[11px] font-semibold text-fg-muted">
+        Preview
       </div>
+      <span className="font-display text-xs text-cherenkov">
+        {rows}×{cols}
+      </span>
     </div>
   );
 }

@@ -56,10 +56,17 @@ export function useAuth() {
     };
   }, [logout]);
 
+  const updateDisplayName = useCallback(async (displayName: string) => {
+    const result = await authApi.updateDisplayName(displayName);
+    setPlayer(result.player);
+    return result.player;
+  }, []);
+
   return {
     player,
     loading,
     isAuthenticated: Boolean(player),
-    logout
+    logout,
+    updateDisplayName
   };
 }

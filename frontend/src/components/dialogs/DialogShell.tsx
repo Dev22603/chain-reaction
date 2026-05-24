@@ -44,20 +44,20 @@ export function DialogShell({
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto px-3 py-6 sm:items-center sm:px-6"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden px-3 py-3 sm:px-6 sm:py-6"
     >
       <button
         type="button"
         aria-label="Close dialog"
         onClick={onClose}
-        className="fixed inset-0 cursor-default bg-bg/80 backdrop-blur-md [animation:overlay-fade_0.2s_ease-out_both]"
+        className="fixed inset-0 cursor-default bg-bg-soft/60 backdrop-blur-sm [animation:overlay-fade_0.2s_ease-out_both]"
         tabIndex={-1}
       />
 
       <div
         className={cn(
-          "relative my-auto w-full rounded-2xl border-2 bg-surface/95 shadow-panel [animation:dialog-rise_0.45s_cubic-bezier(0.2,0.85,0.4,1)_both]",
-          width === "lg" ? "max-w-[640px]" : "max-w-[500px]",
+          "relative w-full max-h-[calc(100svh-1.5rem)] sm:max-h-[calc(100svh-3rem)] overflow-y-auto rounded-2xl border-2 bg-surface [animation:dialog-rise_0.45s_cubic-bezier(0.2,0.85,0.4,1)_both]",
+          width === "lg" ? "max-w-[560px]" : "max-w-[460px]",
           accent === "reactor" ? "border-reactor/60" : "border-cherenkov/60"
         )}
       >
@@ -72,7 +72,7 @@ export function DialogShell({
         />
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-uranium/40 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-line-2 to-transparent"
         />
         <span aria-hidden className="pointer-events-none absolute left-2 top-2 h-3 w-3 border-l border-t border-current/40" />
         <span aria-hidden className="pointer-events-none absolute right-2 top-2 h-3 w-3 border-r border-t border-current/40" />

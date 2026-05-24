@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { ERROR_CODES } from "../constants/app.constants.js";
 import { SERVER_MESSAGES } from "../constants/app.messages.js";
 import { playersRepo } from "../db/index.js";
-import type { LoginInput, SignupInput } from "../schemas/auth.schemas.js";
+import type { LoginInput, SignupInput, UpdateProfileInput } from "../schemas/auth.schemas.js";
 import type { AuthResult, PublicPlayer } from "../types/auth.js";
 import { ApiError } from "../utils/api_error.js";
 import { signAccessToken } from "../utils/jwt.js";
@@ -48,6 +48,16 @@ export const authService = {
 		}
 
 		return toPublicPlayer(player);
+	},
+
+	async updateProfile(playerId: string, input: UpdateProfileInput): Promise<PublicPlayer> {
+		const existing = await playersRepo.findById(playerId);
+		if (!existing?.email) {
+			throw new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.NOT_AUTHENTICATED, [], 401);
+		}
+
+		const updated = await playersRepo.updateDisplayName(playerId, input.displayName);
+		return toPublicPlayer(updated);
 	},
 };
 

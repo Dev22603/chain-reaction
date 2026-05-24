@@ -1,32 +1,21 @@
 "use client";
 
-import { AlertTriangle, Sparkles, WifiOff } from "lucide-react";
+import { AlertTriangle, LogOut, Sparkles, Trophy, WifiOff } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { GameBoard } from "@/components/GameBoard";
 import { GameOver } from "@/components/GameOver";
 import { LandingHub } from "@/components/LandingHub";
+import { NameCard } from "@/components/NameCard";
 import { QueueScreen } from "@/components/QueueScreen";
 import { Card, CardCorners } from "@/components/ui/card";
 import { useGameWebSocket } from "@/hooks/useGameWebSocket";
 import { useAuth } from "@/hooks/useAuth";
 import type { CreateRoomConfig } from "@/components/dialogs/CreateRoomDialog";
 import { useSounds } from "@/hooks/useSounds";
+import { loadOrCreateGuestName, saveGuestName } from "@/lib/guestName";
 
 const DEFAULT_GRID = { rows: 6, cols: 9 };
-
-function makeGuestName() {
-  if (typeof window === "undefined") return "Player";
-  const stored = window.localStorage.getItem("cr.guest.name");
-  if (stored) return stored;
-  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let suffix = "";
-  for (let i = 0; i < 4; i += 1) {
-    suffix += alphabet[Math.floor(Math.random() * alphabet.length)];
-  }
-  const generated = `Player-${suffix}`;
-  window.localStorage.setItem("cr.guest.name", generated);
-  return generated;
-}
 
 export default function Home() {
   const game = useGameWebSocket();
@@ -37,7 +26,7 @@ export default function Home() {
   const noticeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setGuestName(makeGuestName());
+    setGuestName(loadOrCreateGuestName());
   }, []);
 
   useEffect(() => {
@@ -112,12 +101,22 @@ export default function Home() {
   const disconnected = game.connectionState !== "open" && game.connectionState !== "connecting";
 
   const isPlaying = game.phase === "playing";
+  const isLobby = game.phase === "lobby";
+
+  async function handleNameSave(newName: string) {
+    if (auth.isAuthenticated) {
+      await auth.updateDisplayName(newName);
+    } else {
+      saveGuestName(newName);
+      setGuestName(newName);
+    }
+  }
 
   return (
     <>
       {/* ── Full-screen game overlay (covers TopBar) ── */}
       {isPlaying && game.gameState ? (
-        <div className="fixed inset-0 z-50 bg-bg">
+        <div className="fixed inset-0 z-50 bg-surface">
           <GameBoard
             gameState={game.gameState}
             playerId={game.playerId}
@@ -137,7 +136,7 @@ export default function Home() {
       ) : null}
 
       {isPlaying && !game.gameState ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-bg">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-surface">
           <Card className="grid w-[min(420px,90vw)] gap-4 p-10 text-center [animation:panel-rise_0.5s_ease-out_both]">
             <CardCorners />
             <h1 className="font-display text-4xl tracking-tight text-fg">
@@ -150,71 +149,154 @@ export default function Home() {
         </div>
       ) : null}
 
-      {/* ── Standard scrollable layout (lobby / queue / gameover) ── */}
-      <main className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col gap-3 px-4 pb-3 sm:px-8 lg:px-10">
-        {disconnected ? (
-          <div
-            role="status"
-            className="flex items-start gap-3 border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1"
-          >
-            <WifiOff size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
-            <span className="font-mono leading-relaxed">
-              Reactor offline — reconnecting to the backend. Gameplay paused until the link is back.
-            </span>
-          </div>
-        ) : null}
+      {/* ── No-scroll lobby shell ── */}
+      {isLobby ? (
+        <div className="fixed inset-0 z-10 grid h-[100svh] w-full grid-rows-[auto_1fr_auto] overflow-hidden px-3 pb-3 pt-3 sm:px-6 sm:pt-4">
+          {/* Top rail: name (left) + leaderboard/auth (right) */}
+          <div className="flex items-start justify-between gap-3">
+            <NameCard
+              displayName={playerName}
+              canEdit={auth.isAuthenticated}
+              onSave={handleNameSave}
+              onInteract={() => sounds.play("click")}
+            />
 
-        {errorVisible ? (
+            <nav className="flex items-center gap-2">
+              <Link
+                href="/leaderboard"
+                onClick={() => sounds.play("click")}
+                className="inline-flex h-10 items-center gap-2 rounded-full border-2 border-cherenkov/50 bg-surface px-3.5 font-body text-sm font-semibold text-cherenkov transition-colors hover:border-cherenkov hover:bg-cherenkov/10"
+              >
+                <Trophy size={14} strokeWidth={2.5} aria-hidden="true" />
+                <span className="hidden sm:inline">Leaderboard</span>
+              </Link>
+              {auth.isAuthenticated ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm("Sign out? You'll leave any active queue or game.")) {
+                      auth.logout();
+                    }
+                  }}
+                  aria-label="Sign out"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-line bg-surface text-fg-soft transition-colors hover:border-reactor hover:text-reactor"
+                >
+                  <LogOut size={14} aria-hidden="true" />
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => sounds.play("click")}
+                  className="inline-flex h-10 items-center gap-2 rounded-full border-2 border-reactor/50 bg-surface px-3.5 font-body text-sm font-semibold text-reactor transition-colors hover:border-reactor hover:bg-reactor/10"
+                >
+                  <Sparkles size={14} strokeWidth={2.5} aria-hidden="true" />
+                  Sign in
+                </Link>
+              )}
+            </nav>
+          </div>
+
+          {/* Centered hero */}
+          <div className="relative grid place-items-center overflow-hidden">
+            <LandingHub
+              connectionReady={game.connectionState === "open"}
+              onInteract={() => sounds.play("click")}
+              onPlay={onPlay}
+              onCreateRoom={onCreateRoom}
+              onJoinRoom={onJoinRoom}
+            />
+          </div>
+
+          {/* Bottom: connection / error toasts */}
           <div className="grid gap-2">
+            {disconnected ? (
+              <div
+                role="status"
+                className="flex items-start gap-3 border border-p1/50 bg-p1/5 px-4 py-2 text-xs text-p1"
+              >
+                <WifiOff size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
+                <span className="font-mono leading-relaxed">
+                  Reactor offline — reconnecting. Gameplay paused until the link is back.
+                </span>
+              </div>
+            ) : null}
             {game.lastError ? (
               <div
                 role="alert"
-                className="flex items-start gap-3 border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1 [animation:panel-rise_0.4s_ease-out_both]"
+                className="flex items-start gap-3 border border-p1/50 bg-p1/5 px-4 py-2 text-xs text-p1 [animation:panel-rise_0.4s_ease-out_both]"
               >
-                <AlertTriangle size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+                <AlertTriangle size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
                 <span className="font-mono leading-relaxed">{game.lastError.message}</span>
               </div>
             ) : null}
             {softNotice ? (
               <div
                 role="status"
-                className="flex items-start gap-3 border border-cherenkov/40 bg-cherenkov/5 px-4 py-3 text-sm text-cherenkov [animation:panel-rise_0.4s_ease-out_both]"
+                className="flex items-start gap-3 border border-cherenkov/40 bg-cherenkov/5 px-4 py-2 text-xs text-cherenkov [animation:panel-rise_0.4s_ease-out_both]"
               >
-                <Sparkles size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
+                <Sparkles size={12} aria-hidden="true" className="mt-0.5 shrink-0" />
                 <span className="font-mono leading-relaxed">{softNotice}</span>
               </div>
             ) : null}
           </div>
-        ) : null}
+        </div>
+      ) : null}
 
-        {game.phase === "lobby" ? (
-          <LandingHub
-            isAuthenticated={auth.isAuthenticated}
-            displayName={auth.player?.displayName ?? guestName}
-            connectionReady={game.connectionState === "open"}
-            onInteract={() => sounds.play("click")}
-            onPlay={onPlay}
-            onCreateRoom={onCreateRoom}
-            onJoinRoom={onJoinRoom}
-          />
-        ) : null}
+      {/* ── Standard scrollable layout (queue / gameover) ── */}
+      {!isLobby && !isPlaying ? (
+        <main className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col gap-3 px-4 pb-3 sm:px-8 lg:px-10">
+          {disconnected ? (
+            <div
+              role="status"
+              className="flex items-start gap-3 border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1"
+            >
+              <WifiOff size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+              <span className="font-mono leading-relaxed">
+                Reactor offline — reconnecting to the backend. Gameplay paused until the link is back.
+              </span>
+            </div>
+          ) : null}
 
-        {game.phase === "queued" ? (
-          <QueueScreen info={game.queuedInfo} code={game.roomCode} onCancel={game.leaveQueue} />
-        ) : null}
+          {errorVisible ? (
+            <div className="grid gap-2">
+              {game.lastError ? (
+                <div
+                  role="alert"
+                  className="flex items-start gap-3 border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1 [animation:panel-rise_0.4s_ease-out_both]"
+                >
+                  <AlertTriangle size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+                  <span className="font-mono leading-relaxed">{game.lastError.message}</span>
+                </div>
+              ) : null}
+              {softNotice ? (
+                <div
+                  role="status"
+                  className="flex items-start gap-3 border border-cherenkov/40 bg-cherenkov/5 px-4 py-3 text-sm text-cherenkov [animation:panel-rise_0.4s_ease-out_both]"
+                >
+                  <Sparkles size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
+                  <span className="font-mono leading-relaxed">{softNotice}</span>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
 
-        {game.phase === "gameover" ? (
-          <GameOver
-            winner={game.winner}
-            mode={game.gameMode}
-            winnerIndex={game.gameState?.players.findIndex((p) => p.id === game.winner?.id) ?? null}
-            players={game.gameState?.players ?? null}
-            scoreDeltas={game.scoreDeltas}
-            onPlayAgain={game.reset}
-            onRematch={onRematch}
-          />
-        ) : null}
-      </main>
+          {game.phase === "queued" ? (
+            <QueueScreen info={game.queuedInfo} code={game.roomCode} onCancel={game.leaveQueue} />
+          ) : null}
+
+          {game.phase === "gameover" ? (
+            <GameOver
+              winner={game.winner}
+              mode={game.gameMode}
+              winnerIndex={game.gameState?.players.findIndex((p) => p.id === game.winner?.id) ?? null}
+              players={game.gameState?.players ?? null}
+              scoreDeltas={game.scoreDeltas}
+              onPlayAgain={game.reset}
+              onRematch={onRematch}
+            />
+          ) : null}
+        </main>
+      ) : null}
     </>
   );
 }

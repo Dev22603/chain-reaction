@@ -15,7 +15,9 @@ export const AUTH_VALIDATION_ERRORS = {
 	PASSWORD_MIN: "password must be at least 8 characters",
 	PASSWORD_MAX: "password must be 200 characters or less",
 	DISPLAY_NAME_REQUIRED: "displayName is required",
-	DISPLAY_NAME_MAX: "displayName must be 100 characters or less",
+	DISPLAY_NAME_MAX: "displayName must be 30 characters or less",
+	DISPLAY_NAME_NO_DIGITS: "displayName cannot contain numbers",
+	DISPLAY_NAME_INVALID_CHARS: "displayName can only contain letters, spaces, hyphens, and underscores",
 } as const;
 
 export const QUEUE_VALIDATION_ERRORS = {

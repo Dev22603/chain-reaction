@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { authService } from "../services/auth.service.js";
 import type { AuthTokenPayload } from "../types/auth.js";
 import { apiResponse } from "../utils/api_response.js";
-import { LoginSchema, SignupSchema } from "../schemas/auth.schemas.js";
+import { LoginSchema, SignupSchema, UpdateProfileSchema } from "../schemas/auth.schemas.js";
 
 export const authController = {
 	async signup(request: Request, response: Response): Promise<void> {
@@ -20,6 +20,13 @@ export const authController = {
 	async me(_request: Request, response: Response): Promise<void> {
 		const auth = response.locals.auth as AuthTokenPayload;
 		const player = await authService.getMe(auth.sub);
+		response.json(apiResponse({ player }));
+	},
+
+	async updateMe(request: Request, response: Response): Promise<void> {
+		const auth = response.locals.auth as AuthTokenPayload;
+		const input = UpdateProfileSchema.parse(request.body);
+		const player = await authService.updateProfile(auth.sub, input);
 		response.json(apiResponse({ player }));
 	},
 };

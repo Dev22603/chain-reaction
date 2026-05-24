@@ -54,6 +54,13 @@ export const playersRepo = {
 		};
 	},
 
+	async updateDisplayName(id: string, displayName: string) {
+		return prisma.player.update({
+			where: { id },
+			data: { displayName },
+		});
+	},
+
 	async upsert(input: { id: string; displayName: string }) {
 		return prisma.player.upsert({
 			where: {

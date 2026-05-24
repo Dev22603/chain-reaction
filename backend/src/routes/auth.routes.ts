@@ -9,3 +9,4 @@ export const authRouter = Router();
 authRouter.post("/auth/signup", authLimiter, asyncHandler(authController.signup));
 authRouter.post("/auth/login", authLimiter, asyncHandler(authController.login));
 authRouter.get("/auth/me", requireAuth, asyncHandler(authController.me));
+authRouter.patch("/auth/me", requireAuth, asyncHandler(authController.updateMe));

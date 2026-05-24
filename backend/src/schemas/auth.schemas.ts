@@ -9,7 +9,9 @@ const displayNameSchema = z
 	.string()
 	.trim()
 	.min(1, AUTH_VALIDATION_ERRORS.DISPLAY_NAME_REQUIRED)
-	.max(100, AUTH_VALIDATION_ERRORS.DISPLAY_NAME_MAX);
+	.max(30, AUTH_VALIDATION_ERRORS.DISPLAY_NAME_MAX)
+	.refine((value) => !/\d/.test(value), AUTH_VALIDATION_ERRORS.DISPLAY_NAME_NO_DIGITS)
+	.refine((value) => /^[A-Za-z][A-Za-z _-]*$/.test(value), AUTH_VALIDATION_ERRORS.DISPLAY_NAME_INVALID_CHARS);
 
 export const SignupSchema = z.object({
 	displayName: displayNameSchema,
@@ -22,5 +24,10 @@ export const LoginSchema = z.object({
 	password: passwordSchema,
 });
 
+export const UpdateProfileSchema = z.object({
+	displayName: displayNameSchema,
+});
+
 export type SignupInput = z.infer<typeof SignupSchema>;
 export type LoginInput = z.infer<typeof LoginSchema>;
+export type UpdateProfileInput = z.infer<typeof UpdateProfileSchema>;
