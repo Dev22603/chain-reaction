@@ -1,7 +1,6 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Orb } from "@/components/ui/orb";
 import type { BoardCellEffect } from "@/lib/board";
 import { cn } from "@/lib/cn";
 import type { Cell as CellModel } from "@/lib/types";
@@ -51,7 +50,7 @@ export function Cell({
         } as CSSProperties & Record<"--cell-color", string>
       }
     >
-      {filled ? <CellOrbs count={cell.count} color={color} critical={critical} /> : null}
+      {filled ? <AtomCluster count={cell.count} color={color} critical={critical} /> : null}
 
       {effect?.exploded ? (
         <span
@@ -107,79 +106,59 @@ export function Cell({
   );
 }
 
-function CellOrbs({ count, color, critical }: { count: number; color: string; critical: boolean }) {
-  const displayCount = Math.min(count, 4);
-  const size =
-    displayCount === 1
-      ? "clamp(0.55rem, 52%, 1.5rem)"
-      : displayCount === 2
-        ? "clamp(0.45rem, 40%, 1.125rem)"
-        : displayCount === 3
-          ? "clamp(0.4rem, 34%, 0.95rem)"
-          : "clamp(0.35rem, 30%, 0.82rem)";
-  const orbits = orbitConfig(displayCount, critical);
+const ATOM_POSITIONS: Record<number, ReadonlyArray<{ x: string; y: string; size: string }>> = {
+  1: [{ x: "0%", y: "0%", size: "48%" }],
+  2: [
+    { x: "-22%", y: "0%", size: "38%" },
+    { x: "22%", y: "0%", size: "38%" }
+  ],
+  3: [
+    { x: "0%", y: "-22%", size: "34%" },
+    { x: "-22%", y: "16%", size: "34%" },
+    { x: "22%", y: "16%", size: "34%" }
+  ],
+  4: [
+    { x: "-22%", y: "-22%", size: "32%" },
+    { x: "22%", y: "-22%", size: "32%" },
+    { x: "-22%", y: "22%", size: "32%" },
+    { x: "22%", y: "22%", size: "32%" }
+  ]
+};
+
+function AtomCluster({ count, color, critical }: { count: number; color: string; critical: boolean }) {
+  const positions = ATOM_POSITIONS[Math.min(count, 4)] ?? [];
 
   return (
-    <span className="absolute inset-0 grid place-items-center" aria-hidden="true">
-      {orbits.map((orbit, index) => (
-        <span
-          key={index}
-          className="absolute left-1/2 top-1/2"
-          style={{
-            animation: orbit.spins ? `orbit-spin ${orbit.duration}s linear infinite` : undefined,
-            animationDelay: orbit.spins ? `-${orbit.duration * orbit.startFraction}s` : undefined
-          }}
-        >
+    <span className="pointer-events-none absolute inset-0 grid place-items-center" aria-hidden="true">
+      <span className="atom-cluster">
+        {positions.map((p, i) => (
           <span
-            className="absolute left-0 top-0"
+            key={i}
+            className={cn("atom", critical ? "atom-critical" : "atom-idle")}
+            style={
+              {
+                "--cell-color": color,
+                "--tx": p.x,
+                "--ty": p.y,
+                "--as": p.size,
+                animationDelay: `${i * 0.04}s`
+              } as CSSProperties & Record<"--cell-color" | "--tx" | "--ty" | "--as", string>
+            }
+          />
+        ))}
+        {count > 4 ? (
+          <span
+            className="absolute bottom-[4%] right-[8%] font-display tracking-[0.04em]"
             style={{
-              transform: `translate(-50%, -50%) translateX(${orbit.radius})`,
-              animation:
-                orbit.spins ? `orbit-spin-reverse ${orbit.duration}s linear infinite` : undefined,
-              animationDelay: orbit.spins ? `-${orbit.duration * orbit.startFraction}s` : undefined
+              color,
+              fontSize: "clamp(8px, 1.4vw, 12px)",
+              textShadow: `0 0 8px ${color}`
             }}
           >
-            <Orb color={color} size={size} delay={index * 0.08} critical={critical} />
+            {count}
           </span>
-        </span>
-      ))}
-      {count > 4 ? (
-        <span
-          className="absolute bottom-1 right-1 font-display text-[10px] uppercase tracking-[0.08em]"
-          style={{ color }}
-        >
-          {count}
-        </span>
-      ) : null}
+        ) : null}
+      </span>
     </span>
   );
-}
-
-function orbitConfig(
-  count: number,
-  critical: boolean
-): Array<{ radius: string; duration: number; startFraction: number; spins: boolean }> {
-  switch (count) {
-    case 1:
-      return [{ radius: "0px", duration: 0, startFraction: 0, spins: false }];
-    case 2:
-      return [
-        { radius: "clamp(0.28rem, 22%, 0.75rem)", duration: critical ? 1.9 : 3.9, startFraction: 0, spins: true },
-        { radius: "clamp(0.28rem, 22%, 0.75rem)", duration: critical ? 1.9 : 3.9, startFraction: 0.5, spins: true }
-      ];
-    case 3:
-      return [
-        { radius: "clamp(0.24rem, 20%, 0.7rem)", duration: critical ? 1.8 : 3.5, startFraction: 0, spins: true },
-        { radius: "clamp(0.24rem, 20%, 0.7rem)", duration: critical ? 1.8 : 3.5, startFraction: 1 / 3, spins: true },
-        { radius: "clamp(0.24rem, 20%, 0.7rem)", duration: critical ? 1.8 : 3.5, startFraction: 2 / 3, spins: true }
-      ];
-    case 4:
-    default:
-      return [
-        { radius: "clamp(0.22rem, 18%, 0.68rem)", duration: critical ? 1.6 : 4.4, startFraction: 0, spins: true },
-        { radius: "clamp(0.22rem, 18%, 0.68rem)", duration: critical ? 1.6 : 4.4, startFraction: 0.25, spins: true },
-        { radius: "clamp(0.22rem, 18%, 0.68rem)", duration: critical ? 1.6 : 4.4, startFraction: 0.5, spins: true },
-        { radius: "clamp(0.22rem, 18%, 0.68rem)", duration: critical ? 1.6 : 4.4, startFraction: 0.75, spins: true }
-      ];
-  }
 }

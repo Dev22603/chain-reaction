@@ -140,6 +140,57 @@ body::before {
   }
 }
 
+/* ─── Atom rendering ───────────────────────────────────────────────────── */
+
+.atom-cluster {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  display: grid;
+  place-items: center;
+}
+
+.atom {
+  --as: 44%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--as);
+  height: var(--as);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) translate(var(--tx, 0px), var(--ty, 0px));
+  will-change: transform, filter;
+  background: radial-gradient(
+    circle at 32% 30%,
+    #fff 0%,
+    color-mix(in srgb, var(--cell-color) 60%, white) 24%,
+    var(--cell-color) 58%,
+    color-mix(in srgb, var(--cell-color) 55%, black) 100%
+  );
+  box-shadow:
+    0 0 12px var(--cell-color),
+    0 0 30px color-mix(in srgb, var(--cell-color) 55%, transparent),
+    inset 0 0 8px rgba(255, 255, 255, 0.35);
+}
+
+.atom-idle {
+  animation: atom-breathe 2.6s ease-in-out 0.35s infinite;
+}
+
+.atom-critical {
+  animation: atom-critical 0.55s ease-in-out infinite;
+}
+
+@keyframes atom-breathe {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.15); }
+}
+
+@keyframes atom-critical {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 6px var(--cell-color)); }
+  50%      { filter: brightness(1.6) drop-shadow(0 0 14px var(--cell-color)); }
+}
+
 @keyframes shockwave {
   0% {
     transform: scale(0.2);
