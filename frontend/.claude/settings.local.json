@@ -5,7 +5,8 @@
       "Bash(npx tsc *)",
       "Bash(git -C /d/College/Github_Projects/chain-reaction/frontend diff HEAD -- src/components/dialogs/CreateRoomDialog.tsx src/components/dialogs/DialogShell.tsx)",
       "Bash(git *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Skill(agent-browser)"
     ]
   }
 }

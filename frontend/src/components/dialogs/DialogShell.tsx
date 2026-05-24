@@ -46,13 +46,13 @@ export function DialogShell({
       aria-labelledby={titleId}
       className="fixed inset-0 z-50 flex items-center justify-center px-2 py-3 sm:px-6 sm:py-6"
     >
-      <button
+      {/* <button
         type="button"
         aria-label="Close dialog"
         onClick={onClose}
         className="fixed inset-0 cursor-default bg-bg-soft/60 backdrop-blur-sm [animation:overlay-fade_0.2s_ease-out_both]"
         tabIndex={-1}
-      />
+      /> */}
 
       <div
         className={cn(
