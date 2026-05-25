@@ -1,0 +1,3 @@
+## 2024-05-25 - Mathematical translation of critical mass logic
+**Learning:** In the grid-based game logic (`gameLogic.ts`), `getCriticalMass` was previously generating full arrays of neighbor cells just to count them (`getNeighbors(..).length`), creating unnecessary intermediate array allocations and GC pressure in a hot loop (like `applyMove`). `getNeighbors` itself allocated candidates and used `.filter`.
+**Action:** Replaced array-returning `.filter` calls with primitive-based boundary checks and `.push()` in `getNeighbors`. Refactored `getCriticalMass` entirely to compute the length mathematically (`4 - (edges)`) instead of invoking array allocations. Avoid intermediate arrays in logic hot loops by defaulting to inline primitive math where possible.
