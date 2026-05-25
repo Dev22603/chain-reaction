@@ -1,34 +1,12 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { RefreshCw, Trophy } from "lucide-react";
-import { ApiClientError, leaderboardApi, type LeaderboardEntry } from "@/lib/api";
-import { Button } from "@/components/ui/button";
+import { Trophy } from "lucide-react";
+import { leaderboardApi } from "@/lib/api";
 import { Card, CardCorners, CardEyebrow, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui";
 
-export default function LeaderboardPage() {
-  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  async function loadLeaderboard() {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result = await leaderboardApi.list(50);
-      setEntries(result.leaderboard);
-    } catch (caught) {
-      setError(caught instanceof ApiClientError ? caught.message : "Could not load leaderboard.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    void loadLeaderboard();
-  }, []);
+export default async function LeaderboardPage() {
+  const result = await leaderboardApi.list(50);
+  const entries = result.leaderboard;
 
   return (
     <main className="relative z-10 mx-auto w-full max-w-[980px] px-4 py-8 sm:px-8">
@@ -40,33 +18,13 @@ export default function LeaderboardPage() {
             <CardTitle className="text-3xl sm:text-4xl">Leaderboard</CardTitle>
           </div>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => void loadLeaderboard()} disabled={loading}>
-              <RefreshCw size={16} aria-hidden="true" />
-              Refresh
-            </Button>
             <Trophy className="text-uranium" size={32} aria-hidden="true" />
           </div>
         </header>
 
-        {error ? (
-          <div role="alert" className="border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1">
-            {error}
-          </div>
-        ) : null}
-
-        {!error && loading ? (
-          <div className="border border-line bg-bg-soft px-4 py-8 text-center font-mono text-xs uppercase tracking-[0.24em] text-fg-muted">
-            Loading standings
-          </div>
-        ) : null}
-
-        {!error && !loading && entries.length === 0 ? (
-          <div className="border border-line bg-bg-soft px-4 py-8 text-center font-mono text-xs uppercase tracking-[0.24em] text-fg-muted">
-            No ranked games yet
-          </div>
-        ) : null}
-
-        {!error && !loading && entries.length > 0 ? (
+        {entries.length === 0 ? (
+          <EmptyState message="No ranked games yet" />
+        ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] border-collapse font-mono text-sm">
               <thead>
@@ -99,7 +57,7 @@ export default function LeaderboardPage() {
               </tbody>
             </table>
           </div>
-        ) : null}
+        )}
       </Card>
     </main>
   );

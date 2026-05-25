@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { authApi, ApiClientError, type PublicPlayer } from "@/lib/api";
+import { authApi, ApiClientError } from "@/lib/api";
+import type { PublicPlayer } from "@/types";
 import { clearStoredAccessToken, getStoredAccessToken } from "@/lib/auth";
 
 export function useAuth() {
