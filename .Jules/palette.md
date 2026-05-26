@@ -1,0 +1,3 @@
+## 2024-05-26 - [Clickable Modal Backdrop]
+**Learning:** Adding a clickable background overlay (`backdrop-blur`) behind modal dialogs (like `DialogShell.tsx`) greatly improves user flow, as users naturally expect to click outside the modal to dismiss it. Adding `aria-hidden="true"` to the backdrop overlay maintains accessibility, ensuring screen readers aren't trapped or confused by structural elements designed only for visual UX and mouse interaction.
+**Action:** Use a `fixed inset-0` element for dialog backdrops, attach an `onClick={onClose}` handler, and mark it with `aria-hidden="true"` for a11y compliance.
