@@ -28,17 +28,17 @@ Intended outcome: HTTP controllers, the HTTP auth middleware, Zod usage, and the
 ## Files to modify
 
 - `backend/src/middlewares/auth.middleware.ts` → **rename to** `backend/src/middlewares/auth.ts`.
-  - Rename export `requireAuth` → `authenticate`.
-  - On missing/invalid token: respond directly `res.status(401).json(new HttpApiError(401, "Access denied. No token provided."))` (and 401 for invalid token — fix the finance-dashboard 400 quirk; we control both projects).
-  - Assign `req.user = verifyAccessToken(token)` instead of `response.locals.auth`.
-  - Update route imports: `auth.routes.ts`, `players.routes.ts`.
+    - Rename export `requireAuth` → `authenticate`.
+    - On missing/invalid token: respond directly `res.status(401).json(new HttpApiError(401, "Access denied. No token provided."))` (and 401 for invalid token — fix the finance-dashboard 400 quirk; we control both projects).
+    - Assign `req.user = verifyAccessToken(token)` instead of `response.locals.auth`.
+    - Update route imports: `auth.routes.ts`, `players.routes.ts`.
 - `backend/src/middlewares/rateLimit.middleware.ts` → **rename to** `backend/src/middlewares/rateLimit.ts`. Update imports in `auth.routes.ts`, `leaderboard.routes.ts`, `players.routes.ts`. No logic change.
 - `backend/src/app.ts` — remove `import { errorMiddleware }` and remove `app.use(errorMiddleware)`. Leave helmet, cors, json, trust proxy as-is.
 - `backend/src/controllers/auth.controller.ts` — rewrite each handler:
-  - Replace `SignupSchema.parse(request.body)` with `validateSignup(request.body)`.
-  - Wrap body in `try/catch`; success path returns `new HttpApiResponse(201, SERVER_MESSAGES.SIGNUP_OK, result)`.
-  - In `login`'s catch, when `error instanceof HttpApiError && error.code === 401` (invalid credentials) emit `logSecurityEvent("auth_failure", { ip: getClientIp(request), details: "HTTP login invalid credentials" })` before responding. (Service throws `HttpApiError(401, INVALID_CREDENTIALS)` — see service-layer note below.)
-  - `me`: read `req.user` (typed as `AuthTokenPayload | undefined`; controller asserts non-null since `authenticate` ran first, or throws `HttpApiError(401, ...)` defensively).
+    - Replace `SignupSchema.parse(request.body)` with `validateSignup(request.body)`.
+    - Wrap body in `try/catch`; success path returns `new HttpApiResponse(201, SERVER_MESSAGES.SIGNUP_OK, result)`.
+    - In `login`'s catch, when `error instanceof HttpApiError && error.code === 401` (invalid credentials) emit `logSecurityEvent("auth_failure", { ip: getClientIp(request), details: "HTTP login invalid credentials" })` before responding. (Service throws `HttpApiError(401, INVALID_CREDENTIALS)` — see service-layer note below.)
+    - `me`: read `req.user` (typed as `AuthTokenPayload | undefined`; controller asserts non-null since `authenticate` ran first, or throws `HttpApiError(401, ...)` defensively).
 - `backend/src/controllers/health.controller.ts` — rewrite with try/catch + `HttpApiResponse`.
 - `backend/src/controllers/leaderboard.controller.ts` — rewrite with try/catch + `HttpApiResponse`.
 - `backend/src/controllers/players.controller.ts` — rewrite three handlers; switch `response.locals.auth` → `req.user`; use `HttpApiResponse` + `HttpApiError`.
@@ -47,15 +47,20 @@ Intended outcome: HTTP controllers, the HTTP auth middleware, Zod usage, and the
 - `backend/src/routes/leaderboard.routes.ts` — drop `asyncHandler`; update `rateLimit.ts` import path.
 - `backend/src/routes/players.routes.ts` — drop `asyncHandler`; import `authenticate`; update import paths.
 - `backend/src/schemas/auth.schemas.ts` — add two exported helpers:
-  ```ts
-  export function validateSignup(data: unknown): SignupInput {
-    const result = SignupSchema.safeParse(data);
-    if (!result.success) throw new HttpApiError(400, "Signup validation failed", result.error.issues.map(i => i.message));
-    return result.data;
-  }
-  // same shape for validateLogin
-  ```
-  Leave the existing `SignupSchema`/`LoginSchema` exports in place — the WS path may still use the raw schemas.
+    ```ts
+    export function validateSignup(data: unknown): SignupInput {
+	const result = SignupSchema.safeParse(data);
+	if (!result.success)
+		throw new HttpApiError(
+			400,
+			"Signup validation failed",
+			result.error.issues.map((i) => i.message),
+		);
+	return result.data;
+    }
+    // same shape for validateLogin
+    ```
+    Leave the existing `SignupSchema`/`LoginSchema` exports in place — the WS path may still use the raw schemas.
 - `backend/src/services/auth.service.ts` — where it currently throws `ApiError(ERROR_CODES.INVALID_CREDENTIALS, ..., 401)` on the HTTP login path, switch to `HttpApiError(401, SERVER_MESSAGES.INVALID_CREDENTIALS)`. Inspect the file first; if a single throw is shared between HTTP and a WS caller, branch the call sites instead of changing both. (The service currently has both `signup` and `login` consumed from HTTP only per `auth.routes.ts` — verify during implementation.)
 
 ## Files to delete
@@ -91,12 +96,12 @@ Intended outcome: HTTP controllers, the HTTP auth middleware, Zod usage, and the
 2. `cd backend && npm run lint` — ESLint clean.
 3. `cd backend && npm run dev` — server boots on `:8080`, no startup errors.
 4. Manual HTTP smoke:
-   - `POST /api/auth/signup` valid payload → 201 with `{ code: 201, message, data }`.
-   - `POST /api/auth/signup` invalid payload → 400 with `{ code: 400, message: "Signup validation failed", errors: [...] }`.
-   - `POST /api/auth/login` bad creds → 401 with new envelope; check logs for `auth_failure` security event.
-   - `GET /api/auth/me` no token → 401, `{ code: 401, message: "Access denied. No token provided." }`.
-   - `GET /api/auth/me` valid token → 200 with player payload.
-   - `GET /api/leaderboard` → 200 with `{ code, message, data }`.
-   - Hit `/api/auth/login` 11 times in 15 minutes → 429 (rate limiter still active).
+    - `POST /api/auth/signup` valid payload → 201 with `{ code: 201, message, data }`.
+    - `POST /api/auth/signup` invalid payload → 400 with `{ code: 400, message: "Signup validation failed", errors: [...] }`.
+    - `POST /api/auth/login` bad creds → 401 with new envelope; check logs for `auth_failure` security event.
+    - `GET /api/auth/me` no token → 401, `{ code: 401, message: "Access denied. No token provided." }`.
+    - `GET /api/auth/me` valid token → 200 with player payload.
+    - `GET /api/leaderboard` → 200 with `{ code, message, data }`.
+    - Hit `/api/auth/login` 11 times in 15 minutes → 429 (rate limiter still active).
 5. WS regression check: connect a client, run `npm run smoke:logic`, play a join/move/leave sequence — error frames still carry string `code` per `PROTOCOL.md`. Nothing in the WS path should have changed.
 6. Confirm `backend/src/middlewares/` contains exactly `auth.ts` and `rateLimit.ts` (no `*.middleware.ts`, no `async_handler.ts`, no `error.middleware.ts`).
