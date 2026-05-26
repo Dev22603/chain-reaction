@@ -4,6 +4,7 @@ import { Check, Minus, Plus, Settings2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { DialogShell } from "@/components/dialogs/DialogShell";
 import { BOARD_PRESETS } from "@/lib/presets";
+import { playerColor } from "@/lib/colors";
 
 export interface CreateRoomConfig {
   players: number;
@@ -20,16 +21,6 @@ interface CreateRoomDialogProps {
 }
 
 const DEFAULT_PRESET = BOARD_PRESETS[1];
-
-const PLAYER_TINTS: Record<number, string> = {
-  2: "#ff3b6b",
-  3: "#2ad8ff",
-  4: "#ffd23f",
-  5: "#5cff9b",
-  6: "#ff3da7",
-  7: "#ff6b1f",
-  8: "#b6ff3c"
-};
 
 export function CreateRoomDialog({
   open,
@@ -67,7 +58,7 @@ export function CreateRoomDialog({
     onInteract?.();
   }
 
-  const activeTint = PLAYER_TINTS[players] ?? "#ff6b1f";
+  const activeTint = playerColor(players - 2);
 
   return (
     <DialogShell
@@ -162,8 +153,8 @@ export function CreateRoomDialog({
                   <span
                     className="block h-1.5 w-full rounded-full transition-all"
                     style={{
-                      background: on ? PLAYER_TINTS[value] : "var(--color-line)",
-                      boxShadow: on ? `0 0 10px color-mix(in srgb, ${PLAYER_TINTS[value]} 70%, transparent)` : undefined
+                      background: on ? playerColor(value - 2) : "var(--color-line)",
+                      boxShadow: on ? `0 0 10px color-mix(in srgb, ${playerColor(value - 2)} 70%, transparent)` : undefined
                     }}
                   />
                 </button>

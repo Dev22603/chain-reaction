@@ -6,17 +6,9 @@ import { AtomicHero } from "@/components/AtomicHero";
 import { CreateRoomDialog } from "@/components/dialogs/CreateRoomDialog";
 import { JoinRoomDialog } from "@/components/dialogs/JoinRoomDialog";
 import type { CreateRoomConfig } from "@/components/dialogs/CreateRoomDialog";
+import { playerColor } from "@/lib/colors";
 
 const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 7, 8] as const;
-const PLAYER_COLORS: Record<number, string> = {
-  2: "#ff3b6b",
-  3: "#2ad8ff",
-  4: "#ffd23f",
-  5: "#5cff9b",
-  6: "#ff3da7",
-  7: "#ff6b1f",
-  8: "#b6ff3c"
-};
 
 interface LandingHubProps {
   connectionReady: boolean;
@@ -88,7 +80,7 @@ export function LandingHub({
         >
           {PLAYER_OPTIONS.map((count) => {
             const active = playerCount === count;
-            const chipColor = PLAYER_COLORS[count];
+            const chipColor = playerColor(count - 2);
             return (
               <button
                 key={count}

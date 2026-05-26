@@ -57,7 +57,7 @@
       "source_file": "backend\\eslint.config.mjs",
       "source_location": "L1",
       "id": "backend_eslint_config_mjs",
-      "community": 34,
+      "community": 39,
       "norm_label": "eslint.config.mjs"
     },
     {
@@ -66,7 +66,7 @@
       "source_file": "backend\\prisma.config.ts",
       "source_location": "L1",
       "id": "backend_prisma_config_ts",
-      "community": 35,
+      "community": 40,
       "norm_label": "prisma.config.ts"
     },
     {
@@ -75,7 +75,7 @@
       "source_file": "backend\\prisma\\seed.ts",
       "source_location": "L1",
       "id": "backend_prisma_seed_ts",
-      "community": 7,
+      "community": 3,
       "norm_label": "seed.ts"
     },
     {
@@ -84,7 +84,7 @@
       "source_file": "backend\\prisma\\seed.ts",
       "source_location": "L3",
       "id": "seed_main",
-      "community": 7,
+      "community": 3,
       "norm_label": "main()"
     },
     {
@@ -93,7 +93,7 @@
       "source_file": "backend\\scripts\\recompute-scores.ts",
       "source_location": "L1",
       "id": "backend_scripts_recompute_scores_ts",
-      "community": 7,
+      "community": 3,
       "norm_label": "recompute-scores.ts"
     },
     {
@@ -102,7 +102,7 @@
       "source_file": "backend\\scripts\\recompute-scores.ts",
       "source_location": "L10",
       "id": "recompute_scores_main",
-      "community": 7,
+      "community": 3,
       "norm_label": "main()"
     },
     {
@@ -111,7 +111,7 @@
       "source_file": "backend\\src\\app.ts",
       "source_location": "L1",
       "id": "backend_src_app_ts",
-      "community": 7,
+      "community": 0,
       "norm_label": "app.ts"
     },
     {
@@ -120,7 +120,7 @@
       "source_file": "backend\\src\\index.ts",
       "source_location": "L1",
       "id": "backend_src_index_ts",
-      "community": 7,
+      "community": 0,
       "norm_label": "index.ts"
     },
     {
@@ -129,7 +129,7 @@
       "source_file": "backend\\src\\index.ts",
       "source_location": "L24",
       "id": "index_gracefulshutdown",
-      "community": 7,
+      "community": 0,
       "norm_label": "gracefulshutdown()"
     },
     {
@@ -138,7 +138,7 @@
       "source_file": "backend\\src\\router.ts",
       "source_location": "L1",
       "id": "backend_src_router_ts",
-      "community": 2,
+      "community": 0,
       "norm_label": "router.ts"
     },
     {
@@ -147,7 +147,7 @@
       "source_file": "backend\\src\\router.ts",
       "source_location": "L15",
       "id": "router_dispatch",
-      "community": 5,
+      "community": 1,
       "norm_label": "dispatch()"
     },
     {
@@ -156,7 +156,7 @@
       "source_file": "backend\\src\\constants\\app.constants.ts",
       "source_location": "L1",
       "id": "backend_src_constants_app_constants_ts",
-      "community": 2,
+      "community": 0,
       "norm_label": "app.constants.ts"
     },
     {
@@ -165,7 +165,7 @@
       "source_file": "backend\\src\\constants\\app.messages.ts",
       "source_location": "L1",
       "id": "backend_src_constants_app_messages_ts",
-      "community": 2,
+      "community": 0,
       "norm_label": "app.messages.ts"
     },
     {
@@ -174,7 +174,7 @@
       "source_file": "backend\\src\\constants\\config.ts",
       "source_location": "L1",
       "id": "backend_src_constants_config_ts",
-      "community": 7,
+      "community": 0,
       "norm_label": "config.ts"
     },
     {
@@ -183,7 +183,7 @@
       "source_file": "backend\\src\\controllers\\auth.controller.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_auth_controller_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "auth.controller.ts"
     },
     {
@@ -192,7 +192,7 @@
       "source_file": "backend\\src\\controllers\\health.controller.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_health_controller_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "health.controller.ts"
     },
     {
@@ -201,7 +201,7 @@
       "source_file": "backend\\src\\controllers\\leaderboard.controller.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_leaderboard_controller_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "leaderboard.controller.ts"
     },
     {
@@ -210,7 +210,7 @@
       "source_file": "backend\\src\\controllers\\players.controller.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_players_controller_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "players.controller.ts"
     },
     {
@@ -219,7 +219,7 @@
       "source_file": "backend\\src\\controllers\\players.controller.ts",
       "source_location": "L26",
       "id": "players_controller_getplayerid",
-      "community": 1,
+      "community": 0,
       "norm_label": "getplayerid()"
     },
     {
@@ -228,7 +228,7 @@
       "source_file": "backend\\src\\db\\index.ts",
       "source_location": "L1",
       "id": "backend_src_db_index_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "index.ts"
     },
     {
@@ -237,7 +237,7 @@
       "source_file": "backend\\src\\db\\repos\\matches.ts",
       "source_location": "L1",
       "id": "backend_src_db_repos_matches_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "matches.ts"
     },
     {
@@ -246,7 +246,7 @@
       "source_file": "backend\\src\\db\\repos\\players.ts",
       "source_location": "L1",
       "id": "backend_src_db_repos_players_ts",
-      "community": 7,
+      "community": 3,
       "norm_label": "players.ts"
     },
     {
@@ -255,7 +255,7 @@
       "source_file": "backend\\src\\db\\repos\\scores.ts",
       "source_location": "L1",
       "id": "backend_src_db_repos_scores_ts",
-      "community": 7,
+      "community": 3,
       "norm_label": "scores.ts"
     },
     {
@@ -264,7 +264,7 @@
       "source_file": "backend\\src\\game\\gameLogic.ts",
       "source_location": "L1",
       "id": "backend_src_game_gamelogic_ts",
-      "community": 9,
+      "community": 1,
       "norm_label": "gamelogic.ts"
     },
     {
@@ -273,43 +273,43 @@
       "source_file": "backend\\src\\game\\gameLogic.ts",
       "source_location": "L4",
       "id": "gamelogic_createboard",
-      "community": 9,
+      "community": 1,
       "norm_label": "createboard()"
     },
     {
       "label": "getNeighbors()",
       "file_type": "code",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L10",
+      "source_location": "L8",
       "id": "gamelogic_getneighbors",
-      "community": 9,
+      "community": 1,
       "norm_label": "getneighbors()"
     },
     {
       "label": "getCriticalMass()",
       "file_type": "code",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L29",
+      "source_location": "L19",
       "id": "gamelogic_getcriticalmass",
-      "community": 9,
+      "community": 1,
       "norm_label": "getcriticalmass()"
     },
     {
       "label": "applyMove()",
       "file_type": "code",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L38",
+      "source_location": "L23",
       "id": "gamelogic_applymove",
-      "community": 9,
+      "community": 1,
       "norm_label": "applymove()"
     },
     {
       "label": "isEliminated()",
       "file_type": "code",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L110",
+      "source_location": "L83",
       "id": "gamelogic_iseliminated",
-      "community": 9,
+      "community": 1,
       "norm_label": "iseliminated()"
     },
     {
@@ -318,7 +318,7 @@
       "source_file": "backend\\src\\generated\\prisma\\browser.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_browser_ts",
-      "community": 17,
+      "community": 20,
       "norm_label": "browser.ts"
     },
     {
@@ -327,7 +327,7 @@
       "source_file": "backend\\src\\generated\\prisma\\client.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_client_ts",
-      "community": 11,
+      "community": 3,
       "norm_label": "client.ts"
     },
     {
@@ -336,7 +336,7 @@
       "source_file": "backend\\src\\generated\\prisma\\commonInputTypes.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_commoninputtypes_ts",
-      "community": 11,
+      "community": 3,
       "norm_label": "commoninputtypes.ts"
     },
     {
@@ -345,7 +345,7 @@
       "source_file": "backend\\src\\generated\\prisma\\enums.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_enums_ts",
-      "community": 11,
+      "community": 3,
       "norm_label": "enums.ts"
     },
     {
@@ -354,7 +354,7 @@
       "source_file": "backend\\src\\generated\\prisma\\models.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_models_ts",
-      "community": 11,
+      "community": 3,
       "norm_label": "models.ts"
     },
     {
@@ -363,7 +363,7 @@
       "source_file": "backend\\src\\generated\\prisma\\internal\\class.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_internal_class_ts",
-      "community": 11,
+      "community": 3,
       "norm_label": "class.ts"
     },
     {
@@ -372,7 +372,7 @@
       "source_file": "backend\\src\\generated\\prisma\\internal\\class.ts",
       "source_location": "L41",
       "id": "class_decodebase64aswasm",
-      "community": 11,
+      "community": 3,
       "norm_label": "decodebase64aswasm()"
     },
     {
@@ -381,7 +381,7 @@
       "source_file": "backend\\src\\generated\\prisma\\internal\\class.ts",
       "source_location": "L232",
       "id": "class_getprismaclientclass",
-      "community": 11,
+      "community": 3,
       "norm_label": "getprismaclientclass()"
     },
     {
@@ -390,7 +390,7 @@
       "source_file": "backend\\src\\generated\\prisma\\internal\\prismaNamespace.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_internal_prismanamespace_ts",
-      "community": 11,
+      "community": 3,
       "norm_label": "prismanamespace.ts"
     },
     {
@@ -399,7 +399,7 @@
       "source_file": "backend\\src\\generated\\prisma\\internal\\prismaNamespaceBrowser.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_internal_prismanamespacebrowser_ts",
-      "community": 17,
+      "community": 20,
       "norm_label": "prismanamespacebrowser.ts"
     },
     {
@@ -408,7 +408,7 @@
       "source_file": "backend\\src\\generated\\prisma\\models\\Match.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_models_match_ts",
-      "community": 11,
+      "community": 3,
       "norm_label": "match.ts"
     },
     {
@@ -417,7 +417,7 @@
       "source_file": "backend\\src\\generated\\prisma\\models\\MatchPlayer.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_models_matchplayer_ts",
-      "community": 11,
+      "community": 3,
       "norm_label": "matchplayer.ts"
     },
     {
@@ -426,7 +426,7 @@
       "source_file": "backend\\src\\generated\\prisma\\models\\Player.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_models_player_ts",
-      "community": 11,
+      "community": 3,
       "norm_label": "player.ts"
     },
     {
@@ -435,7 +435,7 @@
       "source_file": "backend\\src\\generated\\prisma\\models\\PlayerScore.ts",
       "source_location": "L1",
       "id": "backend_src_generated_prisma_models_playerscore_ts",
-      "community": 11,
+      "community": 3,
       "norm_label": "playerscore.ts"
     },
     {
@@ -444,151 +444,151 @@
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
       "source_location": "L1",
       "id": "backend_src_handlers_game_handlers_ts",
-      "community": 5,
+      "community": 1,
       "norm_label": "game.handlers.ts"
     },
     {
       "label": "handleMove()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L26",
+      "source_location": "L19",
       "id": "game_handlers_handlemove",
-      "community": 5,
+      "community": 1,
       "norm_label": "handlemove()"
     },
     {
       "label": "handleLeaveGame()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L70",
+      "source_location": "L63",
       "id": "game_handlers_handleleavegame",
-      "community": 5,
+      "community": 1,
       "norm_label": "handleleavegame()"
     },
     {
       "label": "graceExpireLeaveGame()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L75",
+      "source_location": "L68",
       "id": "game_handlers_graceexpireleavegame",
-      "community": 5,
+      "community": 1,
       "norm_label": "graceexpireleavegame()"
     },
     {
       "label": "sendGameStateToPlayer()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L80",
+      "source_location": "L73",
       "id": "game_handlers_sendgamestatetoplayer",
-      "community": 6,
+      "community": 1,
       "norm_label": "sendgamestatetoplayer()"
     },
     {
       "label": "eliminateAndBroadcast()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L94",
+      "source_location": "L87",
       "id": "game_handlers_eliminateandbroadcast",
-      "community": 5,
+      "community": 1,
       "norm_label": "eliminateandbroadcast()"
     },
     {
       "label": "getRoomForPlayer()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L138",
+      "source_location": "L131",
       "id": "game_handlers_getroomforplayer",
-      "community": 5,
+      "community": 1,
       "norm_label": "getroomforplayer()"
     },
     {
       "label": "isInBounds()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L147",
+      "source_location": "L140",
       "id": "game_handlers_isinbounds",
-      "community": 5,
+      "community": 1,
       "norm_label": "isinbounds()"
     },
     {
       "label": "advanceTurn()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L151",
+      "source_location": "L144",
       "id": "game_handlers_advanceturn",
-      "community": 5,
+      "community": 1,
       "norm_label": "advanceturn()"
     },
     {
       "label": "getWinner()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L162",
+      "source_location": "L155",
       "id": "game_handlers_getwinner",
-      "community": 5,
+      "community": 1,
       "norm_label": "getwinner()"
     },
     {
       "label": "broadcastGameState()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L167",
+      "source_location": "L160",
       "id": "game_handlers_broadcastgamestate",
-      "community": 5,
+      "community": 1,
       "norm_label": "broadcastgamestate()"
     },
     {
       "label": "computeAuthDeltas()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L176",
+      "source_location": "L169",
       "id": "game_handlers_computeauthdeltas",
-      "community": 5,
+      "community": 1,
       "norm_label": "computeauthdeltas()"
     },
     {
       "label": "destroyRoom()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L186",
+      "source_location": "L179",
       "id": "game_handlers_destroyroom",
-      "community": 5,
+      "community": 1,
       "norm_label": "destroyroom()"
     },
     {
       "label": "startRoomReaper()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L203",
+      "source_location": "L196",
       "id": "game_handlers_startroomreaper",
-      "community": 5,
+      "community": 1,
       "norm_label": "startroomreaper()"
     },
     {
       "label": "stopRoomReaper()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L230",
+      "source_location": "L223",
       "id": "game_handlers_stoproomreaper",
-      "community": 7,
+      "community": 0,
       "norm_label": "stoproomreaper()"
     },
     {
       "label": "endGame()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L238",
+      "source_location": "L231",
       "id": "game_handlers_endgame",
-      "community": 5,
+      "community": 1,
       "norm_label": "endgame()"
     },
     {
       "label": "persistFinishedMatch()",
       "file_type": "code",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L282",
+      "source_location": "L275",
       "id": "game_handlers_persistfinishedmatch",
-      "community": 5,
+      "community": 1,
       "norm_label": "persistfinishedmatch()"
     },
     {
@@ -597,7 +597,7 @@
       "source_file": "backend\\src\\handlers\\queue.handlers.ts",
       "source_location": "L1",
       "id": "backend_src_handlers_queue_handlers_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "queue.handlers.ts"
     },
     {
@@ -606,7 +606,7 @@
       "source_file": "backend\\src\\handlers\\queue.handlers.ts",
       "source_location": "L11",
       "id": "queue_handlers_getqueuekey",
-      "community": 2,
+      "community": 1,
       "norm_label": "getqueuekey()"
     },
     {
@@ -615,7 +615,7 @@
       "source_file": "backend\\src\\handlers\\queue.handlers.ts",
       "source_location": "L15",
       "id": "queue_handlers_getqueuemode",
-      "community": 2,
+      "community": 1,
       "norm_label": "getqueuemode()"
     },
     {
@@ -624,7 +624,7 @@
       "source_file": "backend\\src\\handlers\\queue.handlers.ts",
       "source_location": "L19",
       "id": "queue_handlers_getqueuemaxplayers",
-      "community": 2,
+      "community": 1,
       "norm_label": "getqueuemaxplayers()"
     },
     {
@@ -633,7 +633,7 @@
       "source_file": "backend\\src\\handlers\\queue.handlers.ts",
       "source_location": "L23",
       "id": "queue_handlers_removefromallqueues",
-      "community": 2,
+      "community": 1,
       "norm_label": "removefromallqueues()"
     },
     {
@@ -642,7 +642,7 @@
       "source_file": "backend\\src\\handlers\\queue.handlers.ts",
       "source_location": "L42",
       "id": "queue_handlers_handlejoinqueue",
-      "community": 2,
+      "community": 1,
       "norm_label": "handlejoinqueue()"
     },
     {
@@ -651,7 +651,7 @@
       "source_file": "backend\\src\\handlers\\queue.handlers.ts",
       "source_location": "L96",
       "id": "queue_handlers_handleleavequeue",
-      "community": 2,
+      "community": 1,
       "norm_label": "handleleavequeue()"
     },
     {
@@ -660,7 +660,7 @@
       "source_file": "backend\\src\\handlers\\queue.handlers.ts",
       "source_location": "L100",
       "id": "queue_handlers_createroom",
-      "community": 9,
+      "community": 1,
       "norm_label": "createroom()"
     },
     {
@@ -669,7 +669,7 @@
       "source_file": "backend\\src\\handlers\\room.handlers.ts",
       "source_location": "L1",
       "id": "backend_src_handlers_room_handlers_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "room.handlers.ts"
     },
     {
@@ -678,7 +678,7 @@
       "source_file": "backend\\src\\handlers\\room.handlers.ts",
       "source_location": "L16",
       "id": "room_handlers_generateinvitecode",
-      "community": 2,
+      "community": 1,
       "norm_label": "generateinvitecode()"
     },
     {
@@ -687,7 +687,7 @@
       "source_file": "backend\\src\\handlers\\room.handlers.ts",
       "source_location": "L24",
       "id": "room_handlers_handlecreateroom",
-      "community": 2,
+      "community": 1,
       "norm_label": "handlecreateroom()"
     },
     {
@@ -696,7 +696,7 @@
       "source_file": "backend\\src\\handlers\\room.handlers.ts",
       "source_location": "L85",
       "id": "room_handlers_handlejoinroombycode",
-      "community": 5,
+      "community": 1,
       "norm_label": "handlejoinroombycode()"
     },
     {
@@ -705,16 +705,16 @@
       "source_file": "backend\\src\\lib\\logger.ts",
       "source_location": "L1",
       "id": "backend_src_lib_logger_ts",
-      "community": 7,
+      "community": 0,
       "norm_label": "logger.ts"
     },
     {
       "label": "getLogger()",
       "file_type": "code",
       "source_file": "backend\\src\\lib\\logger.ts",
-      "source_location": "L13",
+      "source_location": "L9",
       "id": "logger_getlogger",
-      "community": 7,
+      "community": 0,
       "norm_label": "getlogger()"
     },
     {
@@ -723,7 +723,7 @@
       "source_file": "backend\\src\\lib\\prisma.ts",
       "source_location": "L1",
       "id": "backend_src_lib_prisma_ts",
-      "community": 7,
+      "community": 3,
       "norm_label": "prisma.ts"
     },
     {
@@ -732,7 +732,7 @@
       "source_file": "backend\\src\\lib\\prisma.ts",
       "source_location": "L6",
       "id": "prisma_createprismaclient",
-      "community": 7,
+      "community": 3,
       "norm_label": "createprismaclient()"
     },
     {
@@ -741,16 +741,16 @@
       "source_file": "backend\\src\\middlewares\\async_handler.ts",
       "source_location": "L1",
       "id": "backend_src_middlewares_async_handler_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "async_handler.ts"
     },
     {
       "label": "asyncHandler()",
       "file_type": "code",
       "source_file": "backend\\src\\middlewares\\async_handler.ts",
-      "source_location": "L9",
+      "source_location": "L5",
       "id": "async_handler_asynchandler",
-      "community": 1,
+      "community": 0,
       "norm_label": "asynchandler()"
     },
     {
@@ -759,7 +759,7 @@
       "source_file": "backend\\src\\middlewares\\auth.middleware.ts",
       "source_location": "L1",
       "id": "backend_src_middlewares_auth_middleware_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "auth.middleware.ts"
     },
     {
@@ -768,7 +768,7 @@
       "source_file": "backend\\src\\middlewares\\auth.middleware.ts",
       "source_location": "L8",
       "id": "auth_middleware_requireauth",
-      "community": 1,
+      "community": 0,
       "norm_label": "requireauth()"
     },
     {
@@ -777,7 +777,7 @@
       "source_file": "backend\\src\\middlewares\\auth.middleware.ts",
       "source_location": "L19",
       "id": "auth_middleware_getbearertoken",
-      "community": 1,
+      "community": 0,
       "norm_label": "getbearertoken()"
     },
     {
@@ -786,7 +786,7 @@
       "source_file": "backend\\src\\middlewares\\error.middleware.ts",
       "source_location": "L1",
       "id": "backend_src_middlewares_error_middleware_ts",
-      "community": 2,
+      "community": 0,
       "norm_label": "error.middleware.ts"
     },
     {
@@ -795,7 +795,7 @@
       "source_file": "backend\\src\\middlewares\\error.middleware.ts",
       "source_location": "L12",
       "id": "error_middleware_errormiddleware",
-      "community": 6,
+      "community": 0,
       "norm_label": "errormiddleware()"
     },
     {
@@ -804,7 +804,7 @@
       "source_file": "backend\\src\\middlewares\\rateLimit.middleware.ts",
       "source_location": "L1",
       "id": "backend_src_middlewares_ratelimit_middleware_ts",
-      "community": 6,
+      "community": 0,
       "norm_label": "ratelimit.middleware.ts"
     },
     {
@@ -813,7 +813,7 @@
       "source_file": "backend\\src\\middlewares\\rateLimit.middleware.ts",
       "source_location": "L6",
       "id": "ratelimit_middleware_ratelimithandler",
-      "community": 6,
+      "community": 0,
       "norm_label": "ratelimithandler()"
     },
     {
@@ -822,7 +822,7 @@
       "source_file": "backend\\src\\realtime\\websocket.ts",
       "source_location": "L1",
       "id": "backend_src_realtime_websocket_ts",
-      "community": 6,
+      "community": 0,
       "norm_label": "websocket.ts"
     },
     {
@@ -831,61 +831,61 @@
       "source_file": "backend\\src\\realtime\\websocket.ts",
       "source_location": "L41",
       "id": "websocket_attachwebsocketserver",
-      "community": 6,
+      "community": 0,
       "norm_label": "attachwebsocketserver()"
     },
     {
       "label": "resetIdleTimeout()",
       "file_type": "code",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L132",
+      "source_location": "L135",
       "id": "websocket_resetidletimeout",
-      "community": 6,
+      "community": 0,
       "norm_label": "resetidletimeout()"
     },
     {
       "label": "handleConnection()",
       "file_type": "code",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L146",
+      "source_location": "L149",
       "id": "websocket_handleconnection",
-      "community": 6,
+      "community": 1,
       "norm_label": "handleconnection()"
     },
     {
       "label": "wireSocketEvents()",
       "file_type": "code",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L193",
+      "source_location": "L196",
       "id": "websocket_wiresocketevents",
-      "community": 6,
+      "community": 1,
       "norm_label": "wiresocketevents()"
     },
     {
       "label": "resolveIdentity()",
       "file_type": "code",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L289",
+      "source_location": "L295",
       "id": "websocket_resolveidentity",
-      "community": 6,
+      "community": 0,
       "norm_label": "resolveidentity()"
     },
     {
       "label": "getTokenFromRequest()",
       "file_type": "code",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L317",
+      "source_location": "L323",
       "id": "websocket_gettokenfromrequest",
-      "community": 6,
+      "community": 0,
       "norm_label": "gettokenfromrequest()"
     },
     {
       "label": "buildGuestIdentity()",
       "file_type": "code",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L323",
+      "source_location": "L329",
       "id": "websocket_buildguestidentity",
-      "community": 6,
+      "community": 0,
       "norm_label": "buildguestidentity()"
     },
     {
@@ -894,7 +894,7 @@
       "source_file": "backend\\src\\routes\\auth.routes.ts",
       "source_location": "L1",
       "id": "backend_src_routes_auth_routes_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "auth.routes.ts"
     },
     {
@@ -903,7 +903,7 @@
       "source_file": "backend\\src\\routes\\health.routes.ts",
       "source_location": "L1",
       "id": "backend_src_routes_health_routes_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "health.routes.ts"
     },
     {
@@ -912,7 +912,7 @@
       "source_file": "backend\\src\\routes\\index.ts",
       "source_location": "L1",
       "id": "backend_src_routes_index_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "index.ts"
     },
     {
@@ -921,7 +921,7 @@
       "source_file": "backend\\src\\routes\\leaderboard.routes.ts",
       "source_location": "L1",
       "id": "backend_src_routes_leaderboard_routes_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "leaderboard.routes.ts"
     },
     {
@@ -930,7 +930,7 @@
       "source_file": "backend\\src\\routes\\players.routes.ts",
       "source_location": "L1",
       "id": "backend_src_routes_players_routes_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "players.routes.ts"
     },
     {
@@ -939,7 +939,7 @@
       "source_file": "backend\\src\\schemas\\auth.schemas.ts",
       "source_location": "L1",
       "id": "backend_src_schemas_auth_schemas_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "auth.schemas.ts"
     },
     {
@@ -948,7 +948,7 @@
       "source_file": "backend\\src\\schemas\\messages.schemas.ts",
       "source_location": "L1",
       "id": "backend_src_schemas_messages_schemas_ts",
-      "community": 2,
+      "community": 0,
       "norm_label": "messages.schemas.ts"
     },
     {
@@ -957,7 +957,7 @@
       "source_file": "backend\\src\\schemas\\messages.schemas.ts",
       "source_location": "L86",
       "id": "messages_schemas_validatemessage",
-      "community": 2,
+      "community": 0,
       "norm_label": "validatemessage()"
     },
     {
@@ -966,7 +966,7 @@
       "source_file": "backend\\src\\schemas\\messages.schemas.ts",
       "source_location": "L109",
       "id": "messages_schemas_getschemafortype",
-      "community": 2,
+      "community": 0,
       "norm_label": "getschemafortype()"
     },
     {
@@ -975,34 +975,34 @@
       "source_file": "backend\\src\\services\\auth.service.ts",
       "source_location": "L1",
       "id": "backend_src_services_auth_service_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "auth.service.ts"
     },
     {
       "label": "buildAuthResult()",
       "file_type": "code",
       "source_file": "backend\\src\\services\\auth.service.ts",
-      "source_location": "L59",
+      "source_location": "L64",
       "id": "auth_service_buildauthresult",
-      "community": 1,
+      "community": 0,
       "norm_label": "buildauthresult()"
     },
     {
       "label": "toPublicPlayer()",
       "file_type": "code",
       "source_file": "backend\\src\\services\\auth.service.ts",
-      "source_location": "L73",
+      "source_location": "L78",
       "id": "auth_service_topublicplayer",
-      "community": 1,
+      "community": 0,
       "norm_label": "topublicplayer()"
     },
     {
       "label": "throwInvalidCredentials()",
       "file_type": "code",
       "source_file": "backend\\src\\services\\auth.service.ts",
-      "source_location": "L81",
+      "source_location": "L86",
       "id": "auth_service_throwinvalidcredentials",
-      "community": 1,
+      "community": 0,
       "norm_label": "throwinvalidcredentials()"
     },
     {
@@ -1011,7 +1011,7 @@
       "source_file": "backend\\src\\services\\leaderboard.service.ts",
       "source_location": "L1",
       "id": "backend_src_services_leaderboard_service_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "leaderboard.service.ts"
     },
     {
@@ -1020,7 +1020,7 @@
       "source_file": "backend\\src\\services\\leaderboard.service.ts",
       "source_location": "L13",
       "id": "leaderboard_service_normalizelimit",
-      "community": 1,
+      "community": 0,
       "norm_label": "normalizelimit()"
     },
     {
@@ -1029,7 +1029,7 @@
       "source_file": "backend\\src\\services\\players.service.ts",
       "source_location": "L1",
       "id": "backend_src_services_players_service_ts",
-      "community": 2,
+      "community": 0,
       "norm_label": "players.service.ts"
     },
     {
@@ -1038,7 +1038,7 @@
       "source_file": "backend\\src\\services\\players.service.ts",
       "source_location": "L27",
       "id": "players_service_normalizelimit",
-      "community": 2,
+      "community": 0,
       "norm_label": "normalizelimit()"
     },
     {
@@ -1047,7 +1047,7 @@
       "source_file": "backend\\src\\state\\memory.ts",
       "source_location": "L1",
       "id": "backend_src_state_memory_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "memory.ts"
     },
     {
@@ -1056,7 +1056,7 @@
       "source_file": "backend\\src\\types\\auth.ts",
       "source_location": "L1",
       "id": "backend_src_types_auth_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "auth.ts"
     },
     {
@@ -1065,7 +1065,7 @@
       "source_file": "backend\\src\\types\\connection.ts",
       "source_location": "L1",
       "id": "backend_src_types_connection_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "connection.ts"
     },
     {
@@ -1074,7 +1074,7 @@
       "source_file": "backend\\src\\types\\game.ts",
       "source_location": "L1",
       "id": "backend_src_types_game_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "game.ts"
     },
     {
@@ -1083,7 +1083,7 @@
       "source_file": "backend\\src\\types\\persistence.ts",
       "source_location": "L1",
       "id": "backend_src_types_persistence_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "persistence.ts"
     },
     {
@@ -1092,7 +1092,7 @@
       "source_file": "backend\\src\\types\\profile.ts",
       "source_location": "L1",
       "id": "backend_src_types_profile_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "profile.ts"
     },
     {
@@ -1101,7 +1101,7 @@
       "source_file": "backend\\src\\types\\protocol.ts",
       "source_location": "L1",
       "id": "backend_src_types_protocol_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "protocol.ts"
     },
     {
@@ -1110,7 +1110,7 @@
       "source_file": "backend\\src\\types\\scoring.ts",
       "source_location": "L1",
       "id": "backend_src_types_scoring_ts",
-      "community": 7,
+      "community": 3,
       "norm_label": "scoring.ts"
     },
     {
@@ -1119,7 +1119,7 @@
       "source_file": "backend\\src\\utils\\api_error.ts",
       "source_location": "L1",
       "id": "backend_src_utils_api_error_ts",
-      "community": 2,
+      "community": 0,
       "norm_label": "api_error.ts"
     },
     {
@@ -1128,7 +1128,7 @@
       "source_file": "backend\\src\\utils\\api_error.ts",
       "source_location": "L1",
       "id": "api_error_apierror",
-      "community": 2,
+      "community": 0,
       "norm_label": "apierror"
     },
     {
@@ -1137,7 +1137,7 @@
       "source_file": "backend\\src\\utils\\api_error.ts",
       "source_location": "L2",
       "id": "api_error_apierror_constructor",
-      "community": 2,
+      "community": 0,
       "norm_label": ".constructor()"
     },
     {
@@ -1146,7 +1146,7 @@
       "source_file": "backend\\src\\utils\\api_response.ts",
       "source_location": "L1",
       "id": "backend_src_utils_api_response_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "api_response.ts"
     },
     {
@@ -1155,7 +1155,7 @@
       "source_file": "backend\\src\\utils\\api_response.ts",
       "source_location": "L6",
       "id": "api_response_apiresponse",
-      "community": 1,
+      "community": 0,
       "norm_label": "apiresponse()"
     },
     {
@@ -1164,7 +1164,7 @@
       "source_file": "backend\\src\\utils\\broadcast.ts",
       "source_location": "L1",
       "id": "backend_src_utils_broadcast_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "broadcast.ts"
     },
     {
@@ -1173,7 +1173,7 @@
       "source_file": "backend\\src\\utils\\broadcast.ts",
       "source_location": "L6",
       "id": "broadcast_send",
-      "community": 6,
+      "community": 1,
       "norm_label": "send()"
     },
     {
@@ -1182,7 +1182,7 @@
       "source_file": "backend\\src\\utils\\broadcast.ts",
       "source_location": "L14",
       "id": "broadcast_broadcast",
-      "community": 5,
+      "community": 1,
       "norm_label": "broadcast()"
     },
     {
@@ -1191,7 +1191,7 @@
       "source_file": "backend\\src\\utils\\clientIp.ts",
       "source_location": "L1",
       "id": "backend_src_utils_clientip_ts",
-      "community": 6,
+      "community": 0,
       "norm_label": "clientip.ts"
     },
     {
@@ -1200,7 +1200,7 @@
       "source_file": "backend\\src\\utils\\clientIp.ts",
       "source_location": "L13",
       "id": "clientip_getclientip",
-      "community": 6,
+      "community": 0,
       "norm_label": "getclientip()"
     },
     {
@@ -1209,7 +1209,7 @@
       "source_file": "backend\\src\\utils\\clientIp.ts",
       "source_location": "L40",
       "id": "clientip_anonymizeip",
-      "community": 6,
+      "community": 0,
       "norm_label": "anonymizeip()"
     },
     {
@@ -1218,7 +1218,7 @@
       "source_file": "backend\\src\\utils\\jwt.ts",
       "source_location": "L1",
       "id": "backend_src_utils_jwt_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "jwt.ts"
     },
     {
@@ -1227,7 +1227,7 @@
       "source_file": "backend\\src\\utils\\jwt.ts",
       "source_location": "L8",
       "id": "jwt_signaccesstoken",
-      "community": 1,
+      "community": 0,
       "norm_label": "signaccesstoken()"
     },
     {
@@ -1236,16 +1236,16 @@
       "source_file": "backend\\src\\utils\\jwt.ts",
       "source_location": "L17",
       "id": "jwt_verifyaccesstoken",
-      "community": 1,
+      "community": 0,
       "norm_label": "verifyaccesstoken()"
     },
     {
       "label": "isAuthTokenPayload()",
       "file_type": "code",
       "source_file": "backend\\src\\utils\\jwt.ts",
-      "source_location": "L48",
+      "source_location": "L38",
       "id": "jwt_isauthtokenpayload",
-      "community": 1,
+      "community": 0,
       "norm_label": "isauthtokenpayload()"
     },
     {
@@ -1254,17 +1254,593 @@
       "source_file": "backend\\src\\utils\\securityLogger.ts",
       "source_location": "L1",
       "id": "backend_src_utils_securitylogger_ts",
-      "community": 6,
+      "community": 0,
       "norm_label": "securitylogger.ts"
     },
     {
       "label": "logSecurityEvent()",
       "file_type": "code",
       "source_file": "backend\\src\\utils\\securityLogger.ts",
-      "source_location": "L18",
+      "source_location": "L14",
       "id": "securitylogger_logsecurityevent",
-      "community": 6,
+      "community": 0,
       "norm_label": "logsecurityevent()"
+    },
+    {
+      "label": "atom.jsx",
+      "file_type": "code",
+      "source_file": "design_bundle\\atom.jsx",
+      "source_location": "L1",
+      "id": "design_bundle_atom_jsx",
+      "community": 21,
+      "norm_label": "atom.jsx"
+    },
+    {
+      "label": "AtomCluster()",
+      "file_type": "code",
+      "source_file": "design_bundle\\atom.jsx",
+      "source_location": "L5",
+      "id": "atom_atomcluster",
+      "community": 21,
+      "norm_label": "atomcluster()"
+    },
+    {
+      "label": "board.jsx",
+      "file_type": "code",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L1",
+      "id": "design_bundle_board_jsx",
+      "community": 11,
+      "norm_label": "board.jsx"
+    },
+    {
+      "label": "Board()",
+      "file_type": "code",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L5",
+      "id": "board_board",
+      "community": 11,
+      "norm_label": "board()"
+    },
+    {
+      "label": "CellView()",
+      "file_type": "code",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L80",
+      "id": "board_cellview",
+      "community": 11,
+      "norm_label": "cellview()"
+    },
+    {
+      "label": "capacityFor()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\lib\\board.ts",
+      "source_location": "L3",
+      "id": "board_capacityfor",
+      "community": 11,
+      "norm_label": "capacityfor()"
+    },
+    {
+      "label": "capacityTicks()",
+      "file_type": "code",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L126",
+      "id": "board_capacityticks",
+      "community": 11,
+      "norm_label": "capacityticks()"
+    },
+    {
+      "label": "PopLayer()",
+      "file_type": "code",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L137",
+      "id": "board_poplayer",
+      "community": 11,
+      "norm_label": "poplayer()"
+    },
+    {
+      "label": "renderEffect()",
+      "file_type": "code",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L148",
+      "id": "board_rendereffect",
+      "community": 11,
+      "norm_label": "rendereffect()"
+    },
+    {
+      "label": "game.jsx",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L1",
+      "id": "design_bundle_game_jsx",
+      "community": 12,
+      "norm_label": "game.jsx"
+    },
+    {
+      "label": "makeBoard()",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L9",
+      "id": "game_makeboard",
+      "community": 12,
+      "norm_label": "makeboard()"
+    },
+    {
+      "label": "neighbors()",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L15",
+      "id": "game_neighbors",
+      "community": 12,
+      "norm_label": "neighbors()"
+    },
+    {
+      "label": "capacity()",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L24",
+      "id": "game_capacity",
+      "community": 12,
+      "norm_label": "capacity()"
+    },
+    {
+      "label": "tallyOrbs()",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L28",
+      "id": "game_tallyorbs",
+      "community": 12,
+      "norm_label": "tallyorbs()"
+    },
+    {
+      "label": "planMove()",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L40",
+      "id": "game_planmove",
+      "community": 12,
+      "norm_label": "planmove()"
+    },
+    {
+      "label": "deepCloneBoard()",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L47",
+      "id": "game_deepcloneboard",
+      "community": 12,
+      "norm_label": "deepcloneboard()"
+    },
+    {
+      "label": "computeEliminated()",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L127",
+      "id": "game_computeeliminated",
+      "community": 12,
+      "norm_label": "computeeliminated()"
+    },
+    {
+      "label": "nextTurn()",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L139",
+      "id": "game_nextturn",
+      "community": 12,
+      "norm_label": "nextturn()"
+    },
+    {
+      "label": "checkWinner()",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L148",
+      "id": "game_checkwinner",
+      "community": 12,
+      "norm_label": "checkwinner()"
+    },
+    {
+      "label": "aiPickMove()",
+      "file_type": "code",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L157",
+      "id": "game_aipickmove",
+      "community": 12,
+      "norm_label": "aipickmove()"
+    },
+    {
+      "label": "lobby.jsx",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L1",
+      "id": "design_bundle_lobby_jsx",
+      "community": 6,
+      "norm_label": "lobby.jsx"
+    },
+    {
+      "label": "makeRoomCode()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L10",
+      "id": "lobby_makeroomcode",
+      "community": 6,
+      "norm_label": "makeroomcode()"
+    },
+    {
+      "label": "DialogShell()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L27",
+      "id": "lobby_dialogshell",
+      "community": 6,
+      "norm_label": "dialogshell()"
+    },
+    {
+      "label": "CreateRoomDialog()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L56",
+      "id": "lobby_createroomdialog",
+      "community": 6,
+      "norm_label": "createroomdialog()"
+    },
+    {
+      "label": "BoardPreview()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L152",
+      "id": "lobby_boardpreview",
+      "community": 6,
+      "norm_label": "boardpreview()"
+    },
+    {
+      "label": "JoinRoomDialog()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L177",
+      "id": "lobby_joinroomdialog",
+      "community": 6,
+      "norm_label": "joinroomdialog()"
+    },
+    {
+      "label": "InviteCard()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L288",
+      "id": "lobby_invitecard",
+      "community": 6,
+      "norm_label": "invitecard()"
+    },
+    {
+      "label": "ShareCodeDialog()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L337",
+      "id": "lobby_sharecodedialog",
+      "community": 6,
+      "norm_label": "sharecodedialog()"
+    },
+    {
+      "label": "QueueScreen()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L381",
+      "id": "lobby_queuescreen",
+      "community": 6,
+      "norm_label": "queuescreen()"
+    },
+    {
+      "label": "BoardCodePopover()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L475",
+      "id": "lobby_boardcodepopover",
+      "community": 6,
+      "norm_label": "boardcodepopover()"
+    },
+    {
+      "label": "DlgIconX()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L562",
+      "id": "lobby_dlgiconx",
+      "community": 6,
+      "norm_label": "dlgiconx()"
+    },
+    {
+      "label": "DlgIconCheck()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L570",
+      "id": "lobby_dlgiconcheck",
+      "community": 6,
+      "norm_label": "dlgiconcheck()"
+    },
+    {
+      "label": "DlgIconArrowRight()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L577",
+      "id": "lobby_dlgiconarrowright",
+      "community": 6,
+      "norm_label": "dlgiconarrowright()"
+    },
+    {
+      "label": "DlgIconPlus()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L585",
+      "id": "lobby_dlgiconplus",
+      "community": 6,
+      "norm_label": "dlgiconplus()"
+    },
+    {
+      "label": "DlgIconMinus()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L593",
+      "id": "lobby_dlgiconminus",
+      "community": 6,
+      "norm_label": "dlgiconminus()"
+    },
+    {
+      "label": "IconCopy()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L601",
+      "id": "lobby_iconcopy",
+      "community": 6,
+      "norm_label": "iconcopy()"
+    },
+    {
+      "label": "IconShare()",
+      "file_type": "code",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L610",
+      "id": "lobby_iconshare",
+      "community": 6,
+      "norm_label": "iconshare()"
+    },
+    {
+      "label": "main.jsx",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L1",
+      "id": "design_bundle_main_jsx",
+      "community": 7,
+      "norm_label": "main.jsx"
+    },
+    {
+      "label": "gridKey()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L29",
+      "id": "main_gridkey",
+      "community": 7,
+      "norm_label": "gridkey()"
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L36",
+      "id": "main_app",
+      "community": 7,
+      "norm_label": "app()"
+    },
+    {
+      "label": "buildGame()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L421",
+      "id": "main_buildgame",
+      "community": 12,
+      "norm_label": "buildgame()"
+    },
+    {
+      "label": "delay()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L432",
+      "id": "main_delay",
+      "community": 7,
+      "norm_label": "delay()"
+    },
+    {
+      "label": "Topbar()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L438",
+      "id": "main_topbar",
+      "community": 7,
+      "norm_label": "topbar()"
+    },
+    {
+      "label": "BottomBar()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L471",
+      "id": "main_bottombar",
+      "community": 7,
+      "norm_label": "bottombar()"
+    },
+    {
+      "label": "LandingScreen()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L510",
+      "id": "main_landingscreen",
+      "community": 7,
+      "norm_label": "landingscreen()"
+    },
+    {
+      "label": "GameOver()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L580",
+      "id": "main_gameover",
+      "community": 7,
+      "norm_label": "gameover()"
+    },
+    {
+      "label": "Confetti()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L602",
+      "id": "main_confetti",
+      "community": 7,
+      "norm_label": "confetti()"
+    },
+    {
+      "label": "Tweaks()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L628",
+      "id": "main_tweaks",
+      "community": 7,
+      "norm_label": "tweaks()"
+    },
+    {
+      "label": "svg()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L704",
+      "id": "main_svg",
+      "community": 7,
+      "norm_label": "svg()"
+    },
+    {
+      "label": "IconVolume()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L711",
+      "id": "main_iconvolume",
+      "community": 7,
+      "norm_label": "iconvolume()"
+    },
+    {
+      "label": "IconVolumeX()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L717",
+      "id": "main_iconvolumex",
+      "community": 7,
+      "norm_label": "iconvolumex()"
+    },
+    {
+      "label": "IconExit()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L724",
+      "id": "main_iconexit",
+      "community": 7,
+      "norm_label": "iconexit()"
+    },
+    {
+      "label": "IconPlay()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L731",
+      "id": "main_iconplay",
+      "community": 7,
+      "norm_label": "iconplay()"
+    },
+    {
+      "label": "IconUsers()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L734",
+      "id": "main_iconusers",
+      "community": 7,
+      "norm_label": "iconusers()"
+    },
+    {
+      "label": "IconLogin()",
+      "file_type": "code",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L741",
+      "id": "main_iconlogin",
+      "community": 7,
+      "norm_label": "iconlogin()"
+    },
+    {
+      "label": "sound.jsx",
+      "file_type": "code",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L1",
+      "id": "design_bundle_sound_jsx",
+      "community": 13,
+      "norm_label": "sound.jsx"
+    },
+    {
+      "label": "ensureContext()",
+      "file_type": "code",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L7",
+      "id": "sound_ensurecontext",
+      "community": 13,
+      "norm_label": "ensurecontext()"
+    },
+    {
+      "label": "env()",
+      "file_type": "code",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L22",
+      "id": "sound_env",
+      "community": 13,
+      "norm_label": "env()"
+    },
+    {
+      "label": "noiseBuffer()",
+      "file_type": "code",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L29",
+      "id": "sound_noisebuffer",
+      "community": 13,
+      "norm_label": "noisebuffer()"
+    },
+    {
+      "label": "setPack()",
+      "file_type": "code",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L352",
+      "id": "sound_setpack",
+      "community": 13,
+      "norm_label": "setpack()"
+    },
+    {
+      "label": "setMuted()",
+      "file_type": "code",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L355",
+      "id": "sound_setmuted",
+      "community": 13,
+      "norm_label": "setmuted()"
+    },
+    {
+      "label": "isMuted()",
+      "file_type": "code",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L359",
+      "id": "sound_ismuted",
+      "community": 13,
+      "norm_label": "ismuted()"
+    },
+    {
+      "label": "resume()",
+      "file_type": "code",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L362",
+      "id": "sound_resume",
+      "community": 13,
+      "norm_label": "resume()"
+    },
+    {
+      "label": "play()",
+      "file_type": "code",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L366",
+      "id": "sound_play",
+      "community": 13,
+      "norm_label": "play()"
     },
     {
       "label": "eslint.config.mjs",
@@ -1272,7 +1848,7 @@
       "source_file": "frontend\\eslint.config.mjs",
       "source_location": "L1",
       "id": "frontend_eslint_config_mjs",
-      "community": 36,
+      "community": 41,
       "norm_label": "eslint.config.mjs"
     },
     {
@@ -1281,7 +1857,7 @@
       "source_file": "frontend\\next-env.d.ts",
       "source_location": "L1",
       "id": "frontend_next_env_d_ts",
-      "community": 37,
+      "community": 42,
       "norm_label": "next-env.d.ts"
     },
     {
@@ -1290,7 +1866,7 @@
       "source_file": "frontend\\next.config.ts",
       "source_location": "L1",
       "id": "frontend_next_config_ts",
-      "community": 38,
+      "community": 43,
       "norm_label": "next.config.ts"
     },
     {
@@ -1299,7 +1875,7 @@
       "source_file": "frontend\\postcss.config.mjs",
       "source_location": "L1",
       "id": "frontend_postcss_config_mjs",
-      "community": 39,
+      "community": 44,
       "norm_label": "postcss.config.mjs"
     },
     {
@@ -1308,7 +1884,7 @@
       "source_file": "frontend\\src\\app\\layout.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_layout_tsx",
-      "community": 40,
+      "community": 45,
       "norm_label": "layout.tsx"
     },
     {
@@ -1317,7 +1893,7 @@
       "source_file": "frontend\\src\\app\\not-found.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_not_found_tsx",
-      "community": 18,
+      "community": 22,
       "norm_label": "not-found.tsx"
     },
     {
@@ -1326,7 +1902,7 @@
       "source_file": "frontend\\src\\app\\not-found.tsx",
       "source_location": "L5",
       "id": "not_found_notfound",
-      "community": 18,
+      "community": 22,
       "norm_label": "notfound()"
     },
     {
@@ -1335,53 +1911,62 @@
       "source_file": "frontend\\src\\app\\page.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_page_tsx",
-      "community": 9,
+      "community": 8,
       "norm_label": "page.tsx"
-    },
-    {
-      "label": "makeGuestName()",
-      "file_type": "code",
-      "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L17",
-      "id": "page_makeguestname",
-      "community": 9,
-      "norm_label": "makeguestname()"
     },
     {
       "label": "flashNotice()",
       "file_type": "code",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L59",
+      "source_location": "L47",
       "id": "page_flashnotice",
-      "community": 9,
+      "community": 8,
       "norm_label": "flashnotice()"
     },
     {
       "label": "onPlay()",
       "file_type": "code",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L65",
+      "source_location": "L53",
       "id": "page_onplay",
-      "community": 9,
+      "community": 8,
       "norm_label": "onplay()"
     },
     {
       "label": "onCreateRoom()",
       "file_type": "code",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L79",
+      "source_location": "L67",
       "id": "page_oncreateroom",
-      "community": 9,
+      "community": 8,
       "norm_label": "oncreateroom()"
     },
     {
       "label": "onJoinRoom()",
       "file_type": "code",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L92",
+      "source_location": "L80",
       "id": "page_onjoinroom",
-      "community": 9,
+      "community": 8,
       "norm_label": "onjoinroom()"
+    },
+    {
+      "label": "onRematch()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\app\\page.tsx",
+      "source_location": "L89",
+      "id": "page_onrematch",
+      "community": 8,
+      "norm_label": "onrematch()"
+    },
+    {
+      "label": "handleNameSave()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\app\\page.tsx",
+      "source_location": "L103",
+      "id": "page_handlenamesave",
+      "community": 8,
+      "norm_label": "handlenamesave()"
     },
     {
       "label": "page.tsx",
@@ -1389,7 +1974,7 @@
       "source_file": "frontend\\src\\app\\leaderboard\\page.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_leaderboard_page_tsx",
-      "community": 19,
+      "community": 23,
       "norm_label": "page.tsx"
     },
     {
@@ -1398,7 +1983,7 @@
       "source_file": "frontend\\src\\app\\leaderboard\\page.tsx",
       "source_location": "L10",
       "id": "page_leaderboardpage",
-      "community": 19,
+      "community": 23,
       "norm_label": "leaderboardpage()"
     },
     {
@@ -1407,7 +1992,7 @@
       "source_file": "frontend\\src\\app\\login\\page.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_login_page_tsx",
-      "community": 20,
+      "community": 24,
       "norm_label": "page.tsx"
     },
     {
@@ -1416,7 +2001,7 @@
       "source_file": "frontend\\src\\app\\login\\page.tsx",
       "source_location": "L3",
       "id": "page_loginpage",
-      "community": 20,
+      "community": 24,
       "norm_label": "loginpage()"
     },
     {
@@ -1425,7 +2010,7 @@
       "source_file": "frontend\\src\\app\\players\\[playerId]\\page.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_players_playerid_page_tsx",
-      "community": 21,
+      "community": 25,
       "norm_label": "page.tsx"
     },
     {
@@ -1434,7 +2019,7 @@
       "source_file": "frontend\\src\\app\\players\\[playerId]\\page.tsx",
       "source_location": "L26",
       "id": "page_loadprofile",
-      "community": 21,
+      "community": 25,
       "norm_label": "loadprofile()"
     },
     {
@@ -1443,7 +2028,7 @@
       "source_file": "frontend\\src\\app\\signup\\page.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_signup_page_tsx",
-      "community": 22,
+      "community": 26,
       "norm_label": "page.tsx"
     },
     {
@@ -1452,7 +2037,7 @@
       "source_file": "frontend\\src\\app\\signup\\page.tsx",
       "source_location": "L3",
       "id": "page_signuppage",
-      "community": 22,
+      "community": 26,
       "norm_label": "signuppage()"
     },
     {
@@ -1461,7 +2046,7 @@
       "source_file": "frontend\\src\\components\\AtomicHero.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_atomichero_tsx",
-      "community": 23,
+      "community": 27,
       "norm_label": "atomichero.tsx"
     },
     {
@@ -1470,7 +2055,7 @@
       "source_file": "frontend\\src\\components\\AtomicHero.tsx",
       "source_location": "L17",
       "id": "atomichero_atomichero",
-      "community": 23,
+      "community": 27,
       "norm_label": "atomichero()"
     },
     {
@@ -1479,7 +2064,7 @@
       "source_file": "frontend\\src\\components\\AuthPanel.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_authpanel_tsx",
-      "community": 8,
+      "community": 9,
       "norm_label": "authpanel.tsx"
     },
     {
@@ -1488,7 +2073,7 @@
       "source_file": "frontend\\src\\components\\AuthPanel.tsx",
       "source_location": "L26",
       "id": "authpanel_handlesubmit",
-      "community": 8,
+      "community": 9,
       "norm_label": "handlesubmit()"
     },
     {
@@ -1497,7 +2082,7 @@
       "source_file": "frontend\\src\\components\\GameBoard.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_gameboard_tsx",
-      "community": 41,
+      "community": 46,
       "norm_label": "gameboard.tsx"
     },
     {
@@ -1506,7 +2091,7 @@
       "source_file": "frontend\\src\\components\\GameOver.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_gameover_tsx",
-      "community": 42,
+      "community": 47,
       "norm_label": "gameover.tsx"
     },
     {
@@ -1515,8 +2100,53 @@
       "source_file": "frontend\\src\\components\\LandingHub.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_landinghub_tsx",
-      "community": 43,
+      "community": 48,
       "norm_label": "landinghub.tsx"
+    },
+    {
+      "label": "LobbyNav.tsx",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\LobbyNav.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_lobbynav_tsx",
+      "community": 49,
+      "norm_label": "lobbynav.tsx"
+    },
+    {
+      "label": "NameCard.tsx",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\NameCard.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_namecard_tsx",
+      "community": 8,
+      "norm_label": "namecard.tsx"
+    },
+    {
+      "label": "startEdit()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\NameCard.tsx",
+      "source_location": "L32",
+      "id": "namecard_startedit",
+      "community": 8,
+      "norm_label": "startedit()"
+    },
+    {
+      "label": "cancel()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\NameCard.tsx",
+      "source_location": "L40",
+      "id": "namecard_cancel",
+      "community": 8,
+      "norm_label": "cancel()"
+    },
+    {
+      "label": "commit()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\NameCard.tsx",
+      "source_location": "L47",
+      "id": "namecard_commit",
+      "community": 8,
+      "norm_label": "commit()"
     },
     {
       "label": "QueueScreen.tsx",
@@ -1524,8 +2154,35 @@
       "source_file": "frontend\\src\\components\\QueueScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_queuescreen_tsx",
-      "community": 44,
+      "community": 15,
       "norm_label": "queuescreen.tsx"
+    },
+    {
+      "label": "QueueScreen()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\QueueScreen.tsx",
+      "source_location": "L14",
+      "id": "queuescreen_queuescreen",
+      "community": 15,
+      "norm_label": "queuescreen()"
+    },
+    {
+      "label": "handleCopy()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\QueueScreen.tsx",
+      "source_location": "L57",
+      "id": "queuescreen_handlecopy",
+      "community": 15,
+      "norm_label": "handlecopy()"
+    },
+    {
+      "label": "ToastStack.tsx",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\ToastStack.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_toaststack_tsx",
+      "community": 50,
+      "norm_label": "toaststack.tsx"
     },
     {
       "label": "TopBar.tsx",
@@ -1533,7 +2190,7 @@
       "source_file": "frontend\\src\\components\\TopBar.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_topbar_tsx",
-      "community": 45,
+      "community": 51,
       "norm_label": "topbar.tsx"
     },
     {
@@ -1542,25 +2199,25 @@
       "source_file": "frontend\\src\\components\\dialogs\\CreateRoomDialog.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_dialogs_createroomdialog_tsx",
-      "community": 14,
+      "community": 16,
       "norm_label": "createroomdialog.tsx"
     },
     {
       "label": "handleConfirm()",
       "file_type": "code",
       "source_file": "frontend\\src\\components\\dialogs\\CreateRoomDialog.tsx",
-      "source_location": "L50",
+      "source_location": "L51",
       "id": "createroomdialog_handleconfirm",
-      "community": 14,
+      "community": 16,
       "norm_label": "handleconfirm()"
     },
     {
       "label": "adjustPlayers()",
       "file_type": "code",
       "source_file": "frontend\\src\\components\\dialogs\\CreateRoomDialog.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "id": "createroomdialog_adjustplayers",
-      "community": 14,
+      "community": 16,
       "norm_label": "adjustplayers()"
     },
     {
@@ -1569,17 +2226,17 @@
       "source_file": "frontend\\src\\components\\dialogs\\DialogShell.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_dialogs_dialogshell_tsx",
-      "community": 24,
+      "community": 28,
       "norm_label": "dialogshell.tsx"
     },
     {
-      "label": "DialogShell()",
+      "label": "handleKey()",
       "file_type": "code",
       "source_file": "frontend\\src\\components\\dialogs\\DialogShell.tsx",
-      "source_location": "L15",
-      "id": "dialogshell_dialogshell",
-      "community": 24,
-      "norm_label": "dialogshell()"
+      "source_location": "L26",
+      "id": "dialogshell_handlekey",
+      "community": 28,
+      "norm_label": "handlekey()"
     },
     {
       "label": "JoinRoomDialog.tsx",
@@ -1587,7 +2244,7 @@
       "source_file": "frontend\\src\\components\\dialogs\\JoinRoomDialog.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_dialogs_joinroomdialog_tsx",
-      "community": 12,
+      "community": 14,
       "norm_label": "joinroomdialog.tsx"
     },
     {
@@ -1596,7 +2253,7 @@
       "source_file": "frontend\\src\\components\\dialogs\\JoinRoomDialog.tsx",
       "source_location": "L31",
       "id": "joinroomdialog_setcharat",
-      "community": 12,
+      "community": 14,
       "norm_label": "setcharat()"
     },
     {
@@ -1605,7 +2262,7 @@
       "source_file": "frontend\\src\\components\\dialogs\\JoinRoomDialog.tsx",
       "source_location": "L39",
       "id": "joinroomdialog_handleinput",
-      "community": 12,
+      "community": 14,
       "norm_label": "handleinput()"
     },
     {
@@ -1614,7 +2271,7 @@
       "source_file": "frontend\\src\\components\\dialogs\\JoinRoomDialog.tsx",
       "source_location": "L53",
       "id": "joinroomdialog_handlekeydown",
-      "community": 12,
+      "community": 14,
       "norm_label": "handlekeydown()"
     },
     {
@@ -1623,7 +2280,7 @@
       "source_file": "frontend\\src\\components\\dialogs\\JoinRoomDialog.tsx",
       "source_location": "L74",
       "id": "joinroomdialog_handlepaste",
-      "community": 12,
+      "community": 14,
       "norm_label": "handlepaste()"
     },
     {
@@ -1632,8 +2289,35 @@
       "source_file": "frontend\\src\\components\\dialogs\\JoinRoomDialog.tsx",
       "source_location": "L88",
       "id": "joinroomdialog_handleconfirm",
-      "community": 12,
+      "community": 14,
       "norm_label": "handleconfirm()"
+    },
+    {
+      "label": "BoardCodePopover.tsx",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\game\\BoardCodePopover.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_game_boardcodepopover_tsx",
+      "community": 17,
+      "norm_label": "boardcodepopover.tsx"
+    },
+    {
+      "label": "onDown()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\game\\BoardCodePopover.tsx",
+      "source_location": "L15",
+      "id": "boardcodepopover_ondown",
+      "community": 17,
+      "norm_label": "ondown()"
+    },
+    {
+      "label": "onKey()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\components\\game\\BoardCodePopover.tsx",
+      "source_location": "L18",
+      "id": "boardcodepopover_onkey",
+      "community": 17,
+      "norm_label": "onkey()"
     },
     {
       "label": "Cell.tsx",
@@ -1641,35 +2325,8 @@
       "source_file": "frontend\\src\\components\\game\\Cell.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_game_cell_tsx",
-      "community": 46,
+      "community": 52,
       "norm_label": "cell.tsx"
-    },
-    {
-      "label": "PlayerPanel.tsx",
-      "file_type": "code",
-      "source_file": "frontend\\src\\components\\game\\PlayerPanel.tsx",
-      "source_location": "L1",
-      "id": "frontend_src_components_game_playerpanel_tsx",
-      "community": 47,
-      "norm_label": "playerpanel.tsx"
-    },
-    {
-      "label": "badge.tsx",
-      "file_type": "code",
-      "source_file": "frontend\\src\\components\\ui\\badge.tsx",
-      "source_location": "L1",
-      "id": "frontend_src_components_ui_badge_tsx",
-      "community": 25,
-      "norm_label": "badge.tsx"
-    },
-    {
-      "label": "Badge()",
-      "file_type": "code",
-      "source_file": "frontend\\src\\components\\ui\\badge.tsx",
-      "source_location": "L4",
-      "id": "badge_badge",
-      "community": 25,
-      "norm_label": "badge()"
     },
     {
       "label": "button.tsx",
@@ -1677,7 +2334,7 @@
       "source_file": "frontend\\src\\components\\ui\\button.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_ui_button_tsx",
-      "community": 48,
+      "community": 53,
       "norm_label": "button.tsx"
     },
     {
@@ -1686,7 +2343,7 @@
       "source_file": "frontend\\src\\components\\ui\\card.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_ui_card_tsx",
-      "community": 49,
+      "community": 54,
       "norm_label": "card.tsx"
     },
     {
@@ -1695,7 +2352,7 @@
       "source_file": "frontend\\src\\components\\ui\\input.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_ui_input_tsx",
-      "community": 26,
+      "community": 29,
       "norm_label": "input.tsx"
     },
     {
@@ -1704,35 +2361,8 @@
       "source_file": "frontend\\src\\components\\ui\\input.tsx",
       "source_location": "L24",
       "id": "input_cn",
-      "community": 26,
+      "community": 29,
       "norm_label": "cn()"
-    },
-    {
-      "label": "orb.tsx",
-      "file_type": "code",
-      "source_file": "frontend\\src\\components\\ui\\orb.tsx",
-      "source_location": "L1",
-      "id": "frontend_src_components_ui_orb_tsx",
-      "community": 27,
-      "norm_label": "orb.tsx"
-    },
-    {
-      "label": "Orb()",
-      "file_type": "code",
-      "source_file": "frontend\\src\\components\\ui\\orb.tsx",
-      "source_location": "L14",
-      "id": "orb_orb",
-      "community": 27,
-      "norm_label": "orb()"
-    },
-    {
-      "label": "select.tsx",
-      "file_type": "code",
-      "source_file": "frontend\\src\\components\\ui\\select.tsx",
-      "source_location": "L1",
-      "id": "frontend_src_components_ui_select_tsx",
-      "community": 50,
-      "norm_label": "select.tsx"
     },
     {
       "label": "useAuth.ts",
@@ -1740,7 +2370,7 @@
       "source_file": "frontend\\src\\hooks\\useAuth.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_useauth_ts",
-      "community": 28,
+      "community": 30,
       "norm_label": "useauth.ts"
     },
     {
@@ -1749,8 +2379,44 @@
       "source_file": "frontend\\src\\hooks\\useAuth.ts",
       "source_location": "L8",
       "id": "useauth_useauth",
-      "community": 28,
+      "community": 30,
       "norm_label": "useauth()"
+    },
+    {
+      "label": "useBoardEffects.ts",
+      "file_type": "code",
+      "source_file": "frontend\\src\\hooks\\useBoardEffects.ts",
+      "source_location": "L1",
+      "id": "frontend_src_hooks_useboardeffects_ts",
+      "community": 31,
+      "norm_label": "useboardeffects.ts"
+    },
+    {
+      "label": "useBoardEffects()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\hooks\\useBoardEffects.ts",
+      "source_location": "L14",
+      "id": "useboardeffects_useboardeffects",
+      "community": 31,
+      "norm_label": "useboardeffects()"
+    },
+    {
+      "label": "useBoardMetrics.ts",
+      "file_type": "code",
+      "source_file": "frontend\\src\\hooks\\useBoardMetrics.ts",
+      "source_location": "L1",
+      "id": "frontend_src_hooks_useboardmetrics_ts",
+      "community": 32,
+      "norm_label": "useboardmetrics.ts"
+    },
+    {
+      "label": "useBoardMetrics()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\hooks\\useBoardMetrics.ts",
+      "source_location": "L3",
+      "id": "useboardmetrics_useboardmetrics",
+      "community": 32,
+      "norm_label": "useboardmetrics()"
     },
     {
       "label": "useGameWebSocket.ts",
@@ -1758,7 +2424,7 @@
       "source_file": "frontend\\src\\hooks\\useGameWebSocket.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_usegamewebsocket_ts",
-      "community": 8,
+      "community": 9,
       "norm_label": "usegamewebsocket.ts"
     },
     {
@@ -1767,7 +2433,7 @@
       "source_file": "frontend\\src\\hooks\\useGameWebSocket.ts",
       "source_location": "L22",
       "id": "usegamewebsocket_buildwebsocketurl",
-      "community": 8,
+      "community": 9,
       "norm_label": "buildwebsocketurl()"
     },
     {
@@ -1776,7 +2442,7 @@
       "source_file": "frontend\\src\\hooks\\useGameWebSocket.ts",
       "source_location": "L32",
       "id": "usegamewebsocket_usegamewebsocket",
-      "community": 8,
+      "community": 9,
       "norm_label": "usegamewebsocket()"
     },
     {
@@ -1803,7 +2469,7 @@
       "source_file": "frontend\\src\\lib\\api.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_api_ts",
-      "community": 8,
+      "community": 9,
       "norm_label": "api.ts"
     },
     {
@@ -1812,7 +2478,7 @@
       "source_file": "frontend\\src\\lib\\api.ts",
       "source_location": "L12",
       "id": "api_apiclienterror",
-      "community": 8,
+      "community": 9,
       "norm_label": "apiclienterror"
     },
     {
@@ -1821,7 +2487,7 @@
       "source_file": "frontend\\src\\lib\\api.ts",
       "source_location": "L13",
       "id": "api_apiclienterror_constructor",
-      "community": 8,
+      "community": 9,
       "norm_label": ".constructor()"
     },
     {
@@ -1830,16 +2496,16 @@
       "source_file": "frontend\\src\\lib\\api.ts",
       "source_location": "L86",
       "id": "api_apirequest",
-      "community": 8,
+      "community": 9,
       "norm_label": "apirequest()"
     },
     {
       "label": "readJson()",
       "file_type": "code",
       "source_file": "frontend\\src\\lib\\api.ts",
-      "source_location": "L170",
+      "source_location": "L178",
       "id": "api_readjson",
-      "community": 8,
+      "community": 9,
       "norm_label": "readjson()"
     },
     {
@@ -1848,7 +2514,7 @@
       "source_file": "frontend\\src\\lib\\auth.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_auth_ts",
-      "community": 8,
+      "community": 9,
       "norm_label": "auth.ts"
     },
     {
@@ -1857,7 +2523,7 @@
       "source_file": "frontend\\src\\lib\\auth.ts",
       "source_location": "L3",
       "id": "auth_getstoredaccesstoken",
-      "community": 8,
+      "community": 9,
       "norm_label": "getstoredaccesstoken()"
     },
     {
@@ -1866,7 +2532,7 @@
       "source_file": "frontend\\src\\lib\\auth.ts",
       "source_location": "L11",
       "id": "auth_setstoredaccesstoken",
-      "community": 8,
+      "community": 9,
       "norm_label": "setstoredaccesstoken()"
     },
     {
@@ -1875,7 +2541,7 @@
       "source_file": "frontend\\src\\lib\\auth.ts",
       "source_location": "L15",
       "id": "auth_clearstoredaccesstoken",
-      "community": 8,
+      "community": 9,
       "norm_label": "clearstoredaccesstoken()"
     },
     {
@@ -1884,43 +2550,43 @@
       "source_file": "frontend\\src\\lib\\board.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_board_ts",
-      "community": 13,
+      "community": 11,
       "norm_label": "board.ts"
-    },
-    {
-      "label": "capacityFor()",
-      "file_type": "code",
-      "source_file": "frontend\\src\\lib\\board.ts",
-      "source_location": "L3",
-      "id": "board_capacityfor",
-      "community": 13,
-      "norm_label": "capacityfor()"
     },
     {
       "label": "cellKey()",
       "file_type": "code",
       "source_file": "frontend\\src\\lib\\board.ts",
-      "source_location": "L24",
+      "source_location": "L29",
       "id": "board_cellkey",
-      "community": 13,
+      "community": 11,
       "norm_label": "cellkey()"
+    },
+    {
+      "label": "neighborDirections()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\lib\\board.ts",
+      "source_location": "L38",
+      "id": "board_neighbordirections",
+      "community": 11,
+      "norm_label": "neighbordirections()"
     },
     {
       "label": "diffBoards()",
       "file_type": "code",
       "source_file": "frontend\\src\\lib\\board.ts",
-      "source_location": "L28",
+      "source_location": "L51",
       "id": "board_diffboards",
-      "community": 13,
+      "community": 11,
       "norm_label": "diffboards()"
     },
     {
       "label": "tallyOrbs()",
       "file_type": "code",
       "source_file": "frontend\\src\\lib\\board.ts",
-      "source_location": "L71",
+      "source_location": "L104",
       "id": "board_tallyorbs",
-      "community": 13,
+      "community": 11,
       "norm_label": "tallyorbs()"
     },
     {
@@ -1929,7 +2595,7 @@
       "source_file": "frontend\\src\\lib\\cn.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_cn_ts",
-      "community": 29,
+      "community": 33,
       "norm_label": "cn.ts"
     },
     {
@@ -1938,7 +2604,7 @@
       "source_file": "frontend\\src\\lib\\cn.ts",
       "source_location": "L4",
       "id": "cn_cn",
-      "community": 29,
+      "community": 33,
       "norm_label": "cn()"
     },
     {
@@ -1947,8 +2613,71 @@
       "source_file": "frontend\\src\\lib\\colors.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_colors_ts",
-      "community": 51,
+      "community": 34,
       "norm_label": "colors.ts"
+    },
+    {
+      "label": "playerColor()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\lib\\colors.ts",
+      "source_location": "L6",
+      "id": "colors_playercolor",
+      "community": 34,
+      "norm_label": "playercolor()"
+    },
+    {
+      "label": "guestName.ts",
+      "file_type": "code",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L1",
+      "id": "frontend_src_lib_guestname_ts",
+      "community": 8,
+      "norm_label": "guestname.ts"
+    },
+    {
+      "label": "pick()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L17",
+      "id": "guestname_pick",
+      "community": 8,
+      "norm_label": "pick()"
+    },
+    {
+      "label": "generateGuestName()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L21",
+      "id": "guestname_generateguestname",
+      "community": 8,
+      "norm_label": "generateguestname()"
+    },
+    {
+      "label": "loadOrCreateGuestName()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L25",
+      "id": "guestname_loadorcreateguestname",
+      "community": 8,
+      "norm_label": "loadorcreateguestname()"
+    },
+    {
+      "label": "saveGuestName()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L34",
+      "id": "guestname_saveguestname",
+      "community": 8,
+      "norm_label": "saveguestname()"
+    },
+    {
+      "label": "isValidDisplayName()",
+      "file_type": "code",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L39",
+      "id": "guestname_isvaliddisplayname",
+      "community": 8,
+      "norm_label": "isvaliddisplayname()"
     },
     {
       "label": "presets.ts",
@@ -1956,7 +2685,7 @@
       "source_file": "frontend\\src\\lib\\presets.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_presets_ts",
-      "community": 52,
+      "community": 55,
       "norm_label": "presets.ts"
     },
     {
@@ -2064,7 +2793,7 @@
       "source_file": "frontend\\src\\lib\\types.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_types_ts",
-      "community": 53,
+      "community": 56,
       "norm_label": "types.ts"
     },
     {
@@ -2076,7 +2805,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "graphify knowledge graph instructions",
       "id": "gemini_graphify_instructions"
     },
@@ -2089,7 +2818,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 54,
+      "community": 57,
       "norm_label": "graphify query/path/explain cli",
       "id": "gemini_graphify_query_tool"
     },
@@ -2102,7 +2831,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "system overview (frontend, backend, db)",
       "id": "architecture_system_overview"
     },
@@ -2115,7 +2844,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 55,
+      "community": 58,
       "norm_label": "frontend responsibilities",
       "id": "architecture_frontend_responsibility"
     },
@@ -2128,7 +2857,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "backend responsibilities",
       "id": "architecture_backend_responsibility"
     },
@@ -2141,7 +2870,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "game/gamelogic.ts pure module",
       "id": "architecture_game_logic_module"
     },
@@ -2154,7 +2883,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "database boundary (post-m7)",
       "id": "architecture_database_boundary"
     },
@@ -2167,7 +2896,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "frontend phase machine",
       "id": "architecture_phase_machine"
     },
@@ -2180,7 +2909,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "in-memory state maps (players/queues/rooms/playerrooms)",
       "id": "architecture_in_memory_state"
     },
@@ -2193,7 +2922,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "connection-to-cleanup lifecycle",
       "id": "architecture_lifecycle"
     },
@@ -2206,7 +2935,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "fly.io deployment plan",
       "id": "architecture_deployment_fly"
     },
@@ -2219,7 +2948,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 56,
+      "community": 59,
       "norm_label": "non-goals for m1-m7",
       "id": "architecture_non_goals"
     },
@@ -2232,7 +2961,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "backend file map",
       "id": "backend_file_map"
     },
@@ -2245,7 +2974,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 57,
+      "community": 60,
       "norm_label": "backend reading order",
       "id": "backend_reading_order"
     },
@@ -2258,7 +2987,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "connection-to-game state flow",
       "id": "backend_state_flow"
     },
@@ -2271,7 +3000,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "adding a new message type steps",
       "id": "backend_new_message_steps"
     },
@@ -2284,7 +3013,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "backend critical invariants",
       "id": "backend_critical_invariants"
     },
@@ -2297,7 +3026,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 15,
+      "community": 18,
       "norm_label": "backend run commands (npm run dev, smoke:logic)",
       "id": "backend_run_commands"
     },
@@ -2310,7 +3039,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "production-grade node.js backend setup guide",
       "id": "backend_setup_guide"
     },
@@ -2323,7 +3052,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "routes/controllers/services/repositories layering",
       "id": "setup_layered_architecture"
     },
@@ -2336,7 +3065,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "typescript & tsconfig.json setup",
       "id": "setup_typescript_tsconfig"
     },
@@ -2349,7 +3078,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "tsx watch dev runner",
       "id": "setup_tsx_dev_runner"
     },
@@ -2362,7 +3091,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 5,
       "norm_label": "prisma v7 orm setup",
       "id": "setup_prisma_orm"
     },
@@ -2375,7 +3104,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "winston logger setup",
       "id": "setup_winston_logger"
     },
@@ -2388,7 +3117,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "zod input validation",
       "id": "setup_zod_validation"
     },
@@ -2401,7 +3130,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "apierror and apiresponse pattern",
       "id": "setup_api_error_response"
     },
@@ -2414,7 +3143,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "chain reaction claude context overview",
       "id": "claudemd_project_overview"
     },
@@ -2427,7 +3156,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 58,
+      "community": 61,
       "norm_label": "project directory map",
       "id": "claudemd_directory_map"
     },
@@ -2440,7 +3169,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "context file index",
       "id": "claudemd_context_index"
     },
@@ -2453,7 +3182,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "backend layering convention",
       "id": "conventions_layering"
     },
@@ -2466,7 +3195,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 59,
+      "community": 62,
       "norm_label": "file naming conventions",
       "id": "conventions_file_naming"
     },
@@ -2479,7 +3208,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "wire (snake_case) vs internal (camelcase) format",
       "id": "conventions_wire_vs_internal_format"
     },
@@ -2492,7 +3221,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "apierror throw/catch in router pattern",
       "id": "conventions_api_error_pattern"
     },
@@ -2505,7 +3234,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "zod validation at boundary",
       "id": "conventions_zod_validation"
     },
@@ -2518,7 +3247,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "winston named child loggers",
       "id": "conventions_named_loggers"
     },
@@ -2531,7 +3260,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 35,
       "norm_label": "centralized constants (limits, message_types, error_codes)",
       "id": "conventions_constants"
     },
@@ -2544,7 +3273,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "typescript strictness convention",
       "id": "conventions_typescript_strictness"
     },
@@ -2557,7 +3286,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 60,
+      "community": 63,
       "norm_label": "async/await style",
       "id": "conventions_async_style"
     },
@@ -2570,7 +3299,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "db status: post-m7 only",
       "id": "database_status_postm7"
     },
@@ -2583,7 +3312,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "repository pattern hard rules",
       "id": "database_repository_pattern"
     },
@@ -2596,7 +3325,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 36,
       "norm_label": "planned db/ directory layout",
       "id": "database_directory_layout"
     },
@@ -2609,7 +3338,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 16,
+      "community": 19,
       "norm_label": "players table schema",
       "id": "database_schema_players"
     },
@@ -2622,7 +3351,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 16,
+      "community": 19,
       "norm_label": "matches table schema",
       "id": "database_schema_matches"
     },
@@ -2635,7 +3364,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 16,
+      "community": 19,
       "norm_label": "match_players table schema",
       "id": "database_schema_match_players"
     },
@@ -2648,7 +3377,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 36,
       "norm_label": "repository interface (matchesrepo etc)",
       "id": "database_repo_interface"
     },
@@ -2661,7 +3390,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "provider swap rule",
       "id": "database_swap_providers"
     },
@@ -2674,7 +3403,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 61,
+      "community": 64,
       "norm_label": "migrations (forward-only sql files)",
       "id": "database_migrations"
     },
@@ -2687,7 +3416,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "error websocket frame shape",
       "id": "errors_error_frame"
     },
@@ -2700,7 +3429,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "when to send error vs silently drop",
       "id": "errors_send_vs_drop"
     },
@@ -2713,7 +3442,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 35,
       "norm_label": "error codes table",
       "id": "errors_error_codes_table"
     },
@@ -2726,7 +3455,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "server-side apierror dispatch pattern",
       "id": "errors_server_handling"
     },
@@ -2739,7 +3468,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "frontend onmessage error handling",
       "id": "errors_frontend_handling"
     },
@@ -2752,7 +3481,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "frontend file map",
       "id": "frontend_file_map"
     },
@@ -2765,7 +3494,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "frontend component tree (page.tsx)",
       "id": "frontend_component_tree"
     },
@@ -2778,7 +3507,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "usegamewebsocket hook (state ownership)",
       "id": "frontend_use_game_websocket_hook"
     },
@@ -2791,7 +3520,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "gameboard rendering contract",
       "id": "frontend_rendering_contract"
     },
@@ -2804,7 +3533,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 62,
+      "community": 65,
       "norm_label": "frontend common gotchas",
       "id": "frontend_common_gotchas"
     },
@@ -2817,7 +3546,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "gamelogic.ts purity rule",
       "id": "gamelogic_purity_rule"
     },
@@ -2830,7 +3559,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 63,
+      "community": 66,
       "norm_label": "move rule (click empty/own cell)",
       "id": "gamelogic_rules_moves"
     },
@@ -2843,7 +3572,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 32,
+      "community": 38,
       "norm_label": "critical mass rule",
       "id": "gamelogic_critical_mass"
     },
@@ -2856,7 +3585,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 33,
+      "community": 37,
       "norm_label": "ownership transfer on explosion",
       "id": "gamelogic_ownership_transfer"
     },
@@ -2869,7 +3598,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "elimination rule with grace period",
       "id": "gamelogic_elimination"
     },
@@ -2882,7 +3611,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 64,
+      "community": 67,
       "norm_label": "win condition (one survivor)",
       "id": "gamelogic_win_condition"
     },
@@ -2895,7 +3624,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 65,
+      "community": 68,
       "norm_label": "createboard() function",
       "id": "gamelogic_create_board"
     },
@@ -2908,7 +3637,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "getcriticalmass() function",
       "id": "gamelogic_get_critical_mass"
     },
@@ -2921,7 +3650,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "getneighbors() function",
       "id": "gamelogic_get_neighbors"
     },
@@ -2934,7 +3663,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "applymove() function",
       "id": "gamelogic_apply_move"
     },
@@ -2947,7 +3676,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "iseliminated() function",
       "id": "gamelogic_is_eliminated"
     },
@@ -2960,7 +3689,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 15,
+      "community": 18,
       "norm_label": "standalone smoke test (process.argv guard)",
       "id": "gamelogic_smoke_test"
     },
@@ -2973,7 +3702,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "game logic invariants",
       "id": "gamelogic_invariants"
     },
@@ -2986,7 +3715,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "limits.safety_break 2000 cap",
       "id": "gamelogic_safety_break"
     },
@@ -2999,7 +3728,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 66,
+      "community": 69,
       "norm_label": "cell term",
       "id": "glossary_cell"
     },
@@ -3012,7 +3741,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 67,
+      "community": 70,
       "norm_label": "board term",
       "id": "glossary_board"
     },
@@ -3025,7 +3754,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 68,
+      "community": 71,
       "norm_label": "orb term",
       "id": "glossary_orb"
     },
@@ -3038,7 +3767,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 69,
+      "community": 72,
       "norm_label": "owner term",
       "id": "glossary_owner"
     },
@@ -3051,7 +3780,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 32,
+      "community": 38,
       "norm_label": "critical mass term",
       "id": "glossary_critical_mass"
     },
@@ -3064,7 +3793,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 33,
+      "community": 37,
       "norm_label": "explosion term",
       "id": "glossary_explosion"
     },
@@ -3077,7 +3806,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 70,
+      "community": 73,
       "norm_label": "cascade / chain reaction term",
       "id": "glossary_cascade"
     },
@@ -3090,7 +3819,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "grace period term",
       "id": "glossary_grace_period"
     },
@@ -3103,7 +3832,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "safety break term",
       "id": "glossary_safety_break"
     },
@@ -3116,7 +3845,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 71,
+      "community": 74,
       "norm_label": "player index vs player id",
       "id": "glossary_player_index"
     },
@@ -3129,7 +3858,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "myindex (frontend)",
       "id": "glossary_my_index"
     },
@@ -3142,7 +3871,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 72,
+      "community": 75,
       "norm_label": "bucket / queue key",
       "id": "glossary_bucket"
     },
@@ -3155,7 +3884,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "room term",
       "id": "glossary_room"
     },
@@ -3168,7 +3897,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 73,
+      "community": 76,
       "norm_label": "frame / broadcast / send",
       "id": "glossary_frame_broadcast_send"
     },
@@ -3181,7 +3910,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "handler / router / schema / repository / mapper",
       "id": "glossary_handler_router_schema"
     },
@@ -3194,7 +3923,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 74,
+      "community": 77,
       "norm_label": "words we don't use (match/lobby/session/game)",
       "id": "glossary_forbidden_words"
     },
@@ -3207,7 +3936,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "protocol single source of truth rule",
       "id": "protocol_single_source_of_truth"
     },
@@ -3220,7 +3949,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "websocket json transport",
       "id": "protocol_transport"
     },
@@ -3233,7 +3962,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "join_queue message",
       "id": "protocol_msg_join_queue"
     },
@@ -3246,7 +3975,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 75,
+      "community": 78,
       "norm_label": "leave_queue message",
       "id": "protocol_msg_leave_queue"
     },
@@ -3259,7 +3988,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "make_move message",
       "id": "protocol_msg_make_move"
     },
@@ -3272,7 +4001,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "leave_game message",
       "id": "protocol_msg_leave_game"
     },
@@ -3285,7 +4014,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "connected message",
       "id": "protocol_msg_connected"
     },
@@ -3298,7 +4027,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "queued message",
       "id": "protocol_msg_queued"
     },
@@ -3311,7 +4040,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "game_start message",
       "id": "protocol_msg_game_start"
     },
@@ -3324,7 +4053,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "game_state message",
       "id": "protocol_msg_game_state"
     },
@@ -3337,7 +4066,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "game_over message",
       "id": "protocol_msg_game_over"
     },
@@ -3350,7 +4079,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "error message",
       "id": "protocol_msg_error"
     },
@@ -3363,7 +4092,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "protocol versioning deferred until post-m7",
       "id": "protocol_versioning_rationale"
     },
@@ -3376,7 +4105,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "rule: server authority",
       "id": "rules_server_authority"
     },
@@ -3389,7 +4118,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "rule: game logic purity",
       "id": "rules_game_logic_purity"
     },
@@ -3402,7 +4131,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "rule: message validation via zod",
       "id": "rules_message_validation"
     },
@@ -3415,7 +4144,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "rule: state boundary (memory vs db)",
       "id": "rules_state_boundary"
     },
@@ -3428,7 +4157,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 15,
+      "community": 18,
       "norm_label": "rule: smoke:logic testing path",
       "id": "rules_game_logic_testing"
     },
@@ -3441,7 +4170,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 2,
       "norm_label": "rule: code quality baseline (strict ts, no any, lint)",
       "id": "rules_code_quality"
     },
@@ -3454,7 +4183,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 76,
+      "community": 79,
       "norm_label": "rule: conventional commits",
       "id": "rules_commits"
     }
@@ -4568,7 +5297,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L10",
+      "source_location": "L8",
       "weight": 1.0,
       "_src": "backend_src_game_gamelogic_ts",
       "_tgt": "gamelogic_getneighbors",
@@ -4580,7 +5309,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L29",
+      "source_location": "L19",
       "weight": 1.0,
       "_src": "backend_src_game_gamelogic_ts",
       "_tgt": "gamelogic_getcriticalmass",
@@ -4592,7 +5321,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L38",
+      "source_location": "L23",
       "weight": 1.0,
       "_src": "backend_src_game_gamelogic_ts",
       "_tgt": "gamelogic_applymove",
@@ -4604,7 +5333,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L110",
+      "source_location": "L83",
       "weight": 1.0,
       "_src": "backend_src_game_gamelogic_ts",
       "_tgt": "gamelogic_iseliminated",
@@ -4676,7 +5405,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L35",
+      "source_location": "L20",
       "weight": 1.0,
       "_src": "gamelogic_getcriticalmass",
       "_tgt": "gamelogic_getneighbors",
@@ -4688,7 +5417,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L90",
+      "source_location": "L68",
       "weight": 1.0,
       "_src": "gamelogic_applymove",
       "_tgt": "gamelogic_getneighbors",
@@ -4700,7 +5429,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\game\\gameLogic.ts",
-      "source_location": "L63",
+      "source_location": "L41",
       "weight": 1.0,
       "_src": "gamelogic_applymove",
       "_tgt": "gamelogic_getcriticalmass",
@@ -4976,7 +5705,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L19",
+      "source_location": "L12",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "backend_src_types_game_ts",
@@ -4988,7 +5717,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L20",
+      "source_location": "L13",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "backend_src_types_protocol_ts",
@@ -5000,7 +5729,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L21",
+      "source_location": "L14",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "backend_src_types_scoring_ts",
@@ -5012,7 +5741,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L22",
+      "source_location": "L15",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "backend_src_utils_broadcast_ts",
@@ -5024,7 +5753,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L26",
+      "source_location": "L19",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_handlemove",
@@ -5036,7 +5765,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L70",
+      "source_location": "L63",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_handleleavegame",
@@ -5048,7 +5777,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L75",
+      "source_location": "L68",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_graceexpireleavegame",
@@ -5060,7 +5789,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L80",
+      "source_location": "L73",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_sendgamestatetoplayer",
@@ -5072,7 +5801,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L94",
+      "source_location": "L87",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_eliminateandbroadcast",
@@ -5084,7 +5813,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L138",
+      "source_location": "L131",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_getroomforplayer",
@@ -5096,7 +5825,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L147",
+      "source_location": "L140",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_isinbounds",
@@ -5108,7 +5837,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L151",
+      "source_location": "L144",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_advanceturn",
@@ -5120,7 +5849,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L162",
+      "source_location": "L155",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_getwinner",
@@ -5132,7 +5861,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L167",
+      "source_location": "L160",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_broadcastgamestate",
@@ -5144,7 +5873,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L176",
+      "source_location": "L169",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_computeauthdeltas",
@@ -5156,7 +5885,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L186",
+      "source_location": "L179",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_destroyroom",
@@ -5168,7 +5897,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L203",
+      "source_location": "L196",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_startroomreaper",
@@ -5180,7 +5909,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L230",
+      "source_location": "L223",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_stoproomreaper",
@@ -5192,7 +5921,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L238",
+      "source_location": "L231",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_endgame",
@@ -5204,7 +5933,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L282",
+      "source_location": "L275",
       "weight": 1.0,
       "_src": "backend_src_handlers_game_handlers_ts",
       "_tgt": "game_handlers_persistfinishedmatch",
@@ -5228,7 +5957,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L27",
+      "source_location": "L20",
       "weight": 1.0,
       "_src": "game_handlers_handlemove",
       "_tgt": "game_handlers_getroomforplayer",
@@ -5240,7 +5969,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L37",
+      "source_location": "L30",
       "weight": 1.0,
       "_src": "game_handlers_handlemove",
       "_tgt": "game_handlers_isinbounds",
@@ -5252,7 +5981,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L60",
+      "source_location": "L53",
       "weight": 1.0,
       "_src": "game_handlers_handlemove",
       "_tgt": "game_handlers_getwinner",
@@ -5264,7 +5993,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L62",
+      "source_location": "L55",
       "weight": 1.0,
       "_src": "game_handlers_handlemove",
       "_tgt": "game_handlers_endgame",
@@ -5276,7 +6005,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L66",
+      "source_location": "L59",
       "weight": 1.0,
       "_src": "game_handlers_handlemove",
       "_tgt": "game_handlers_advanceturn",
@@ -5288,7 +6017,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L67",
+      "source_location": "L60",
       "weight": 1.0,
       "_src": "game_handlers_handlemove",
       "_tgt": "game_handlers_broadcastgamestate",
@@ -5300,7 +6029,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L71",
+      "source_location": "L64",
       "weight": 1.0,
       "_src": "game_handlers_handleleavegame",
       "_tgt": "game_handlers_eliminateandbroadcast",
@@ -5312,7 +6041,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L76",
+      "source_location": "L69",
       "weight": 1.0,
       "_src": "game_handlers_graceexpireleavegame",
       "_tgt": "game_handlers_eliminateandbroadcast",
@@ -5324,7 +6053,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L81",
+      "source_location": "L74",
       "weight": 1.0,
       "_src": "game_handlers_sendgamestatetoplayer",
       "_tgt": "game_handlers_getroomforplayer",
@@ -5360,7 +6089,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L95",
+      "source_location": "L88",
       "weight": 1.0,
       "_src": "game_handlers_eliminateandbroadcast",
       "_tgt": "game_handlers_getroomforplayer",
@@ -5372,7 +6101,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L115",
+      "source_location": "L108",
       "weight": 1.0,
       "_src": "game_handlers_eliminateandbroadcast",
       "_tgt": "game_handlers_destroyroom",
@@ -5384,7 +6113,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L119",
+      "source_location": "L112",
       "weight": 1.0,
       "_src": "game_handlers_eliminateandbroadcast",
       "_tgt": "game_handlers_getwinner",
@@ -5396,7 +6125,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L121",
+      "source_location": "L114",
       "weight": 1.0,
       "_src": "game_handlers_eliminateandbroadcast",
       "_tgt": "game_handlers_endgame",
@@ -5408,7 +6137,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L132",
+      "source_location": "L125",
       "weight": 1.0,
       "_src": "game_handlers_eliminateandbroadcast",
       "_tgt": "game_handlers_advanceturn",
@@ -5420,7 +6149,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L135",
+      "source_location": "L128",
       "weight": 1.0,
       "_src": "game_handlers_eliminateandbroadcast",
       "_tgt": "game_handlers_broadcastgamestate",
@@ -5444,7 +6173,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L240",
+      "source_location": "L233",
       "weight": 1.0,
       "_src": "game_handlers_endgame",
       "_tgt": "game_handlers_computeauthdeltas",
@@ -5456,7 +6185,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L265",
+      "source_location": "L258",
       "weight": 1.0,
       "_src": "game_handlers_endgame",
       "_tgt": "game_handlers_destroyroom",
@@ -5468,7 +6197,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\handlers\\game.handlers.ts",
-      "source_location": "L267",
+      "source_location": "L260",
       "weight": 1.0,
       "_src": "game_handlers_endgame",
       "_tgt": "game_handlers_persistfinishedmatch",
@@ -5876,7 +6605,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\lib\\logger.ts",
-      "source_location": "L13",
+      "source_location": "L9",
       "weight": 1.0,
       "_src": "backend_src_lib_logger_ts",
       "_tgt": "logger_getlogger",
@@ -5936,7 +6665,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\middlewares\\async_handler.ts",
-      "source_location": "L9",
+      "source_location": "L5",
       "weight": 1.0,
       "_src": "backend_src_middlewares_async_handler_ts",
       "_tgt": "async_handler_asynchandler",
@@ -6332,7 +7061,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L132",
+      "source_location": "L135",
       "weight": 1.0,
       "_src": "backend_src_realtime_websocket_ts",
       "_tgt": "websocket_resetidletimeout",
@@ -6344,7 +7073,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L146",
+      "source_location": "L149",
       "weight": 1.0,
       "_src": "backend_src_realtime_websocket_ts",
       "_tgt": "websocket_handleconnection",
@@ -6356,7 +7085,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L193",
+      "source_location": "L196",
       "weight": 1.0,
       "_src": "backend_src_realtime_websocket_ts",
       "_tgt": "websocket_wiresocketevents",
@@ -6368,7 +7097,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L289",
+      "source_location": "L295",
       "weight": 1.0,
       "_src": "backend_src_realtime_websocket_ts",
       "_tgt": "websocket_resolveidentity",
@@ -6380,7 +7109,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L317",
+      "source_location": "L323",
       "weight": 1.0,
       "_src": "backend_src_realtime_websocket_ts",
       "_tgt": "websocket_gettokenfromrequest",
@@ -6392,7 +7121,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L323",
+      "source_location": "L329",
       "weight": 1.0,
       "_src": "backend_src_realtime_websocket_ts",
       "_tgt": "websocket_buildguestidentity",
@@ -6404,7 +7133,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L147",
+      "source_location": "L150",
       "weight": 1.0,
       "_src": "websocket_handleconnection",
       "_tgt": "websocket_resolveidentity",
@@ -6416,7 +7145,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L169",
+      "source_location": "L172",
       "weight": 1.0,
       "_src": "websocket_handleconnection",
       "_tgt": "websocket_wiresocketevents",
@@ -6440,7 +7169,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L290",
+      "source_location": "L296",
       "weight": 1.0,
       "_src": "websocket_resolveidentity",
       "_tgt": "websocket_gettokenfromrequest",
@@ -6452,7 +7181,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\realtime\\websocket.ts",
-      "source_location": "L292",
+      "source_location": "L298",
       "weight": 1.0,
       "_src": "websocket_resolveidentity",
       "_tgt": "websocket_buildguestidentity",
@@ -6644,7 +7373,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\services\\auth.service.ts",
-      "source_location": "L59",
+      "source_location": "L64",
       "weight": 1.0,
       "_src": "backend_src_services_auth_service_ts",
       "_tgt": "auth_service_buildauthresult",
@@ -6656,7 +7385,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\services\\auth.service.ts",
-      "source_location": "L73",
+      "source_location": "L78",
       "weight": 1.0,
       "_src": "backend_src_services_auth_service_ts",
       "_tgt": "auth_service_topublicplayer",
@@ -6668,7 +7397,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\services\\auth.service.ts",
-      "source_location": "L81",
+      "source_location": "L86",
       "weight": 1.0,
       "_src": "backend_src_services_auth_service_ts",
       "_tgt": "auth_service_throwinvalidcredentials",
@@ -6680,7 +7409,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\services\\auth.service.ts",
-      "source_location": "L61",
+      "source_location": "L66",
       "weight": 1.0,
       "_src": "auth_service_buildauthresult",
       "_tgt": "auth_service_throwinvalidcredentials",
@@ -7028,7 +7757,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\utils\\jwt.ts",
-      "source_location": "L48",
+      "source_location": "L38",
       "weight": 1.0,
       "_src": "backend_src_utils_jwt_ts",
       "_tgt": "jwt_isauthtokenpayload",
@@ -7052,12 +7781,948 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend\\src\\utils\\securityLogger.ts",
-      "source_location": "L18",
+      "source_location": "L14",
       "weight": 1.0,
       "_src": "backend_src_utils_securitylogger_ts",
       "_tgt": "securitylogger_logsecurityevent",
       "source": "backend_src_utils_securitylogger_ts",
       "target": "securitylogger_logsecurityevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\atom.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "design_bundle_atom_jsx",
+      "_tgt": "atom_atomcluster",
+      "source": "design_bundle_atom_jsx",
+      "target": "atom_atomcluster",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "design_bundle_board_jsx",
+      "_tgt": "board_board",
+      "source": "design_bundle_board_jsx",
+      "target": "board_board",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L80",
+      "weight": 1.0,
+      "_src": "design_bundle_board_jsx",
+      "_tgt": "board_cellview",
+      "source": "design_bundle_board_jsx",
+      "target": "board_cellview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L119",
+      "weight": 1.0,
+      "_src": "design_bundle_board_jsx",
+      "_tgt": "board_capacityfor",
+      "source": "design_bundle_board_jsx",
+      "target": "board_capacityfor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L126",
+      "weight": 1.0,
+      "_src": "design_bundle_board_jsx",
+      "_tgt": "board_capacityticks",
+      "source": "design_bundle_board_jsx",
+      "target": "board_capacityticks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_src": "design_bundle_board_jsx",
+      "_tgt": "board_poplayer",
+      "source": "design_bundle_board_jsx",
+      "target": "board_poplayer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L148",
+      "weight": 1.0,
+      "_src": "design_bundle_board_jsx",
+      "_tgt": "board_rendereffect",
+      "source": "design_bundle_board_jsx",
+      "target": "board_rendereffect",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\board.jsx",
+      "source_location": "L82",
+      "weight": 1.0,
+      "_src": "board_cellview",
+      "_tgt": "board_capacityticks",
+      "source": "board_cellview",
+      "target": "board_capacityticks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\lib\\board.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "frontend_src_lib_board_ts",
+      "_tgt": "board_capacityfor",
+      "source": "board_capacityfor",
+      "target": "frontend_src_lib_board_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "design_bundle_game_jsx",
+      "_tgt": "game_makeboard",
+      "source": "design_bundle_game_jsx",
+      "target": "game_makeboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "design_bundle_game_jsx",
+      "_tgt": "game_neighbors",
+      "source": "design_bundle_game_jsx",
+      "target": "game_neighbors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_src": "design_bundle_game_jsx",
+      "_tgt": "game_capacity",
+      "source": "design_bundle_game_jsx",
+      "target": "game_capacity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_src": "design_bundle_game_jsx",
+      "_tgt": "game_tallyorbs",
+      "source": "design_bundle_game_jsx",
+      "target": "game_tallyorbs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_src": "design_bundle_game_jsx",
+      "_tgt": "game_planmove",
+      "source": "design_bundle_game_jsx",
+      "target": "game_planmove",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "design_bundle_game_jsx",
+      "_tgt": "game_deepcloneboard",
+      "source": "design_bundle_game_jsx",
+      "target": "game_deepcloneboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L127",
+      "weight": 1.0,
+      "_src": "design_bundle_game_jsx",
+      "_tgt": "game_computeeliminated",
+      "source": "design_bundle_game_jsx",
+      "target": "game_computeeliminated",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L139",
+      "weight": 1.0,
+      "_src": "design_bundle_game_jsx",
+      "_tgt": "game_nextturn",
+      "source": "design_bundle_game_jsx",
+      "target": "game_nextturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L148",
+      "weight": 1.0,
+      "_src": "design_bundle_game_jsx",
+      "_tgt": "game_checkwinner",
+      "source": "design_bundle_game_jsx",
+      "target": "game_checkwinner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L157",
+      "weight": 1.0,
+      "_src": "design_bundle_game_jsx",
+      "_tgt": "game_aipickmove",
+      "source": "design_bundle_game_jsx",
+      "target": "game_aipickmove",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L424",
+      "weight": 1.0,
+      "_src": "game_makeboard",
+      "_tgt": "main_buildgame",
+      "source": "game_makeboard",
+      "target": "main_buildgame"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_src": "game_capacity",
+      "_tgt": "game_neighbors",
+      "source": "game_neighbors",
+      "target": "game_capacity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\game.jsx",
+      "source_location": "L128",
+      "weight": 1.0,
+      "_src": "game_computeeliminated",
+      "_tgt": "game_tallyorbs",
+      "source": "game_tallyorbs",
+      "target": "game_computeeliminated",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_makeroomcode",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_makeroomcode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_dialogshell",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_dialogshell",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L56",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_createroomdialog",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_createroomdialog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L152",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_boardpreview",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_boardpreview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L177",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_joinroomdialog",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_joinroomdialog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L288",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_invitecard",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_invitecard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L337",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_sharecodedialog",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_sharecodedialog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L381",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_queuescreen",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_queuescreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L475",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_boardcodepopover",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_boardcodepopover",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L562",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_dlgiconx",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_dlgiconx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L570",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_dlgiconcheck",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_dlgiconcheck",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L577",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_dlgiconarrowright",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_dlgiconarrowright",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L585",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_dlgiconplus",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_dlgiconplus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L593",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_dlgiconminus",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_dlgiconminus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L601",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_iconcopy",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_iconcopy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\lobby.jsx",
+      "source_location": "L610",
+      "weight": 1.0,
+      "_src": "design_bundle_lobby_jsx",
+      "_tgt": "lobby_iconshare",
+      "source": "design_bundle_lobby_jsx",
+      "target": "lobby_iconshare",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_gridkey",
+      "source": "design_bundle_main_jsx",
+      "target": "main_gridkey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_app",
+      "source": "design_bundle_main_jsx",
+      "target": "main_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L421",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_buildgame",
+      "source": "design_bundle_main_jsx",
+      "target": "main_buildgame",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L432",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_delay",
+      "source": "design_bundle_main_jsx",
+      "target": "main_delay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L438",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_topbar",
+      "source": "design_bundle_main_jsx",
+      "target": "main_topbar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L471",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_bottombar",
+      "source": "design_bundle_main_jsx",
+      "target": "main_bottombar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L510",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_landingscreen",
+      "source": "design_bundle_main_jsx",
+      "target": "main_landingscreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L580",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_gameover",
+      "source": "design_bundle_main_jsx",
+      "target": "main_gameover",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L602",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_confetti",
+      "source": "design_bundle_main_jsx",
+      "target": "main_confetti",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L628",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_tweaks",
+      "source": "design_bundle_main_jsx",
+      "target": "main_tweaks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L704",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_svg",
+      "source": "design_bundle_main_jsx",
+      "target": "main_svg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L711",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_iconvolume",
+      "source": "design_bundle_main_jsx",
+      "target": "main_iconvolume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L717",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_iconvolumex",
+      "source": "design_bundle_main_jsx",
+      "target": "main_iconvolumex",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L724",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_iconexit",
+      "source": "design_bundle_main_jsx",
+      "target": "main_iconexit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L731",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_iconplay",
+      "source": "design_bundle_main_jsx",
+      "target": "main_iconplay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L734",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_iconusers",
+      "source": "design_bundle_main_jsx",
+      "target": "main_iconusers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L741",
+      "weight": 1.0,
+      "_src": "design_bundle_main_jsx",
+      "_tgt": "main_iconlogin",
+      "source": "design_bundle_main_jsx",
+      "target": "main_iconlogin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L459",
+      "weight": 1.0,
+      "_src": "main_topbar",
+      "_tgt": "main_iconvolumex",
+      "source": "main_topbar",
+      "target": "main_iconvolumex",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L459",
+      "weight": 1.0,
+      "_src": "main_topbar",
+      "_tgt": "main_iconvolume",
+      "source": "main_topbar",
+      "target": "main_iconvolume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L462",
+      "weight": 1.0,
+      "_src": "main_topbar",
+      "_tgt": "main_iconexit",
+      "source": "main_topbar",
+      "target": "main_iconexit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L563",
+      "weight": 1.0,
+      "_src": "main_landingscreen",
+      "_tgt": "main_iconusers",
+      "source": "main_landingscreen",
+      "target": "main_iconusers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L566",
+      "weight": 1.0,
+      "_src": "main_landingscreen",
+      "_tgt": "main_iconlogin",
+      "source": "main_landingscreen",
+      "target": "main_iconlogin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L570",
+      "weight": 1.0,
+      "_src": "main_landingscreen",
+      "_tgt": "main_iconplay",
+      "source": "main_landingscreen",
+      "target": "main_iconplay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L712",
+      "weight": 1.0,
+      "_src": "main_iconvolume",
+      "_tgt": "main_svg",
+      "source": "main_svg",
+      "target": "main_iconvolume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L718",
+      "weight": 1.0,
+      "_src": "main_iconvolumex",
+      "_tgt": "main_svg",
+      "source": "main_svg",
+      "target": "main_iconvolumex",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L725",
+      "weight": 1.0,
+      "_src": "main_iconexit",
+      "_tgt": "main_svg",
+      "source": "main_svg",
+      "target": "main_iconexit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L732",
+      "weight": 1.0,
+      "_src": "main_iconplay",
+      "_tgt": "main_svg",
+      "source": "main_svg",
+      "target": "main_iconplay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L735",
+      "weight": 1.0,
+      "_src": "main_iconusers",
+      "_tgt": "main_svg",
+      "source": "main_svg",
+      "target": "main_iconusers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\main.jsx",
+      "source_location": "L742",
+      "weight": 1.0,
+      "_src": "main_iconlogin",
+      "_tgt": "main_svg",
+      "source": "main_svg",
+      "target": "main_iconlogin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "design_bundle_sound_jsx",
+      "_tgt": "sound_ensurecontext",
+      "source": "design_bundle_sound_jsx",
+      "target": "sound_ensurecontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_src": "design_bundle_sound_jsx",
+      "_tgt": "sound_env",
+      "source": "design_bundle_sound_jsx",
+      "target": "sound_env",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_src": "design_bundle_sound_jsx",
+      "_tgt": "sound_noisebuffer",
+      "source": "design_bundle_sound_jsx",
+      "target": "sound_noisebuffer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L352",
+      "weight": 1.0,
+      "_src": "design_bundle_sound_jsx",
+      "_tgt": "sound_setpack",
+      "source": "design_bundle_sound_jsx",
+      "target": "sound_setpack",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L355",
+      "weight": 1.0,
+      "_src": "design_bundle_sound_jsx",
+      "_tgt": "sound_setmuted",
+      "source": "design_bundle_sound_jsx",
+      "target": "sound_setmuted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L359",
+      "weight": 1.0,
+      "_src": "design_bundle_sound_jsx",
+      "_tgt": "sound_ismuted",
+      "source": "design_bundle_sound_jsx",
+      "target": "sound_ismuted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L362",
+      "weight": 1.0,
+      "_src": "design_bundle_sound_jsx",
+      "_tgt": "sound_resume",
+      "source": "design_bundle_sound_jsx",
+      "target": "sound_resume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L366",
+      "weight": 1.0,
+      "_src": "design_bundle_sound_jsx",
+      "_tgt": "sound_play",
+      "source": "design_bundle_sound_jsx",
+      "target": "sound_play",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L363",
+      "weight": 1.0,
+      "_src": "sound_resume",
+      "_tgt": "sound_ensurecontext",
+      "source": "sound_ensurecontext",
+      "target": "sound_resume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L367",
+      "weight": 1.0,
+      "_src": "sound_play",
+      "_tgt": "sound_ensurecontext",
+      "source": "sound_ensurecontext",
+      "target": "sound_play",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "design_bundle\\sound.jsx",
+      "source_location": "L371",
+      "weight": 1.0,
+      "_src": "sound_play",
+      "_tgt": "sound_resume",
+      "source": "sound_resume",
+      "target": "sound_play",
       "confidence_score": 1.0
     },
     {
@@ -7076,19 +8741,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L17",
-      "weight": 1.0,
-      "_src": "frontend_src_app_page_tsx",
-      "_tgt": "page_makeguestname",
-      "source": "frontend_src_app_page_tsx",
-      "target": "page_makeguestname",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L59",
+      "source_location": "L47",
       "weight": 1.0,
       "_src": "frontend_src_app_page_tsx",
       "_tgt": "page_flashnotice",
@@ -7100,7 +8753,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L65",
+      "source_location": "L53",
       "weight": 1.0,
       "_src": "frontend_src_app_page_tsx",
       "_tgt": "page_onplay",
@@ -7112,7 +8765,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L79",
+      "source_location": "L67",
       "weight": 1.0,
       "_src": "frontend_src_app_page_tsx",
       "_tgt": "page_oncreateroom",
@@ -7124,7 +8777,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L92",
+      "source_location": "L80",
       "weight": 1.0,
       "_src": "frontend_src_app_page_tsx",
       "_tgt": "page_onjoinroom",
@@ -7133,10 +8786,34 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\app\\page.tsx",
+      "source_location": "L89",
+      "weight": 1.0,
+      "_src": "frontend_src_app_page_tsx",
+      "_tgt": "page_onrematch",
+      "source": "frontend_src_app_page_tsx",
+      "target": "page_onrematch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\app\\page.tsx",
+      "source_location": "L103",
+      "weight": 1.0,
+      "_src": "frontend_src_app_page_tsx",
+      "_tgt": "page_handlenamesave",
+      "source": "frontend_src_app_page_tsx",
+      "target": "page_handlenamesave",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L67",
+      "source_location": "L55",
       "weight": 1.0,
       "_src": "page_onplay",
       "_tgt": "page_flashnotice",
@@ -7148,7 +8825,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L81",
+      "source_location": "L69",
       "weight": 1.0,
       "_src": "page_oncreateroom",
       "_tgt": "page_flashnotice",
@@ -7160,13 +8837,25 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\app\\page.tsx",
-      "source_location": "L94",
+      "source_location": "L82",
       "weight": 1.0,
       "_src": "page_onjoinroom",
       "_tgt": "page_flashnotice",
       "source": "page_flashnotice",
       "target": "page_onjoinroom",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "frontend\\src\\app\\page.tsx",
+      "source_location": "L107",
+      "weight": 1.0,
+      "_src": "page_handlenamesave",
+      "_tgt": "guestname_saveguestname",
+      "source": "page_handlenamesave",
+      "target": "guestname_saveguestname"
     },
     {
       "relation": "contains",
@@ -7255,8 +8944,80 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\components\\NameCard.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_src": "frontend_src_components_namecard_tsx",
+      "_tgt": "namecard_startedit",
+      "source": "frontend_src_components_namecard_tsx",
+      "target": "namecard_startedit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\components\\NameCard.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_src": "frontend_src_components_namecard_tsx",
+      "_tgt": "namecard_cancel",
+      "source": "frontend_src_components_namecard_tsx",
+      "target": "namecard_cancel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\components\\NameCard.tsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "frontend_src_components_namecard_tsx",
+      "_tgt": "namecard_commit",
+      "source": "frontend_src_components_namecard_tsx",
+      "target": "namecard_commit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "frontend\\src\\components\\NameCard.tsx",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_src": "namecard_commit",
+      "_tgt": "guestname_isvaliddisplayname",
+      "source": "namecard_commit",
+      "target": "guestname_isvaliddisplayname"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\components\\QueueScreen.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "frontend_src_components_queuescreen_tsx",
+      "_tgt": "queuescreen_queuescreen",
+      "source": "frontend_src_components_queuescreen_tsx",
+      "target": "queuescreen_queuescreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\components\\QueueScreen.tsx",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_src": "frontend_src_components_queuescreen_tsx",
+      "_tgt": "queuescreen_handlecopy",
+      "source": "frontend_src_components_queuescreen_tsx",
+      "target": "queuescreen_handlecopy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\components\\dialogs\\CreateRoomDialog.tsx",
-      "source_location": "L50",
+      "source_location": "L51",
       "weight": 1.0,
       "_src": "frontend_src_components_dialogs_createroomdialog_tsx",
       "_tgt": "createroomdialog_handleconfirm",
@@ -7268,7 +9029,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\components\\dialogs\\CreateRoomDialog.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0,
       "_src": "frontend_src_components_dialogs_createroomdialog_tsx",
       "_tgt": "createroomdialog_adjustplayers",
@@ -7280,12 +9041,12 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\components\\dialogs\\DialogShell.tsx",
-      "source_location": "L15",
+      "source_location": "L26",
       "weight": 1.0,
       "_src": "frontend_src_components_dialogs_dialogshell_tsx",
-      "_tgt": "dialogshell_dialogshell",
+      "_tgt": "dialogshell_handlekey",
       "source": "frontend_src_components_dialogs_dialogshell_tsx",
-      "target": "dialogshell_dialogshell",
+      "target": "dialogshell_handlekey",
       "confidence_score": 1.0
     },
     {
@@ -7387,13 +9148,25 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "frontend\\src\\components\\ui\\badge.tsx",
-      "source_location": "L4",
+      "source_file": "frontend\\src\\components\\game\\BoardCodePopover.tsx",
+      "source_location": "L15",
       "weight": 1.0,
-      "_src": "frontend_src_components_ui_badge_tsx",
-      "_tgt": "badge_badge",
-      "source": "frontend_src_components_ui_badge_tsx",
-      "target": "badge_badge",
+      "_src": "frontend_src_components_game_boardcodepopover_tsx",
+      "_tgt": "boardcodepopover_ondown",
+      "source": "frontend_src_components_game_boardcodepopover_tsx",
+      "target": "boardcodepopover_ondown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\components\\game\\BoardCodePopover.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "frontend_src_components_game_boardcodepopover_tsx",
+      "_tgt": "boardcodepopover_onkey",
+      "source": "frontend_src_components_game_boardcodepopover_tsx",
+      "target": "boardcodepopover_onkey",
       "confidence_score": 1.0
     },
     {
@@ -7411,18 +9184,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "frontend\\src\\components\\ui\\orb.tsx",
-      "source_location": "L14",
-      "weight": 1.0,
-      "_src": "frontend_src_components_ui_orb_tsx",
-      "_tgt": "orb_orb",
-      "source": "frontend_src_components_ui_orb_tsx",
-      "target": "orb_orb",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\hooks\\useAuth.ts",
       "source_location": "L8",
       "weight": 1.0,
@@ -7430,6 +9191,30 @@
       "_tgt": "useauth_useauth",
       "source": "frontend_src_hooks_useauth_ts",
       "target": "useauth_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\hooks\\useBoardEffects.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "frontend_src_hooks_useboardeffects_ts",
+      "_tgt": "useboardeffects_useboardeffects",
+      "source": "frontend_src_hooks_useboardeffects_ts",
+      "target": "useboardeffects_useboardeffects",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\hooks\\useBoardMetrics.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "frontend_src_hooks_useboardmetrics_ts",
+      "_tgt": "useboardmetrics_useboardmetrics",
+      "source": "frontend_src_hooks_useboardmetrics_ts",
+      "target": "useboardmetrics_useboardmetrics",
       "confidence_score": 1.0
     },
     {
@@ -7520,7 +9305,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\lib\\api.ts",
-      "source_location": "L170",
+      "source_location": "L178",
       "weight": 1.0,
       "_src": "frontend_src_lib_api_ts",
       "_tgt": "api_readjson",
@@ -7604,19 +9389,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\lib\\board.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_src": "frontend_src_lib_board_ts",
-      "_tgt": "board_capacityfor",
-      "source": "frontend_src_lib_board_ts",
-      "target": "board_capacityfor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend\\src\\lib\\board.ts",
-      "source_location": "L24",
+      "source_location": "L29",
       "weight": 1.0,
       "_src": "frontend_src_lib_board_ts",
       "_tgt": "board_cellkey",
@@ -7628,7 +9401,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\lib\\board.ts",
-      "source_location": "L28",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_src": "frontend_src_lib_board_ts",
+      "_tgt": "board_neighbordirections",
+      "source": "frontend_src_lib_board_ts",
+      "target": "board_neighbordirections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\lib\\board.ts",
+      "source_location": "L51",
       "weight": 1.0,
       "_src": "frontend_src_lib_board_ts",
       "_tgt": "board_diffboards",
@@ -7640,7 +9425,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\lib\\board.ts",
-      "source_location": "L71",
+      "source_location": "L104",
       "weight": 1.0,
       "_src": "frontend_src_lib_board_ts",
       "_tgt": "board_tallyorbs",
@@ -7652,7 +9437,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "frontend\\src\\lib\\board.ts",
-      "source_location": "L59",
+      "source_location": "L83",
       "weight": 1.0,
       "_src": "board_diffboards",
       "_tgt": "board_cellkey",
@@ -7670,6 +9455,102 @@
       "_tgt": "cn_cn",
       "source": "frontend_src_lib_cn_ts",
       "target": "cn_cn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\lib\\colors.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "frontend_src_lib_colors_ts",
+      "_tgt": "colors_playercolor",
+      "source": "frontend_src_lib_colors_ts",
+      "target": "colors_playercolor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_src": "frontend_src_lib_guestname_ts",
+      "_tgt": "guestname_pick",
+      "source": "frontend_src_lib_guestname_ts",
+      "target": "guestname_pick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_src": "frontend_src_lib_guestname_ts",
+      "_tgt": "guestname_generateguestname",
+      "source": "frontend_src_lib_guestname_ts",
+      "target": "guestname_generateguestname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_src": "frontend_src_lib_guestname_ts",
+      "_tgt": "guestname_loadorcreateguestname",
+      "source": "frontend_src_lib_guestname_ts",
+      "target": "guestname_loadorcreateguestname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_src": "frontend_src_lib_guestname_ts",
+      "_tgt": "guestname_saveguestname",
+      "source": "frontend_src_lib_guestname_ts",
+      "target": "guestname_saveguestname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_src": "frontend_src_lib_guestname_ts",
+      "_tgt": "guestname_isvaliddisplayname",
+      "source": "frontend_src_lib_guestname_ts",
+      "target": "guestname_isvaliddisplayname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_src": "guestname_generateguestname",
+      "_tgt": "guestname_pick",
+      "source": "guestname_pick",
+      "target": "guestname_generateguestname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend\\src\\lib\\guestName.ts",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_src": "guestname_loadorcreateguestname",
+      "_tgt": "guestname_generateguestname",
+      "source": "guestname_generateguestname",
+      "target": "guestname_loadorcreateguestname",
       "confidence_score": 1.0
     },
     {

@@ -110,7 +110,7 @@ export function GameOver({
           {players.map((player, index) => {
             const delta = scoreDeltas[player.id];
             const isWinner = player.id === winner?.id;
-            const playerColor = PLAYER_COLORS[index] ?? "#ff5b2e";
+            const entryColor = PLAYER_COLORS[index] ?? "#ff5b2e";
             return (
               <li
                 key={player.id}
@@ -119,7 +119,7 @@ export function GameOver({
                 <span className="flex items-center gap-2">
                   <span
                     className="inline-block h-2 w-2 rounded-full"
-                    style={{ background: playerColor }}
+                    style={{ background: entryColor }}
                     aria-hidden="true"
                   />
                   <span className="text-fg-soft">{player.name}</span>
