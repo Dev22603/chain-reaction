@@ -1,0 +1,3 @@
+## 2024-05-26 - [Avoid intermediate array allocations in Hot Loops]
+**Learning:** Found a major performance bottleneck where the `getCriticalMass` and `getNeighbors` core logic in `gameLogic.ts` heavily used intermediate array allocations (e.g., `candidates.filter`) inside the deeply nested loops of `applyMove`. Because the `applyMove` logic is run extensively for each move and during cascade chain reactions, this created substantial Garbage Collection (GC) pressure.
+**Action:** Always prefer mathematical boundary checks and direct array push mutations (like `Array.push`) over allocating arrays and using higher-order functions like `.filter()` in frequently executed hot paths.
