@@ -1,0 +1,3 @@
+## 2024-06-25 - [Chain Reaction Logic Hot Path GC Overhead]
+**Learning:** In the core game logic (`backend/src/game/gameLogic.ts`), `applyMove` acts as a hot loop simulating chain reactions. Previously, `getCriticalMass` and `getNeighbors` used `.filter` and intermediate array allocations heavily. Given the tight loop nature of explosions, this caused massive GC spikes and ~10x slower execution times compared to math-based implementations.
+**Action:** Always favor primitive math boundary checks and mutable `.push()` into single pre-allocated arrays for calculating neighbors or counts on a static grid inside simulation hot loops. Avoid functional methods (`.filter`, `.map`) in these 2D grid logic critical paths.
