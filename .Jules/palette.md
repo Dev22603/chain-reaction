@@ -1,0 +1,3 @@
+## 2024-05-27 - [Programmatic Form Field Hints]
+**Learning:** For accessible forms, relying solely on visual hints near inputs is insufficient. Screen readers will not announce the hint content if it is unassociated.
+**Action:** Use the `aria-describedby` attribute on the `<input>` element pointing to the unique `id` of the hint text element. This ensures the hint is announced to screen reader users when the input receives focus.
