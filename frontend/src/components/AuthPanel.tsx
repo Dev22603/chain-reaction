@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { ChevronLeft, LogIn, UserPlus } from "lucide-react";
+import { ChevronLeft, Loader2, LogIn, UserPlus } from "lucide-react";
 import { authApi, ApiClientError } from "@/lib/api";
 import { setStoredAccessToken } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -90,6 +90,7 @@ export function AuthPanel({ mode }: AuthPanelProps) {
             onChange={(event) => setPassword(event.target.value)}
             autoComplete={isSignup ? "new-password" : "current-password"}
             required
+            hint={isSignup ? "Minimum 8 characters" : undefined}
           />
 
           {error ? (
@@ -99,8 +100,14 @@ export function AuthPanel({ mode }: AuthPanelProps) {
           ) : null}
 
           <Button type="submit" size="lg" variant="primary" disabled={loading}>
-            {isSignup ? <UserPlus size={16} aria-hidden="true" /> : <LogIn size={16} aria-hidden="true" />}
-            {loading ? "Working" : isSignup ? "Create Account" : "Login"}
+            {loading ? (
+              <Loader2 size={16} className="animate-spin" aria-hidden="true" />
+            ) : isSignup ? (
+              <UserPlus size={16} aria-hidden="true" />
+            ) : (
+              <LogIn size={16} aria-hidden="true" />
+            )}
+            {loading ? "Working..." : isSignup ? "Create Account" : "Login"}
           </Button>
         </form>
 
