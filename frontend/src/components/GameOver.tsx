@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { RotateCcw, Trophy } from "lucide-react";
-import { useMemo, type CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardCorners, CardEyebrow } from "@/components/ui/card";
+import { GameOverConfetti } from "@/components/gameover/GameOverConfetti";
+import { GameOverScoreList } from "@/components/gameover/GameOverScoreList";
+import { WinnerBadge } from "@/components/gameover/WinnerBadge";
 import { PLAYER_COLORS } from "@/lib/colors";
 import type { GameMode, Player } from "@/lib/types";
 
@@ -18,6 +20,8 @@ interface GameOverProps {
   onRematch?: () => void;
 }
 
+const FALLBACK_COLOR = "#ff5b2e";
+
 export function GameOver({
   winner,
   mode,
@@ -25,21 +29,9 @@ export function GameOver({
   players = null,
   scoreDeltas = null,
   onPlayAgain,
-  onRematch,
+  onRematch
 }: GameOverProps) {
-  const color = winnerIndex === null ? "#ff5b2e" : PLAYER_COLORS[winnerIndex] ?? "#ff5b2e";
-  const confetti = useMemo(
-    () =>
-      Array.from({ length: 22 }, (_, i) => ({
-        id: i,
-        left: 10 + Math.random() * 80,
-        delay: Math.random() * 1.2,
-        duration: 1.4 + Math.random() * 0.8,
-        size: 5 + Math.random() * 6,
-        color: PLAYER_COLORS[i % PLAYER_COLORS.length] ?? "#ff5b2e"
-      })),
-    []
-  );
+  const color = winnerIndex === null ? FALLBACK_COLOR : PLAYER_COLORS[winnerIndex] ?? FALLBACK_COLOR;
 
   return (
     <Card
@@ -51,37 +43,14 @@ export function GameOver({
       }}
     >
       <CardCorners />
-      {confetti.map((piece) => (
-        <span
-          key={piece.id}
-          className="pointer-events-none absolute top-0 rounded-[2px]"
-          style={
-            {
-              left: `${piece.left}%`,
-              width: `${piece.size}px`,
-              height: `${piece.size}px`,
-              background: piece.color,
-              animation: `confetti-fall ${piece.duration}s ease-in ${piece.delay}s forwards`
-            } as CSSProperties
-          }
-        />
-      ))}
+      <GameOverConfetti />
 
       <div className="grid gap-3 text-center">
         <CardEyebrow>// containment breached</CardEyebrow>
         <span className="mx-auto border border-line bg-bg-soft px-3 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted">
           {mode ?? "casual"} result
         </span>
-        {winner ? (
-          <span
-            className="mx-auto block h-14 w-14 rounded-full"
-            style={{
-              background: `radial-gradient(circle at 30% 30%, color-mix(in srgb, ${color} 70%, white) 0%, ${color} 55%, color-mix(in srgb, ${color} 65%, black) 100%)`,
-              boxShadow: `0 0 30px ${color}, 0 0 60px color-mix(in srgb, ${color} 40%, transparent)`,
-              animation: "orb-critical 0.7s ease-in-out infinite"
-            }}
-          />
-        ) : null}
+        {winner ? <WinnerBadge color={color} /> : null}
         <h1
           id="gameover-title"
           className="font-display text-4xl uppercase tracking-[0.06em] text-fg [animation:win-burst_0.8s_cubic-bezier(0.2,1.4,0.4,1)_both] sm:text-5xl"
@@ -99,44 +68,10 @@ export function GameOver({
         </h1>
       </div>
 
-      <div className="border border-line bg-bg-soft px-4 py-3 text-center font-mono text-xs leading-relaxed text-fg-muted">
-        {mode === "ranked"
-          ? "Ranked result saved. Leaderboard points update after persistence completes."
-          : "Casual result complete. Leaderboard points are unchanged."}
-      </div>
+      <ModeNotice mode={mode} />
 
       {players && players.length > 0 && scoreDeltas ? (
-        <ul className="grid gap-1">
-          {players.map((player, index) => {
-            const delta = scoreDeltas[player.id];
-            const isWinner = player.id === winner?.id;
-            const entryColor = PLAYER_COLORS[index] ?? "#ff5b2e";
-            return (
-              <li
-                key={player.id}
-                className="flex items-center justify-between border border-line bg-bg-soft px-4 py-2 font-mono text-xs"
-              >
-                <span className="flex items-center gap-2">
-                  <span
-                    className="inline-block h-2 w-2 rounded-full"
-                    style={{ background: entryColor }}
-                    aria-hidden="true"
-                  />
-                  <span className="text-fg-soft">{player.name}</span>
-                </span>
-                {delta !== undefined ? (
-                  <span
-                    className={
-                      isWinner ? "font-display text-cherenkov" : "font-display text-fg-muted"
-                    }
-                  >
-                    {`+${delta}`}
-                  </span>
-                ) : null}
-              </li>
-            );
-          })}
-        </ul>
+        <GameOverScoreList players={players} scoreDeltas={scoreDeltas} winnerId={winner?.id} />
       ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -163,5 +98,15 @@ export function GameOver({
         View leaderboard
       </Link>
     </Card>
+  );
+}
+
+function ModeNotice({ mode }: { mode: GameMode | null }) {
+  return (
+    <div className="border border-line bg-bg-soft px-4 py-3 text-center font-mono text-xs leading-relaxed text-fg-muted">
+      {mode === "ranked"
+        ? "Ranked result saved. Leaderboard points update after persistence completes."
+        : "Casual result complete. Leaderboard points are unchanged."}
+    </div>
   );
 }
