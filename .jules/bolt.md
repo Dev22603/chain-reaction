@@ -1,0 +1,3 @@
+## 2025-02-23 - Backend Hot Loop Array Allocation Overhead
+**Learning:** In the Chain Reaction backend, `applyMove` triggers recursive or iterative bursts in `gameLogic.ts`. During these events, intermediate array allocations (like `[row - 1, col]`) combined with `.filter` generate severe garbage collection bottlenecks, particularly via `getCriticalMass` checking `getNeighbors().length`. Mathematical boundary derivations represent significantly faster hot-loop invariants than array-length calculations.
+**Action:** Replace `getNeighbors().length` with arithmetic boundary decrements and convert `.filter()` to conditional push mutations when optimizing graph or grid-based recursive resolution loops.
