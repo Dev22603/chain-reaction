@@ -6,18 +6,27 @@ export function createBoard(rows: number, cols: number): Board {
 }
 
 export function getNeighbors(row: number, col: number, rows: number, cols: number): Array<[number, number]> {
-	const candidates: Array<[number, number]> = [
-		[row - 1, col],
-		[row + 1, col],
-		[row, col - 1],
-		[row, col + 1],
-	];
+	// ⚡ Bolt Optimization: Avoid intermediate array allocations and .filter()
+	// in hot loop. Directly push valid neighbors based on boundaries.
+	// Expected impact: Significant reduction in GC overhead during board updates.
+	const neighbors: Array<[number, number]> = [];
 
-	return candidates.filter(([nextRow, nextCol]) => nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols);
+	if (row > 0) neighbors.push([row - 1, col]);
+	if (row < rows - 1) neighbors.push([row + 1, col]);
+	if (col > 0) neighbors.push([row, col - 1]);
+	if (col < cols - 1) neighbors.push([row, col + 1]);
+
+	return neighbors;
 }
 
 export function getCriticalMass(row: number, col: number, rows: number, cols: number): number {
-	return getNeighbors(row, col, rows, cols).length;
+	// ⚡ Bolt Optimization: Purely mathematical calculation of critical mass
+	// rather than creating an array via getNeighbors and reading length.
+	// Expected impact: Faster mass checks, eliminating unnecessary object creation.
+	let mass = 4;
+	if (row === 0 || row === rows - 1) mass -= 1;
+	if (col === 0 || col === cols - 1) mass -= 1;
+	return mass;
 }
 
 export function applyMove(board: Board, row: number, col: number, playerIndex: PlayerIndex, rows: number, cols: number): Board {

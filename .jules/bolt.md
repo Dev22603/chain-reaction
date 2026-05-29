@@ -1,0 +1,3 @@
+## 2024-05-18 - [Avoid Root package.json modifications]
+**Learning:** Running `pnpm install` in subdirectories (like `backend/` or `frontend/`) can unintentionally create new `pnpm-lock.yaml` files and if done at the root, a `package.json` file if a workspace manifest (`pnpm-workspace.yaml`) is not configured or respected.
+**Action:** Be extremely cautious with `pnpm install` and ensure `package.json` or `pnpm-lock.yaml` files aren't mistakenly generated in unexpected directories. If installing in a subfolder creates unwanted lockfiles, run a git reset to undo the lockfile creation before submission, ensuring strict adherence to the constraint of not modifying root package/lock files without instruction.
