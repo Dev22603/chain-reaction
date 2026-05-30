@@ -1,0 +1,3 @@
+## 2024-05-30 - Array Allocations in Hot Loops
+**Learning:** High-frequency game logic loops (like cascades in `applyMove`) are extremely sensitive to array allocations and higher-order functions (`.filter`). Using `[...].filter()` to compute properties like `getCriticalMass` creates intermediate arrays that cause severe garbage collection bottlenecks and drastic performance degradation, making the loop ~5x slower.
+**Action:** Always use direct mathematical boundary checks for constant calculations (like O(1) checks for `getCriticalMass`) and direct array mutations (like `.push()`) instead of `.filter` in hot game loops.
