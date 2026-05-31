@@ -1,8 +1,8 @@
-import { prisma } from "../../lib/prisma.js";
-import type { GameMode } from "../../types/game.js";
-import type { RecordFinishedMatchInput } from "../../types/persistence.js";
+import { prisma } from "../lib/prisma.js";
+import type { GameMode } from "../types/game.js";
+import type { RecordFinishedMatchInput } from "../types/persistence.js";
 
-export const matchesRepo = {
+export const matchesRepository = {
 	async recordFinished(input: RecordFinishedMatchInput): Promise<void> {
 		await prisma.$transaction(async (tx) => {
 			for (const participant of input.participants) {

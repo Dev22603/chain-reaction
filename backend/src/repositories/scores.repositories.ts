@@ -1,8 +1,8 @@
-import { SCORING_POINTS } from "../../constants/app.constants.js";
-import { prisma } from "../../lib/prisma.js";
-import type { ApplyMatchResultInput, LeaderboardEntry, ScoreDeltas } from "../../types/scoring.js";
+import { SCORING_POINTS } from "../constants/app.constants.js";
+import { prisma } from "../lib/prisma.js";
+import type { ApplyMatchResultInput, LeaderboardEntry, ScoreDeltas } from "../types/scoring.js";
 
-export const scoresRepo = {
+export const scoresRepository = {
 	async getLeaderboard({ limit = 20 }: { limit?: number } = {}): Promise<LeaderboardEntry[]> {
 		const rows = await prisma.playerScore.findMany({
 			include: {

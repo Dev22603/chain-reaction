@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { playersService } from "../services/players.service.js";
+import { playersService } from "../services/players.services.js";
 import type { AuthTokenPayload } from "../types/auth.js";
 import { apiResponse } from "../utils/api_response.js";
 

@@ -1,4 +1,4 @@
-import { scoresRepo } from "../db/index.js";
+import { scoresRepository } from "../repositories/scores.repositories.js";
 
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
@@ -6,7 +6,7 @@ const MAX_LIMIT = 100;
 export const leaderboardService = {
 	async listLeaderboard(limit?: number) {
 		const safeLimit = normalizeLimit(limit);
-		return scoresRepo.getLeaderboard({ limit: safeLimit });
+		return scoresRepository.getLeaderboard({ limit: safeLimit });
 	},
 };
 

@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { leaderboardService } from "../services/leaderboard.service.js";
+import { leaderboardService } from "../services/leaderboard.services.js";
 import { apiResponse } from "../utils/api_response.js";
 
 export const leaderboardController = {

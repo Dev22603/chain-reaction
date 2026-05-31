@@ -1,6 +1,6 @@
 // Rebuilds player_scores from scratch using stored match_players rows.
 // Run intentionally: npm run recompute-scores
-// Only ranked matches affect scores (see src/db/repos/scores.ts applyMatchResult).
+// Only ranked matches affect scores (see src/repositories/scores.repositories.ts applyMatchResult).
 
 import { prisma } from "../src/lib/prisma.js";
 import { getLogger } from "../src/lib/logger.js";
@@ -38,7 +38,7 @@ async function main(): Promise<void> {
 			const row = ensure(participant.playerId);
 			const won = participant.playerId === match.winnerId;
 
-			// Scoring policy mirrors src/db/repos/scores.ts applyMatchResult (lines 26-69):
+			// Scoring policy mirrors src/repositories/scores.repositories.ts applyMatchResult:
 			// winner +3 points, losers +1 point, all counted in gamesPlayed and wins/losses.
 			row.score += won ? 3 : 1;
 			row.wins += won ? 1 : 0;

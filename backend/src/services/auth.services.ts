@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import bcrypt from "bcrypt";
 import { ERROR_CODES } from "../constants/app.constants.js";
 import { SERVER_MESSAGES } from "../constants/app.messages.js";
-import { playersRepo } from "../db/index.js";
+import { playersRepository } from "../repositories/players.repositories.js";
 import type { LoginInput, SignupInput, UpdateProfileInput } from "../schemas/auth.schemas.js";
 import type { AuthResult, PublicPlayer } from "../types/auth.js";
 import { ApiError } from "../utils/api_error.js";
@@ -13,13 +13,13 @@ const DUMMY_HASH = "$2b$12$4lpQHVrnzc9xN9kLolJIMu3rGeYx60oB1JYyZqEdzvqVTpPRiVQHC
 
 export const authService = {
 	async signup(input: SignupInput): Promise<AuthResult> {
-		const existing = await playersRepo.findByEmail(input.email);
+		const existing = await playersRepository.findByEmail(input.email);
 		if (existing) {
 			throw new ApiError(ERROR_CODES.EMAIL_TAKEN, SERVER_MESSAGES.EMAIL_TAKEN, [], 409);
 		}
 
 		const passwordHash = await bcrypt.hash(input.password, PASSWORD_SALT_ROUNDS);
-		const player = await playersRepo.createAccount({
+		const player = await playersRepository.createAccount({
 			id: randomUUID(),
 			displayName: input.displayName,
 			email: input.email,
@@ -30,7 +30,7 @@ export const authService = {
 	},
 
 	async login(input: LoginInput): Promise<AuthResult> {
-		const player = await playersRepo.findByEmail(input.email);
+		const player = await playersRepository.findByEmail(input.email);
 		const passwordHash = player?.passwordHash ?? DUMMY_HASH;
 
 		const validPassword = await bcrypt.compare(input.password, passwordHash);
@@ -42,7 +42,7 @@ export const authService = {
 	},
 
 	async getMe(playerId: string): Promise<PublicPlayer> {
-		const player = await playersRepo.findById(playerId);
+		const player = await playersRepository.findById(playerId);
 		if (!player?.email) {
 			throw new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.NOT_AUTHENTICATED, [], 401);
 		}
@@ -51,12 +51,12 @@ export const authService = {
 	},
 
 	async updateProfile(playerId: string, input: UpdateProfileInput): Promise<PublicPlayer> {
-		const existing = await playersRepo.findById(playerId);
+		const existing = await playersRepository.findById(playerId);
 		if (!existing?.email) {
 			throw new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.NOT_AUTHENTICATED, [], 401);
 		}
 
-		const updated = await playersRepo.updateDisplayName(playerId, input.displayName);
+		const updated = await playersRepository.updateDisplayName(playerId, input.displayName);
 		return toPublicPlayer(updated);
 	},
 };

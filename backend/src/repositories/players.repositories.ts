@@ -1,6 +1,6 @@
-import { prisma } from "../../lib/prisma.js";
+import { prisma } from "../lib/prisma.js";
 
-export const playersRepo = {
+export const playersRepository = {
 	async createAccount(input: { id: string; displayName: string; email: string; passwordHash: string }) {
 		return prisma.player.create({
 			data: {

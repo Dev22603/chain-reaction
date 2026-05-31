@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { authService } from "../services/auth.service.js";
+import { authService } from "../services/auth.services.js";
 import type { AuthTokenPayload } from "../types/auth.js";
 import { apiResponse } from "../utils/api_response.js";
 import { LoginSchema, SignupSchema, UpdateProfileSchema } from "../schemas/auth.schemas.js";

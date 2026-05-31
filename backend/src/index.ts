@@ -2,10 +2,10 @@ import { createServer } from "node:http";
 import { app } from "./app.js";
 import { config } from "./constants/config.js";
 import { getLogger } from "./lib/logger.js";
-import { attachWebSocketServer } from "./realtime/websocket.js";
-import { startRoomReaper, stopRoomReaper } from "./handlers/game.handlers.js";
+import { attachWebSocketServer } from "./sockets/index.js";
+import { startRoomReaper, stopRoomReaper } from "./services/room.services.js";
 import { prisma } from "./lib/prisma.js";
-import { pendingReconnects } from "./state/memory.js";
+import { pendingReconnects } from "./state/connection.state.js";
 
 const logger = getLogger("index");
 const server = createServer(app);
