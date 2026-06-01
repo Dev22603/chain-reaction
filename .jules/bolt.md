@@ -1,0 +1,3 @@
+## 2024-05-24 - [Avoid Array Allocations in Game Logic Hot Loops]
+**Learning:** Using higher-order functions like `.filter` and implicit array creations (e.g., calling `getNeighbors` just to get the length) in the game's hot loops (like `applyMove`) causes frequent intermediate array allocations, leading to garbage collection bottlenecks that impact performance. Additive boundary checks (starting from 0) also correctly handle edge cases (like 1x1 grids) better than subtractive approaches.
+**Action:** Use primitive mathematical boundary checks and direct array mutations (`.push()`) for grid neighbor computations to prevent unnecessary array allocations, particularly in functions called repeatedly during recursive game logic operations.
