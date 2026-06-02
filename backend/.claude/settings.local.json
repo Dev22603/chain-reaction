@@ -1,7 +1,5 @@
 {
-  "permissions": {
-    "additionalDirectories": [
-      "D:\\College\\Github_Projects\\finance-dashboard"
-    ]
-  }
+	"permissions": {
+		"additionalDirectories": ["D:\\College\\Github_Projects\\finance-dashboard"]
+	}
 }
