@@ -1,0 +1,3 @@
+## 2025-06-02 - Accessible Input Hints via programmatic association
+**Learning:** For accessible forms and inputs, rely on programmatic associations rather than just visual hints. The `<input>` element must have an `aria-describedby` attribute pointing to the unique `id` of the hint text element to ensure screen readers announce the hint when the input receives focus.
+**Action:** In React components, prefer using `useId()` to robustly generate unique IDs for programmatic associations (like `aria-describedby` or `htmlFor`) to ensure accessibility features work seamlessly across instances and don't conflict, particularly in SSR environments where id mismatch can cause hydration errors.
