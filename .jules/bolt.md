@@ -1,0 +1,3 @@
+## 2024-05-18 - [Optimization of GC in game logic hot loops]
+**Learning:** Found a performance bottleneck in backend game logic (e.g., `applyMove`, `getCriticalMass`) specifically around array allocations and higher-order functions like `.filter()` which trigger garbage collection pauses during frequent updates (since game state updates are continuous).
+**Action:** When updating hot loop logic such as calculating neighbors or critical mass, strictly avoid intermediate array structures. Use simple additive mathematics bounded by grid limits and mutate single return arrays (e.g., via `.push()`) rather than filtering initial static candidates.

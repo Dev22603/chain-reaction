@@ -94,7 +94,10 @@ export function consumeMessageBudget(ip: string, playerId: string): MessageBudge
 	return "allowed";
 }
 
-function verifyClient(info: { origin: string; req: IncomingMessage }, done: (result: boolean, code?: number, message?: string) => void): void {
+function verifyClient(
+	info: { origin: string; req: IncomingMessage },
+	done: (result: boolean, code?: number, message?: string) => void,
+): void {
 	const originOk = config.ALLOWED_ORIGINS.length === 0 || (info.origin && config.ALLOWED_ORIGINS.includes(info.origin));
 	const ip = getClientIp(info.req);
 	if (!originOk) {
