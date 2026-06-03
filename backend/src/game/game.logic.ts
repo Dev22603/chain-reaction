@@ -6,18 +6,27 @@ export function createBoard(rows: number, cols: number): Board {
 }
 
 export function getNeighbors(row: number, col: number, rows: number, cols: number): Array<[number, number]> {
-	const candidates: Array<[number, number]> = [
-		[row - 1, col],
-		[row + 1, col],
-		[row, col - 1],
-		[row, col + 1],
-	];
+	// Optimization: Avoid intermediate array allocation and higher-order functions (e.g., .filter)
+	// by using direct boundary checks and pushing to the result array.
+	const neighbors: Array<[number, number]> = [];
 
-	return candidates.filter(([nextRow, nextCol]) => nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols);
+	if (row > 0) neighbors.push([row - 1, col]);
+	if (row < rows - 1) neighbors.push([row + 1, col]);
+	if (col > 0) neighbors.push([row, col - 1]);
+	if (col < cols - 1) neighbors.push([row, col + 1]);
+
+	return neighbors;
 }
 
 export function getCriticalMass(row: number, col: number, rows: number, cols: number): number {
-	return getNeighbors(row, col, rows, cols).length;
+	// Optimization: Calculate critical mass mathematically using an additive approach from 0
+	// to prevent calling getNeighbors, which prevents array allocation in hot loops.
+	let mass = 0;
+	if (row > 0) mass += 1;
+	if (row < rows - 1) mass += 1;
+	if (col > 0) mass += 1;
+	if (col < cols - 1) mass += 1;
+	return mass;
 }
 
 export function applyMove(board: Board, row: number, col: number, playerIndex: PlayerIndex, rows: number, cols: number): Board {
