@@ -1,0 +1,3 @@
+## 2024-05-14 - [Avoid Array Allocations in Game Logic Hot Loops]
+**Learning:** In backend game logic, intermediate array allocations and higher-order functions (e.g., `.filter`) inside hot loops (like `applyMove` and `getCriticalMass`) cause significant overhead due to garbage collection and object creation. For example, `getCriticalMass` was creating an intermediate array of 4 coordinate pairs, and filtering it just to get the length.
+**Action:** When calculating grid properties or boundary conditions, avoid allocating arrays whenever possible. Use primitive mathematical boundary checks (`if (row > 0) mass += 1`) and direct array mutations (`.push()`) to eliminate intermediate variables and high-frequency GC pauses.
