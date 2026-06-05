@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LogOut, Sparkles, Trophy } from "lucide-react";
 import { NameCard } from "@/components/NameCard";
+import { confirmSignOut } from "@/lib/confirmSignOut";
 
 interface LobbyNavProps {
   playerName: string;
@@ -39,9 +40,7 @@ export function LobbyNav({
           <button
             type="button"
             onClick={() => {
-              if (window.confirm("Sign out? You'll leave any active queue or game.")) {
-                onLogout();
-              }
+              if (confirmSignOut()) onLogout();
             }}
             aria-label="Sign out"
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-line bg-surface text-fg-soft transition-colors hover:border-reactor hover:text-reactor"

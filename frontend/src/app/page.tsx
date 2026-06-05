@@ -1,28 +1,27 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import type { CreateRoomConfig } from "@/components/dialogs/CreateRoomDialog";
 import { GameBoard } from "@/components/GameBoard";
 import { GameOver } from "@/components/GameOver";
 import { LandingHub } from "@/components/LandingHub";
-import { QueueScreen } from "@/components/QueueScreen";
-import { Card, CardCorners } from "@/components/ui/card";
-import { useGameWebSocket } from "@/hooks/useGameWebSocket";
-import { useAuth } from "@/hooks/useAuth";
-import type { CreateRoomConfig } from "@/components/dialogs/CreateRoomDialog";
-import { useSounds } from "@/hooks/useSounds";
-import { loadOrCreateGuestName, saveGuestName } from "@/lib/guestName";
 import { LobbyNav } from "@/components/LobbyNav";
+import { QueueScreen } from "@/components/QueueScreen";
+import { StartingGameSplash } from "@/components/StartingGameSplash";
 import { ToastStack } from "@/components/ToastStack";
-
-const DEFAULT_GRID = { rows: 6, cols: 9 };
+import { useAuth } from "@/hooks/useAuth";
+import { useFlashNotice } from "@/hooks/useFlashNotice";
+import { useGameWebSocket } from "@/hooks/useGameWebSocket";
+import { useSounds } from "@/hooks/useSounds";
+import { CONNECTING_NOTICE, DEFAULT_GRID } from "@/lib/constants";
+import { loadOrCreateGuestName, saveGuestName } from "@/lib/guestName";
 
 export default function Home() {
   const game = useGameWebSocket();
   const auth = useAuth();
   const sounds = useSounds();
+  const { notice, flash } = useFlashNotice();
   const [guestName, setGuestName] = useState<string>("Operator");
-  const [softNotice, setSoftNotice] = useState<string | null>(null);
-  const noticeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setGuestName(loadOrCreateGuestName());
@@ -36,54 +35,43 @@ export default function Home() {
     if (game.lastError) sounds.play("error");
   }, [game.lastError, sounds]);
 
-  useEffect(() => {
-    return () => {
-      if (noticeTimeout.current) clearTimeout(noticeTimeout.current);
-    };
-  }, []);
-
   const playerName = auth.player?.displayName?.trim() || guestName;
+  const isConnected = game.connectionState === "open";
+  const disconnected = !isConnected && game.connectionState !== "connecting";
+  const isPlaying = game.phase === "playing";
+  const isLobby = game.phase === "lobby";
 
-  function flashNotice(message: string) {
-    setSoftNotice(message);
-    if (noticeTimeout.current) clearTimeout(noticeTimeout.current);
-    noticeTimeout.current = setTimeout(() => setSoftNotice(null), 5200);
+  function whenConnected(action: () => void) {
+    if (!isConnected) {
+      flash(CONNECTING_NOTICE);
+      return;
+    }
+    action();
   }
 
-  const onPlay = (playerCount: number) => {
-    if (game.connectionState !== "open") {
-      flashNotice("Connecting to the reactor… try again in a moment.");
-      return;
-    }
-    game.joinQueue({
-      mode: "casual",
-      gridRows: DEFAULT_GRID.rows,
-      gridCols: DEFAULT_GRID.cols,
-      maxPlayers: playerCount,
-      playerName
-    });
-  };
+  const onPlay = (playerCount: number) =>
+    whenConnected(() =>
+      game.joinQueue({
+        mode: "casual",
+        gridRows: DEFAULT_GRID.rows,
+        gridCols: DEFAULT_GRID.cols,
+        maxPlayers: playerCount,
+        playerName
+      })
+    );
 
-  const onCreateRoom = (config: CreateRoomConfig) => {
-    if (game.connectionState !== "open") {
-      flashNotice("Connecting to the reactor… try again in a moment.");
-      return;
-    }
-    game.createRoom({
-      playerName,
-      gridRows: config.gridRows,
-      gridCols: config.gridCols,
-      maxPlayers: config.players
-    });
-  };
+  const onCreateRoom = (config: CreateRoomConfig) =>
+    whenConnected(() =>
+      game.createRoom({
+        playerName,
+        gridRows: config.gridRows,
+        gridCols: config.gridCols,
+        maxPlayers: config.players
+      })
+    );
 
-  const onJoinRoom = (code: string) => {
-    if (game.connectionState !== "open") {
-      flashNotice("Connecting to the reactor… try again in a moment.");
-      return;
-    }
-    game.joinRoomByCode(code, playerName);
-  };
+  const onJoinRoom = (code: string) =>
+    whenConnected(() => game.joinRoomByCode(code, playerName));
 
   // Rematch: re-queue with the same settings derived from the finished game state
   const onRematch = () => {
@@ -95,10 +83,6 @@ export default function Home() {
     game.reset();
     game.joinQueue({ mode, gridRows: rows, gridCols: cols, maxPlayers, playerName });
   };
-  const disconnected = game.connectionState !== "open" && game.connectionState !== "connecting";
-
-  const isPlaying = game.phase === "playing";
-  const isLobby = game.phase === "lobby";
 
   async function handleNameSave(newName: string) {
     if (auth.isAuthenticated) {
@@ -109,101 +93,77 @@ export default function Home() {
     }
   }
 
-  return (
-    <>
-      {/* ── Full-screen game overlay (covers TopBar) ── */}
-      {isPlaying && game.gameState ? (
-        <div className="fixed inset-0 z-50 bg-surface">
-          <GameBoard
-            gameState={game.gameState}
-            playerId={game.playerId}
-            onMove={game.makeMove}
-            onLeaveGame={game.leaveGame}
-            onPlace={(intensity) => sounds.play("place", { intensity })}
-            onExplode={(intensity) => sounds.play("explode", { intensity })}
-            onChain={(intensity) => sounds.play("chain", { intensity })}
-            muted={sounds.muted}
-            onToggleMute={() => {
-              sounds.resume();
-              sounds.toggleMute();
-            }}
-            roomCode={game.roomCode}
-          />
-        </div>
-      ) : null}
+  if (isPlaying && game.gameState) {
+    return (
+      <div className="fixed inset-0 z-50 bg-surface">
+        <GameBoard
+          gameState={game.gameState}
+          playerId={game.playerId}
+          onMove={game.makeMove}
+          onLeaveGame={game.leaveGame}
+          onPlace={(intensity) => sounds.play("place", { intensity })}
+          onExplode={(intensity) => sounds.play("explode", { intensity })}
+          onChain={(intensity) => sounds.play("chain", { intensity })}
+          muted={sounds.muted}
+          onToggleMute={() => {
+            sounds.resume();
+            sounds.toggleMute();
+          }}
+          roomCode={game.roomCode}
+        />
+      </div>
+    );
+  }
 
-      {isPlaying && !game.gameState ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-surface">
-          <Card className="grid w-[min(420px,90vw)] gap-4 p-10 text-center [animation:panel-rise_0.5s_ease-out_both]">
-            <CardCorners />
-            <h1 className="font-display text-4xl tracking-tight text-fg">
-              Starting game
-              <span className="ml-1 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-cherenkov">
-                _
-              </span>
-            </h1>
-          </Card>
-        </div>
-      ) : null}
+  if (isPlaying) {
+    return <StartingGameSplash />;
+  }
 
-      {/* ── No-scroll lobby shell ── */}
-      {isLobby ? (
-        <div className="fixed inset-0 z-10 grid h-[100svh] w-full grid-rows-[auto_1fr_auto] overflow-hidden px-3 pb-3 pt-3 sm:px-6 sm:pt-4">
-          <LobbyNav
-            playerName={playerName}
-            isAuthenticated={auth.isAuthenticated}
-            onSaveName={handleNameSave}
-            onLogout={auth.logout}
+  if (isLobby) {
+    return (
+      <div className="fixed inset-0 z-10 grid h-[100svh] w-full grid-rows-[auto_1fr_auto] overflow-hidden px-3 pb-3 pt-3 sm:px-6 sm:pt-4">
+        <LobbyNav
+          playerName={playerName}
+          isAuthenticated={auth.isAuthenticated}
+          onSaveName={handleNameSave}
+          onLogout={auth.logout}
+          onInteract={() => sounds.play("click")}
+        />
+
+        <div className="relative grid place-items-center overflow-hidden">
+          <LandingHub
+            connectionReady={isConnected}
             onInteract={() => sounds.play("click")}
-          />
-
-          {/* Centered hero */}
-          <div className="relative grid place-items-center overflow-hidden">
-            <LandingHub
-              connectionReady={game.connectionState === "open"}
-              onInteract={() => sounds.play("click")}
-              onPlay={onPlay}
-              onCreateRoom={onCreateRoom}
-              onJoinRoom={onJoinRoom}
-            />
-          </div>
-
-          <ToastStack
-            disconnected={disconnected}
-            error={game.lastError}
-            notice={softNotice}
-            compact={true}
+            onPlay={onPlay}
+            onCreateRoom={onCreateRoom}
+            onJoinRoom={onJoinRoom}
           />
         </div>
+
+        <ToastStack disconnected={disconnected} error={game.lastError} notice={notice} compact />
+      </div>
+    );
+  }
+
+  return (
+    <main className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col gap-3 px-4 pb-3 sm:px-8 lg:px-10">
+      <ToastStack disconnected={disconnected} error={game.lastError} notice={notice} />
+
+      {game.phase === "queued" ? (
+        <QueueScreen info={game.queuedInfo} code={game.roomCode} onCancel={game.leaveQueue} />
       ) : null}
 
-      {/* ── Standard scrollable layout (queue / gameover) ── */}
-      {!isLobby && !isPlaying ? (
-        <main className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col gap-3 px-4 pb-3 sm:px-8 lg:px-10">
-          <ToastStack
-            disconnected={disconnected}
-            error={game.lastError}
-            notice={softNotice}
-            compact={false}
-          />
-
-          {game.phase === "queued" ? (
-            <QueueScreen info={game.queuedInfo} code={game.roomCode} onCancel={game.leaveQueue} />
-          ) : null}
-
-          {game.phase === "gameover" ? (
-            <GameOver
-              winner={game.winner}
-              mode={game.gameMode}
-              winnerIndex={game.gameState?.players.findIndex((p) => p.id === game.winner?.id) ?? null}
-              players={game.gameState?.players ?? null}
-              scoreDeltas={game.scoreDeltas}
-              onPlayAgain={game.reset}
-              onRematch={onRematch}
-            />
-          ) : null}
-        </main>
+      {game.phase === "gameover" ? (
+        <GameOver
+          winner={game.winner}
+          mode={game.gameMode}
+          winnerIndex={game.gameState?.players.findIndex((p) => p.id === game.winner?.id) ?? null}
+          players={game.gameState?.players ?? null}
+          scoreDeltas={game.scoreDeltas}
+          onPlayAgain={game.reset}
+          onRematch={onRematch}
+        />
       ) : null}
-    </>
+    </main>
   );
 }

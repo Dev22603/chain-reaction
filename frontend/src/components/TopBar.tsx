@@ -4,6 +4,7 @@ import { LogOut, Sparkles, Trophy, UserCircle2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { confirmSignOut } from "@/lib/confirmSignOut";
 
 export function TopBar() {
   const { player, loading, isAuthenticated, logout } = useAuth();
@@ -52,9 +53,7 @@ export function TopBar() {
               type="button"
               className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full border-2 border-line bg-surface px-3 font-body text-sm font-semibold text-fg-soft transition-colors hover:border-reactor hover:text-reactor"
               onClick={() => {
-                if (window.confirm("Sign out? You'll leave any active queue or game.")) {
-                  logout();
-                }
+                if (confirmSignOut()) logout();
               }}
               aria-label="Sign out"
             >

@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { diffBoards, type BoardCellEffect } from "@/lib/board";
+import { BOARD_EFFECT_DURATION_MS, CHAIN_THRESHOLD } from "@/lib/constants";
 import type { Board } from "@/lib/types";
-
-const EFFECT_DURATION_MS = 1100;
-const CHAIN_THRESHOLD = 2;
 
 interface UseBoardEffectsCallbacks {
   onPlace?: (intensity: number) => void;
@@ -55,7 +53,7 @@ export function useBoardEffects(
         diff.effects.forEach((_, key) => next.delete(key));
         return next;
       });
-    }, EFFECT_DURATION_MS);
+    }, BOARD_EFFECT_DURATION_MS);
 
     return () => window.clearTimeout(timeout);
   }, [board, onPlace, onExplode, onChain]);
