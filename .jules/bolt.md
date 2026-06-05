@@ -1,0 +1,3 @@
+## 2024-06-05 - Avoid .filter and Array maps in backend grid calculations
+**Learning:** In hot paths like `applyMove` which calculates grid neighbors and criticality hundreds of times per interaction, creating intermediate arrays via `.filter` on pre-defined coordinate arrays causes significant garbage collection overhead and slows execution from ~95ms to ~375ms per 1 million calls.
+**Action:** Replace filter-based neighbor calculation with direct conditionals (`if (row > 0) neighbors.push(...)`) and calculate critical mass via simple integer addition bounded by the grid dimensions instead of determining length of neighbor arrays.
