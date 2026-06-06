@@ -1,0 +1,3 @@
+## 2025-01-20 - [Avoid Intermediate Array Allocations in Game Loop]
+**Learning:** In the backend game logic, intermediate array allocations and higher-order functions (e.g., `.filter`) inside hot loops (like calculating critical mass for every cell in `applyMove`) cause significant garbage collection bottlenecks. Also, an additive boundary check approach starting from 0 is much more efficient than allocating an array of neighbors just to check its length, and correctly accounts for 1x1 or 1xN grid edge cases.
+**Action:** Always favor primitive operations, mathematical boundary checks, and direct array mutations (like `.push()`) over functional `.filter`/`.map` patterns inside hot game simulation loops to minimize object allocations.
