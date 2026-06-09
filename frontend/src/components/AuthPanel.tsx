@@ -90,6 +90,7 @@ export function AuthPanel({ mode }: AuthPanelProps) {
             onChange={(event) => setPassword(event.target.value)}
             autoComplete={isSignup ? "new-password" : "current-password"}
             required
+            hint={isSignup ? "At least 8 characters" : undefined}
           />
 
           {error ? (

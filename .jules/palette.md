@@ -1,0 +1,3 @@
+## 2024-06-09 - [Accessible Form Hints]
+**Learning:** For accessible forms and inputs, rely on programmatic associations rather than just visual hints. Use the `aria-describedby` attribute on the `<input>` element pointing to the unique `id` of the hint text element. In React components, using `useId()` robustly generates these unique IDs to ensure screen readers announce the hint when the input receives focus.
+**Action:** When creating or modifying input components that support hint or helper text, always ensure `aria-describedby` is utilized with a uniquely generated ID connecting the input and the hint string.
