@@ -1,0 +1,3 @@
+## 2024-06-10 - [Grid Boundary Checks Optimization]
+**Learning:** When optimizing grid boundary checks in game logic (e.g., `getCriticalMass`), using an additive approach from a base of 0 (e.g., `if (row > 0) mass += 1`) correctly accounts for 1x1 or 1xN grid edge cases where a cell touches multiple opposing boundaries simultaneously, unlike subtractive approaches from 4.
+**Action:** Always use primitive, direct additive boundary checks and array mutations (like `.push()`) instead of intermediate array allocations or higher-order functions (e.g., `.filter`) in hot loops to prevent garbage collection bottlenecks.

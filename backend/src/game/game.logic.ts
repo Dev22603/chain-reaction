@@ -5,19 +5,46 @@ export function createBoard(rows: number, cols: number): Board {
 	return Array.from({ length: rows }, () => Array.from({ length: cols }, (): Cell => ({ owner: null, count: 0 })));
 }
 
+// ⚡ Bolt Optimization: Use primitive array mutations and direct additive boundary checks
+// to prevent garbage collection bottlenecks from intermediate arrays and .filter in hot loops.
 export function getNeighbors(row: number, col: number, rows: number, cols: number): Array<[number, number]> {
-	const candidates: Array<[number, number]> = [
-		[row - 1, col],
-		[row + 1, col],
-		[row, col - 1],
-		[row, col + 1],
-	];
+	const neighbors: Array<[number, number]> = [];
 
-	return candidates.filter(([nextRow, nextCol]) => nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols);
+	if (row > 0) {
+		neighbors.push([row - 1, col]);
+	}
+	if (row < rows - 1) {
+		neighbors.push([row + 1, col]);
+	}
+	if (col > 0) {
+		neighbors.push([row, col - 1]);
+	}
+	if (col < cols - 1) {
+		neighbors.push([row, col + 1]);
+	}
+
+	return neighbors;
 }
 
+// ⚡ Bolt Optimization: Use additive checks instead of creating a neighbor array just for length.
+// This correctly handles 1x1 or 1xN edge cases by building from 0.
 export function getCriticalMass(row: number, col: number, rows: number, cols: number): number {
-	return getNeighbors(row, col, rows, cols).length;
+	let mass = 0;
+
+	if (row > 0) {
+		mass += 1;
+	}
+	if (row < rows - 1) {
+		mass += 1;
+	}
+	if (col > 0) {
+		mass += 1;
+	}
+	if (col < cols - 1) {
+		mass += 1;
+	}
+
+	return mass;
 }
 
 export function applyMove(board: Board, row: number, col: number, playerIndex: PlayerIndex, rows: number, cols: number): Board {
