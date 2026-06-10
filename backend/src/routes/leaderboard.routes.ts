@@ -1,7 +1,9 @@
-import { Router } from "express";
-import { leaderboardController } from "../controllers/leaderboard.controller.js";
-import { asyncHandler } from "../middlewares/async_handler.js";
+import express from "express";
+import { getLeaderboard } from "../controllers/leaderboard.controllers";
+import { publicReadLimiter } from "../middlewares/rate-limit";
 
-export const leaderboardRouter = Router();
+const router = express.Router();
 
-leaderboardRouter.get("/leaderboard", asyncHandler(leaderboardController.index));
+router.get("/", publicReadLimiter, getLeaderboard);
+
+export default router;

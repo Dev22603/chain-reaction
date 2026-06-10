@@ -1,5 +1,16 @@
-import { LIMITS } from "../constants/app.constants.js";
-import type { Board, Cell, PlayerIndex } from "../types/game.js";
+import { LIMITS } from "../constants/app.constants";
+
+// Pure chain-reaction board logic. No I/O, no logging, no state maps —
+// everything operates on the board passed in.
+
+export type PlayerIndex = number;
+
+export interface Cell {
+	owner: PlayerIndex | null;
+	count: number;
+}
+
+export type Board = Cell[][];
 
 export function createBoard(rows: number, cols: number): Board {
 	return Array.from({ length: rows }, () => Array.from({ length: cols }, (): Cell => ({ owner: null, count: 0 })));

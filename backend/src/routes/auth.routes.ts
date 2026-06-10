@@ -1,12 +1,13 @@
-import { Router } from "express";
-import { authController } from "../controllers/auth.controller.js";
-import { asyncHandler } from "../middlewares/async_handler.js";
-import { requireAuth } from "../middlewares/auth.middleware.js";
-import { authLimiter } from "../middlewares/rateLimit.middleware.js";
+import express from "express";
+import { signup, login, getMe, updateMe } from "../controllers/auth.controllers";
+import { authenticate } from "../middlewares/auth";
+import { authLimiter } from "../middlewares/rate-limit";
 
-export const authRouter = Router();
+const router = express.Router();
 
-authRouter.post("/auth/signup", authLimiter, asyncHandler(authController.signup));
-authRouter.post("/auth/login", authLimiter, asyncHandler(authController.login));
-authRouter.get("/auth/me", requireAuth, asyncHandler(authController.me));
-authRouter.patch("/auth/me", requireAuth, asyncHandler(authController.updateMe));
+router.post("/signup", authLimiter, signup);
+router.post("/login", authLimiter, login);
+router.get("/me", authenticate, getMe);
+router.patch("/me", authenticate, updateMe);
+
+export default router;

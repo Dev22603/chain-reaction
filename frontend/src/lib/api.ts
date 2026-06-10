@@ -3,8 +3,7 @@ import { clearStoredAccessToken, getStoredAccessToken } from "@/lib/auth";
 const DEFAULT_API_URL = "http://localhost:8080/api";
 
 export interface ApiErrorBody {
-  type?: "error";
-  code?: string;
+  code?: number;
   message?: string;
   errors?: string[];
 }
@@ -13,7 +12,6 @@ export class ApiClientError extends Error {
   constructor(
     message: string,
     public readonly status: number,
-    public readonly code = "request_failed",
     public readonly errors: string[] = []
   ) {
     super(message);
@@ -75,7 +73,8 @@ export interface MatchHistoryEntry {
 }
 
 interface ApiSuccess<T> {
-  success: true;
+  code: number;
+  message: string;
   data: T;
 }
 
@@ -112,12 +111,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
       clearStoredAccessToken();
     }
 
-    throw new ApiClientError(
-      error.message ?? "Request failed.",
-      response.status,
-      error.code ?? "request_failed",
-      error.errors ?? []
-    );
+    throw new ApiClientError(error.message ?? "Request failed.", response.status, error.errors ?? []);
   }
 
   return (payload as ApiSuccess<T>).data;
@@ -169,7 +163,7 @@ export const playersApi = {
   },
 
   myMatches(limit = 20) {
-    return apiRequest<{ matches: MatchHistoryEntry[] }>(`/me/matches?limit=${limit}`, {
+    return apiRequest<{ matches: MatchHistoryEntry[] }>(`/players/me/matches?limit=${limit}`, {
       auth: true
     });
   }

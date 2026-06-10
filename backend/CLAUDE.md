@@ -1,60 +1,48 @@
-# Chain Reaction: Claude Context
+# Chain Reaction Backend
 
-Real-time multiplayer Chain Reaction. Server-authoritative gameplay over WebSocket. chess.com-style scoring/leaderboard backed by Postgres.
+Real-time multiplayer Chain Reaction. Server-authoritative gameplay over WebSocket, REST APIs for auth/profiles/leaderboard, Postgres via Prisma. Hosted on Fly.io.
 
-**Stack:** Express + ws + TypeScript (backend), Next.js + Tailwind (frontend), Postgres via Prisma. Hosted on Fly.io.
+**Stack:** Express 5 + ws + TypeScript (CommonJS) + Prisma 7 + PostgreSQL + Zod v4 + Winston.
 
-## Read first
+## Architecture
 
-**[RULES.md](./RULES.md) is mandatory before writing or refactoring any code.** It is the merged source of truth for non-negotiables, layering, naming, error handling, validation, logging, the persistence boundary, file maps, and "where to add things". When in doubt, read it.
-
-## When to read what
-
-| Need                                                                                               | File                                             |
-| -------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Coding rules, layering, error/validation patterns, file maps, repo boundary, "where to add things" | [RULES.md](./RULES.md)                           |
-| Approved milestones (M0–M9), build strategy, risk register                                         | [PLAN.md](./PLAN.md)                             |
-| Atomic build checklist by milestone                                                                | [TODO.md](./TODO.md)                             |
-| What the product does (overview of all features)                                                   | [../docs/PRD.md](../docs/PRD.md)                 |
-| Chain reaction rules: critical mass, cascades, ownership, elimination, win                         | [../docs/GAMEPLAY.md](../docs/GAMEPLAY.md)       |
-| Queue buckets, room creation, match lifecycle, forfeit/disconnect                                  | [../docs/MATCHMAKING.md](../docs/MATCHMAKING.md) |
-| WebSocket frame contract, error frame, error codes                                                 | [../docs/PROTOCOL.md](../docs/PROTOCOL.md)       |
-| Finished-match persistence, scoring policy, leaderboard                                            | [../docs/PERSISTENCE.md](../docs/PERSISTENCE.md) |
-| Frontend phases, screens, what the user sees                                                       | [../docs/EXPERIENCE.md](../docs/EXPERIENCE.md)   |
-| Canonical names: room, bucket, myIndex, grace period, etc.                                         | [../docs/GLOSSARY.md](../docs/GLOSSARY.md)       |
-
-## Layout
+REST layering (one vertical slice per domain):
 
 ```
-chain-reaction/
-├── backend/                 ← project root for code work
-│   ├── CLAUDE.md            (this file — navigation)
-│   ├── RULES.md             (coding standards)
-│   ├── PLAN.md              (milestones)
-│   ├── TODO.md              (atomic checklist)
-│   ├── src/
-│   ├── prisma/
-│   └── package.json
-├── frontend/
-└── docs/                    ← product docs (PRD + features + glossary)
-    ├── PRD.md
-    ├── GAMEPLAY.md
-    ├── MATCHMAKING.md
-    ├── PROTOCOL.md
-    ├── PERSISTENCE.md
-    ├── EXPERIENCE.md
-    └── GLOSSARY.md
+routes → controllers → services → repositories → Prisma
 ```
 
-## Phase machine (frontend)
+- **Routes** (`src/routes/*.routes.ts`) — default-export Router, middleware chained inline (`authenticate`, rate limiters).
+- **Controllers** (`src/controllers/*.controllers.ts`) — named async functions, per-function try-catch: `ApiError` → its status, else log + 500. Respond with `new ApiResponse(code, message, data)`.
+- **Services** (`src/services/*.services.ts`) — object literals; call `validateXxx()` (Zod) first; throw `ApiError` directly; own their in-memory state Maps.
+- **Repositories** (`src/repositories/*.repositories.ts`) — pure Prisma wrappers, per-method try-catch logging `DB error — method` then rethrow.
+- **Schemas** (`src/schemas/*.schemas.ts`) — Zod v4 schemas + `validateXxx(data: unknown)` functions throwing `ApiError(400, msg, issues)`.
 
-`lobby → queued → playing → gameover → lobby`
+WebSocket layering (same modularity, on top of REST):
+
+```
+upgrade (sockets/index.ts: limits + socket-auth) → gateway (parse → dispatch → handlers) → services → lib/realtime emits
+```
+
+- Frames are `{event, data}` both directions; event names in `src/constants/socket.events.ts` (`game:*`).
+- Auth token rides the `sec-websocket-protocol` header; no/invalid token → guest identity (never rejected).
+- `src/lib/realtime.ts` owns the WSS singleton, the playerId→socket registry (`sendToPlayer`/`sendToPlayers`), and WS hardening (rate budgets, idle timeout, connection caps).
+- `src/game/game.logic.ts` is pure board logic (no I/O).
+
+Game state lives in memory inside the owning service (rooms in `room.services`, queues in `queue.services`, connections in `connection.services`). Only finished matches are persisted (fire-and-forget transaction).
 
 ## Run
 
 ```bash
-cd backend && npm run dev          # backend on :8080
-cd frontend && npm run dev         # frontend on :3000
-
-cd backend && npm run smoke:logic  # pure game-logic smoke test
+npm run dev            # dev server on :8080 (tsx watch)
+npm run build          # tsc → dist/
+npm run lint           # eslint
+npm run db:migrate     # prisma migrate dev
+npm run db:studio      # prisma studio
 ```
+
+WS protocol smoke tests (server must be running): `npx tsx scripts/ws-smoke.ts [token]` and `npx tsx scripts/ws-ranked-smoke.ts <tokenA> <tokenB>`.
+
+Env: see `.env.example` (`DATABASE_URL`, `JWT_SECRET`, `ALLOWED_ORIGINS`, `PORT`).
+
+Product docs (gameplay, matchmaking, protocol, persistence): `../docs/`.

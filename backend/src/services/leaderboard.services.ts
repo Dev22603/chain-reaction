@@ -1,19 +1,9 @@
-import { scoresRepository } from "../repositories/scores.repositories.js";
-
-const DEFAULT_LIMIT = 20;
-const MAX_LIMIT = 100;
+import { LeaderboardEntry, scoreRepository } from "../repositories/score.repositories";
+import { validateListQuery } from "../schemas/player.schemas";
 
 export const leaderboardService = {
-	async listLeaderboard(limit?: number) {
-		const safeLimit = normalizeLimit(limit);
-		return scoresRepository.getLeaderboard({ limit: safeLimit });
+	async listLeaderboard(query: unknown): Promise<LeaderboardEntry[]> {
+		const { limit } = validateListQuery(query);
+		return scoreRepository.getLeaderboard(limit);
 	},
 };
-
-function normalizeLimit(limit?: number): number {
-	if (!limit || Number.isNaN(limit)) {
-		return DEFAULT_LIMIT;
-	}
-
-	return Math.min(Math.max(Math.trunc(limit), 1), MAX_LIMIT);
-}

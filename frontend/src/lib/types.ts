@@ -29,7 +29,7 @@ export interface QueuedInfo {
 }
 
 export interface LastError {
-  code: string;
+  code: number;
   message: string;
 }
 
@@ -48,36 +48,19 @@ export interface CreateRoomInput {
   maxPlayers: number;
 }
 
-export type ClientMessage =
-  | ({ type: "join_queue" } & JoinQueueInput)
-  | { type: "leave_queue" }
-  | { type: "make_move"; row: number; col: number }
-  | { type: "leave_game" }
-  | ({ type: "create_room" } & CreateRoomInput)
-  | { type: "join_room_by_code"; playerName: string; code: string };
-
-export type ServerMessage =
-  | { type: "connected"; playerId: string; displayName: string; isGuest: boolean }
-  | { type: "queued"; mode: GameMode; position: number; maxPlayers: number }
+// WebSocket frames are {event, data} envelopes; event names mirror the
+// backend's SOCKET_EVENTS.GAME constants.
+export type ServerEnvelope =
+  | { event: "game:connected"; data: { playerId: string; displayName: string; isGuest: boolean } }
+  | { event: "game:queued"; data: QueuedInfo }
   | {
-      type: "game_start";
-      roomId: string;
-      mode: GameMode;
-      players: Player[];
-      gridRows: number;
-      gridCols: number;
+      event: "game:start";
+      data: { roomId: string; mode: GameMode; players: Player[]; gridRows: number; gridCols: number };
     }
+  | { event: "game:state"; data: GameState }
   | {
-      type: "game_state";
-      board: Board;
-      currentTurn: number;
-      players: Player[];
+      event: "game:over";
+      data: { mode: GameMode; winner: Pick<Player, "id" | "name">; scoreDeltas?: Record<string, number> };
     }
-  | {
-      type: "game_over";
-      mode: GameMode;
-      winner: Pick<Player, "id" | "name">;
-      score_deltas?: Record<string, number>;
-    }
-  | { type: "error"; code: string; message: string; errors?: string[] }
-  | { type: "room_created"; roomId: string; code: string };
+  | { event: "game:room-created"; data: { roomId: string; code: string } }
+  | { event: "game:error"; data: { code: number; message: string; errors?: string[] } };

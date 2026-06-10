@@ -1,14 +1,14 @@
-import { GAME_MODES, RANKED_VELOCITY_LIMIT, RANKED_VELOCITY_WINDOW_MS, SCORING_POINTS } from "../constants/app.constants.js";
-import { getLogger } from "../lib/logger.js";
-import { matchesRepository } from "../repositories/matches.repositories.js";
-import { scoresRepository } from "../repositories/scores.repositories.js";
-import { rankedCompletions } from "../state/game.state.js";
-import type { Room } from "../types/game.js";
-import type { ScoreDeltas } from "../types/scoring.js";
+import { GAME_MODES, RANKED_VELOCITY_LIMIT, RANKED_VELOCITY_WINDOW_MS, SCORING_POINTS } from "../constants/app.constants";
+import { getLogger } from "../lib/logger";
+import { matchRepository } from "../repositories/match.repositories";
+import { scoreRepository } from "../repositories/score.repositories";
+import type { Room } from "./room.services";
 
 const logger = getLogger("match.service");
 
-interface FinishedRoomSnapshot {
+export type ScoreDeltas = Record<string, number>;
+
+export interface FinishedRoomSnapshot {
 	id: string;
 	mode: Room["mode"];
 	players: Room["players"];
@@ -19,6 +19,9 @@ interface FinishedRoomSnapshot {
 	turnCount: number;
 	forfeitedPlayerIds: Set<string>;
 }
+
+// Ranked completion timestamps per player, owned by this service (velocity cap)
+const rankedCompletions = new Map<string, number[]>();
 
 export const matchService = {
 	computeScoreDeltas(room: Room, winnerId: string): ScoreDeltas {
@@ -58,7 +61,7 @@ export const matchService = {
 			return;
 		}
 
-		await matchesRepository.recordFinished({
+		await matchRepository.recordFinished({
 			id: room.id,
 			mode: room.mode,
 			gridRows: room.gridRows,
@@ -101,11 +104,11 @@ export const matchService = {
 		}
 
 		if (isCapped) {
-			logger.info("skipping scoresRepository.applyMatchResult due to velocity cap", { roomId: room.id });
+			logger.info("skipping scoreRepository.applyMatchResult due to velocity cap", { roomId: room.id });
 			return;
 		}
 
-		await scoresRepository.applyMatchResult({
+		await scoreRepository.applyMatchResult({
 			winnerId,
 			participants: authParticipants.map((player) => ({
 				playerId: player.id,

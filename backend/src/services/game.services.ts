@@ -1,34 +1,33 @@
-import { ERROR_CODES, MESSAGE_TYPES } from "../constants/app.constants.js";
-import { applyMove, isEliminated } from "../game/game.logic.js";
-import { emitToPlayer, emitToRoom } from "../lib/events.js";
-import { getLogger } from "../lib/logger.js";
-import { playerRooms, rooms } from "../state/game.state.js";
-import type { PlayerIndex, Room } from "../types/game.js";
-import type { MakeMoveMessage } from "../types/protocol.js";
-import { matchService } from "./match.services.js";
-import { roomService } from "./room.services.js";
+import { GAME_MESSAGES } from "../constants/app.messages";
+import { SOCKET_EVENTS } from "../constants/socket.events";
+import { PlayerIndex, applyMove, isEliminated } from "../game/game.logic";
+import { getLogger } from "../lib/logger";
+import { sendToPlayer, sendToPlayers } from "../lib/realtime";
+import type { MakeMoveInput } from "../schemas/game.schemas";
+import { matchService } from "./match.services";
+import { Room, roomService } from "./room.services";
 
 const logger = getLogger("game.service");
 
 export const gameService = {
-	makeMove(playerId: string, payload: MakeMoveMessage): void {
-		const room = getRoomForPlayer(playerId);
+	makeMove(playerId: string, input: MakeMoveInput): void {
+		const room = roomService.getRoomForPlayer(playerId);
 		if (!room || room.status !== "active") {
 			return;
 		}
 
 		const currentPlayer = room.players[room.currentTurn];
-		if (!currentPlayer || currentPlayer.id !== playerId || !isInBounds(payload.row, payload.col, room)) {
+		if (!currentPlayer || currentPlayer.id !== playerId || !isInBounds(input.row, input.col, room)) {
 			return;
 		}
 
-		const cell = room.board[payload.row]?.[payload.col];
+		const cell = room.board[input.row]?.[input.col];
 		const playerIndex = room.currentTurn;
 		if (!cell || (cell.owner !== null && cell.owner !== playerIndex)) {
 			return;
 		}
 
-		applyMove(room.board, payload.row, payload.col, playerIndex, room.gridRows, room.gridCols);
+		applyMove(room.board, input.row, input.col, playerIndex, room.gridRows, room.gridCols);
 		room.turnCount += 1;
 
 		if (room.turnCount >= room.players.length) {
@@ -60,13 +59,12 @@ export const gameService = {
 	},
 
 	sendGameStateToPlayer(playerId: string): void {
-		const room = getRoomForPlayer(playerId);
+		const room = roomService.getRoomForPlayer(playerId);
 		if (!room) {
 			return;
 		}
 
-		emitToPlayer(playerId, {
-			type: MESSAGE_TYPES.GAME_STATE,
+		sendToPlayer(playerId, SOCKET_EVENTS.GAME.STATE, {
 			board: room.board,
 			currentTurn: room.currentTurn,
 			players: room.players,
@@ -75,7 +73,7 @@ export const gameService = {
 };
 
 function eliminateAndEmit(playerId: string): void {
-	const room = getRoomForPlayer(playerId);
+	const room = roomService.getRoomForPlayer(playerId);
 	if (!room) {
 		return;
 	}
@@ -116,12 +114,15 @@ function eliminateAndEmit(playerId: string): void {
 function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>): void {
 	room.status = "finished";
 	const scoreDeltas = matchService.computeScoreDeltas(room, winner.id);
-	emitToRoom(room, {
-		type: MESSAGE_TYPES.GAME_OVER,
-		mode: room.mode,
-		winner: { id: winner.id, name: winner.name },
-		...(Object.keys(scoreDeltas).length > 0 && { score_deltas: scoreDeltas }),
-	});
+	sendToPlayers(
+		room.players.map((player) => player.id),
+		SOCKET_EVENTS.GAME.OVER,
+		{
+			mode: room.mode,
+			winner: { id: winner.id, name: winner.name },
+			...(Object.keys(scoreDeltas).length > 0 && { scoreDeltas }),
+		},
+	);
 
 	const playerIds = room.players.map((player) => player.id);
 	const roomSnapshot = matchService.snapshot(room);
@@ -133,18 +134,12 @@ function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>):
 			error: error instanceof Error ? error.message : String(error),
 		});
 		for (const playerId of playerIds) {
-			emitToPlayer(playerId, {
-				type: MESSAGE_TYPES.ERROR,
-				code: ERROR_CODES.MATCH_NOT_SAVED,
-				message: "Match result could not be saved. Leaderboard may not reflect this game.",
+			sendToPlayer(playerId, SOCKET_EVENTS.GAME.ERROR, {
+				code: 500,
+				message: GAME_MESSAGES.MATCH_NOT_SAVED,
 			});
 		}
 	});
-}
-
-function getRoomForPlayer(playerId: string): Room | null {
-	const roomId = playerRooms.get(playerId);
-	return roomId ? (rooms.get(roomId) ?? null) : null;
 }
 
 function isInBounds(row: number, col: number, room: Room): boolean {
@@ -167,10 +162,13 @@ function getWinner(room: Room) {
 }
 
 function emitGameState(room: Room): void {
-	emitToRoom(room, {
-		type: MESSAGE_TYPES.GAME_STATE,
-		board: room.board,
-		currentTurn: room.currentTurn,
-		players: room.players,
-	});
+	sendToPlayers(
+		room.players.map((player) => player.id),
+		SOCKET_EVENTS.GAME.STATE,
+		{
+			board: room.board,
+			currentTurn: room.currentTurn,
+			players: room.players,
+		},
+	);
 }

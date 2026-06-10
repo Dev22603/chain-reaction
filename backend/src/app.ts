@@ -1,18 +1,18 @@
-import cors from "cors";
 import express from "express";
+import cors from "cors";
 import helmet from "helmet";
-import { config } from "./constants/config.js";
-import { getLogger } from "./lib/logger.js";
-import { errorMiddleware } from "./middlewares/error.middleware.js";
-import { apiRouter } from "./routes/index.js";
+import authRoutes from "./routes/auth.routes";
+import playerRoutes from "./routes/player.routes";
+import leaderboardRoutes from "./routes/leaderboard.routes";
+import { config } from "./constants/config";
+import { getLogger } from "./lib/logger";
 
 const logger = getLogger("app");
 
-export const app = express();
+const app = express();
 
 app.set("trust proxy", 1);
 
-// Add security headers via helmet
 app.use(
 	helmet({
 		contentSecurityPolicy: {
@@ -33,5 +33,13 @@ app.use(
 	}),
 );
 app.use(express.json());
-app.use("/api", apiRouter);
-app.use(errorMiddleware);
+
+app.get("/health", (req, res) => {
+	res.status(200).json({ status: "Server is Up and Running!" });
+});
+
+app.use("/api/auth", authRoutes);
+app.use("/api/players", playerRoutes);
+app.use("/api/leaderboard", leaderboardRoutes);
+
+export { app };

@@ -1,21 +1,65 @@
-import { randomUUID } from "node:crypto";
-import { ERROR_CODES, GAME_MODES, LIMITS, MESSAGE_TYPES, ROOM_IDLE_TTL_MS } from "../constants/app.constants.js";
-import { SERVER_MESSAGES } from "../constants/app.messages.js";
-import { createBoard } from "../game/game.logic.js";
-import { emitToPlayer, emitToRoom } from "../lib/events.js";
-import { getLogger } from "../lib/logger.js";
-import { connections, pendingReconnects, players } from "../state/connection.state.js";
-import { playerRooms, roomCodes, rooms } from "../state/game.state.js";
-import type { GameMode, Player, Room } from "../types/game.js";
-import type { CreateRoomMessage, JoinRoomByCodeMessage } from "../types/protocol.js";
-import { ApiError } from "../utils/api_error.js";
+import { randomUUID } from "crypto";
+import { GAME_MODES, LIMITS, ROOM_IDLE_TTL_MS } from "../constants/app.constants";
+import { GAME_MESSAGES } from "../constants/app.messages";
+import { SOCKET_EVENTS } from "../constants/socket.events";
+import { Board, PlayerIndex, createBoard } from "../game/game.logic";
+import { getLogger } from "../lib/logger";
+import { isPlayerConnected, sendToPlayer, sendToPlayers } from "../lib/realtime";
+import type { CreateRoomInput, JoinRoomByCodeInput } from "../schemas/game.schemas";
+import type { SocketUser } from "../types/socket";
+import { ApiError } from "../utils/api_error";
 
 const logger = getLogger("room.service");
 const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
+export interface Player {
+	id: string;
+	name: string;
+	isGuest: boolean;
+	eliminated: boolean;
+	eliminatedTurn: number | null;
+}
+
+export interface Room {
+	id: string;
+	mode: GAME_MODES;
+	isPrivate: boolean;
+	inviteCode?: string;
+	players: Player[];
+	gridRows: number;
+	gridCols: number;
+	maxPlayers: number;
+	board: Board;
+	currentTurn: PlayerIndex;
+	turnCount: number;
+	startedAt: Date;
+	status: "lobby" | "active" | "finished";
+	forfeitedPlayerIds: Set<string>;
+}
+
+// In-memory game state owned by this service
+const rooms = new Map<string, Room>();
+const playerRooms = new Map<string, string>(); // playerId -> roomId
+const roomCodes = new Map<string, string>(); // inviteCode -> roomId
+
 export const roomService = {
-	createMatchedRoom(roomPlayers: Player[], mode: GameMode, gridRows: number, gridCols: number): void {
-		assertRoomCapacity();
+	getRoomForPlayer(playerId: string): Room | null {
+		const roomId = playerRooms.get(playerId);
+		return roomId ? (rooms.get(roomId) ?? null) : null;
+	},
+
+	isInRoom(playerId: string): boolean {
+		return playerRooms.has(playerId);
+	},
+
+	assertCapacity(): void {
+		if (rooms.size >= LIMITS.MAX_ROOMS) {
+			throw new ApiError(503, GAME_MESSAGES.SERVER_BUSY);
+		}
+	},
+
+	createMatchedRoom(roomPlayers: Player[], mode: GAME_MODES, gridRows: number, gridCols: number): void {
+		this.assertCapacity();
 
 		const room: Room = {
 			id: randomUUID(),
@@ -41,19 +85,18 @@ export const roomService = {
 		emitGameStarted(room);
 	},
 
-	createPrivateRoom(playerId: string, payload: CreateRoomMessage): void {
-		if (playerRooms.has(playerId)) {
+	createPrivateRoom(user: SocketUser, input: CreateRoomInput): void {
+		if (playerRooms.has(user.id)) {
 			return;
 		}
 
-		assertRoomCapacity();
+		this.assertCapacity();
 
-		const identity = connections.get(playerId);
 		const code = generateInviteCode();
 		const player: Player = {
-			id: playerId,
-			name: identity && !identity.isGuest ? identity.displayName : payload.playerName,
-			isGuest: identity?.isGuest ?? true,
+			id: user.id,
+			name: user.isGuest ? input.playerName : user.name,
+			isGuest: user.isGuest,
 			eliminated: false,
 			eliminatedTurn: null,
 		};
@@ -63,10 +106,10 @@ export const roomService = {
 			isPrivate: true,
 			inviteCode: code,
 			players: [player],
-			gridRows: payload.gridRows,
-			gridCols: payload.gridCols,
-			maxPlayers: payload.maxPlayers,
-			board: createBoard(payload.gridRows, payload.gridCols),
+			gridRows: input.gridRows,
+			gridCols: input.gridCols,
+			maxPlayers: input.maxPlayers,
+			board: createBoard(input.gridRows, input.gridCols),
 			currentTurn: 0,
 			turnCount: 0,
 			startedAt: new Date(),
@@ -76,44 +119,43 @@ export const roomService = {
 
 		rooms.set(room.id, room);
 		roomCodes.set(code, room.id);
-		playerRooms.set(playerId, room.id);
+		playerRooms.set(user.id, room.id);
 
-		logger.info("private room created", { roomId: room.id, code, playerId });
+		logger.info("private room created", { roomId: room.id, code, playerId: user.id });
 
-		emitToPlayer(playerId, { type: MESSAGE_TYPES.ROOM_CREATED, roomId: room.id, code });
+		sendToPlayer(user.id, SOCKET_EVENTS.GAME.ROOM_CREATED, { roomId: room.id, code });
 		emitGameState(room);
 	},
 
-	joinPrivateRoom(playerId: string, payload: JoinRoomByCodeMessage): void {
-		if (playerRooms.has(playerId)) {
+	joinPrivateRoom(user: SocketUser, input: JoinRoomByCodeInput): void {
+		if (playerRooms.has(user.id)) {
 			return;
 		}
 
-		const roomId = roomCodes.get(payload.code);
+		const roomId = roomCodes.get(input.code);
 		if (!roomId) {
-			throw new ApiError(ERROR_CODES.ROOM_CODE_INVALID, "Invalid invite code.");
+			throw new ApiError(400, GAME_MESSAGES.INVALID_INVITE_CODE);
 		}
 
 		const room = rooms.get(roomId);
 		if (!room) {
-			throw new ApiError(ERROR_CODES.ROOM_NOT_FOUND, "Room no longer exists.");
+			throw new ApiError(404, GAME_MESSAGES.ROOM_GONE);
 		}
 
 		if (room.players.length >= room.maxPlayers) {
-			throw new ApiError(ERROR_CODES.ROOM_FULL, "Room is full.");
+			throw new ApiError(409, GAME_MESSAGES.ROOM_FULL);
 		}
 
-		const identity = connections.get(playerId);
 		room.players.push({
-			id: playerId,
-			name: identity && !identity.isGuest ? identity.displayName : payload.playerName,
-			isGuest: identity?.isGuest ?? true,
+			id: user.id,
+			name: user.isGuest ? input.playerName : user.name,
+			isGuest: user.isGuest,
 			eliminated: false,
 			eliminatedTurn: null,
 		});
-		playerRooms.set(playerId, roomId);
+		playerRooms.set(user.id, roomId);
 
-		logger.info("player joined private room", { roomId, playerId, playerCount: room.players.length });
+		logger.info("player joined private room", { roomId, playerId: user.id, playerCount: room.players.length });
 
 		if (room.players.length === room.maxPlayers) {
 			room.status = "active";
@@ -121,11 +163,11 @@ export const roomService = {
 			return;
 		}
 
-		emitToRoom(room, {
-			type: MESSAGE_TYPES.ROOM_CREATED,
-			roomId: room.id,
-			code: room.inviteCode ?? payload.code,
-		});
+		sendToPlayers(
+			room.players.map((player) => player.id),
+			SOCKET_EVENTS.GAME.ROOM_CREATED,
+			{ roomId: room.id, code: room.inviteCode ?? input.code },
+		);
 	},
 
 	destroyRoom(room: Room): void {
@@ -135,11 +177,6 @@ export const roomService = {
 		}
 		for (const player of room.players) {
 			playerRooms.delete(player.id);
-			const pending = pendingReconnects.get(player.id);
-			if (pending) {
-				clearTimeout(pending.timeoutHandle);
-				pendingReconnects.delete(player.id);
-			}
 		}
 	},
 };
@@ -153,7 +190,7 @@ export function startRoomReaper(): void {
 		logger.info("running periodic room reaper");
 		const now = Date.now();
 		for (const room of Array.from(rooms.values())) {
-			if (!room.players.some((player) => players.has(player.id))) {
+			if (!room.players.some((player) => isPlayerConnected(player.id))) {
 				logger.info("reaper: destroying room with no connected players", { roomId: room.id });
 				roomService.destroyRoom(room);
 				continue;
@@ -178,12 +215,6 @@ export function stopRoomReaper(): void {
 	logger.info("stopped periodic room reaper");
 }
 
-function assertRoomCapacity(): void {
-	if (rooms.size >= LIMITS.MAX_ROOMS) {
-		throw new ApiError(ERROR_CODES.SERVER_BUSY, SERVER_MESSAGES.SERVER_BUSY);
-	}
-}
-
 function generateInviteCode(): string {
 	let code: string;
 	do {
@@ -193,22 +224,28 @@ function generateInviteCode(): string {
 }
 
 function emitGameStarted(room: Room): void {
-	emitToRoom(room, {
-		type: MESSAGE_TYPES.GAME_START,
-		roomId: room.id,
-		mode: room.mode,
-		players: room.players,
-		gridRows: room.gridRows,
-		gridCols: room.gridCols,
-	});
+	sendToPlayers(
+		room.players.map((player) => player.id),
+		SOCKET_EVENTS.GAME.START,
+		{
+			roomId: room.id,
+			mode: room.mode,
+			players: room.players,
+			gridRows: room.gridRows,
+			gridCols: room.gridCols,
+		},
+	);
 	emitGameState(room);
 }
 
 function emitGameState(room: Room): void {
-	emitToRoom(room, {
-		type: MESSAGE_TYPES.GAME_STATE,
-		board: room.board,
-		currentTurn: room.currentTurn,
-		players: room.players,
-	});
+	sendToPlayers(
+		room.players.map((player) => player.id),
+		SOCKET_EVENTS.GAME.STATE,
+		{
+			board: room.board,
+			currentTurn: room.currentTurn,
+			players: room.players,
+		},
+	);
 }

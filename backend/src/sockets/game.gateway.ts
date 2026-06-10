@@ -1,105 +1,89 @@
-import type { IncomingMessage } from "node:http";
-import type WebSocket from "ws";
-import { ERROR_CODES, MESSAGE_TYPES } from "../constants/app.constants.js";
-import { SERVER_MESSAGES } from "../constants/app.messages.js";
-import { consumeMessageBudget, touchSocket } from "../lib/realtime.js";
-import { getLogger } from "../lib/logger.js";
-import { validateMessage } from "../schemas/socket.schemas.js";
-import { connectionService } from "../services/connection.services.js";
-import { gameService } from "../services/game.services.js";
-import { queueService } from "../services/queue.services.js";
-import { roomService } from "../services/room.services.js";
-import { ApiError } from "../utils/api_error.js";
-import { getClientIp } from "../utils/clientIp.js";
-import { logSecurityEvent } from "../utils/securityLogger.js";
-import { send } from "./game.publisher.js";
+import WebSocket from "ws";
+import { GAME_MESSAGES, GLOBAL_ERROR_MESSAGES } from "../constants/app.messages";
+import { SOCKET_EVENTS } from "../constants/socket.events";
+import { getLogger } from "../lib/logger";
+import { consumeMessageBudget, touchSocket } from "../lib/realtime";
+import { validateCreateRoom, validateJoinQueue, validateJoinRoomByCode, validateMakeMove } from "../schemas/game.schemas";
+import { connectionService } from "../services/connection.services";
+import { gameService } from "../services/game.services";
+import { queueService } from "../services/queue.services";
+import { roomService } from "../services/room.services";
+import type { AuthenticatedWebSocket } from "../types/socket";
+import { ApiError } from "../utils/api_error";
+import { logSecurityEvent } from "../utils/security_logger";
 
-const logger = getLogger("ws.game");
+const log = getLogger("ws.game");
 
-export async function handleGameConnection(socket: WebSocket, request: IncomingMessage): Promise<void> {
-	const ip = getClientIp(request);
-	try {
-		const identity = await connectionService.connect(socket, request, ip);
-
-		socket.on("message", (raw) => {
-			touchSocket(socket);
-			const budget = consumeMessageBudget(ip, identity.playerId);
-			if (budget === "server_busy") {
-				send(socket, {
-					type: MESSAGE_TYPES.ERROR,
-					code: ERROR_CODES.RATE_LIMITED,
-					message: "Server is under high load. Please try again later.",
-				});
-				return;
-			}
-			if (budget === "rate_limited") {
-				send(socket, {
-					type: MESSAGE_TYPES.ERROR,
-					code: ERROR_CODES.RATE_LIMITED,
-					message: "Too many messages. Slow down.",
-				});
-				return;
-			}
-			if (budget === "disconnect") {
-				socket.close(1008, "rate limited");
-				return;
-			}
-
-			dispatch(socket, identity.playerId, raw, ip);
-		});
-
-		socket.on("close", () => connectionService.disconnect(socket, identity));
-	} catch (error) {
-		logger.error("websocket connection setup failed", {
-			error: error instanceof Error ? error.message : String(error),
-		});
-		socket.close(1011, "connection setup failed");
-	}
+function send(ws: AuthenticatedWebSocket, event: string, data: unknown): void {
+	if (ws.readyState !== WebSocket.OPEN) return;
+	ws.send(JSON.stringify({ event, data }));
 }
 
-function dispatch(socket: WebSocket, playerId: string, raw: WebSocket.RawData, ip: string): void {
-	let parsed: unknown;
-	try {
-		parsed = JSON.parse(raw.toString());
-	} catch {
-		logSecurityEvent("malformed_frame", { ip, details: "JSON parse error" });
-		return;
-	}
+export function handleGameConnection(ws: AuthenticatedWebSocket, ip: string): void {
+	connectionService.connect(ws);
 
-	try {
-		const message = validateMessage(parsed);
-		if (!message) {
-			logSecurityEvent("malformed_frame", { ip, details: "unknown or invalid message type" });
+	ws.on("message", (raw) => {
+		touchSocket(ws);
+
+		const budget = consumeMessageBudget(ip, ws.user.id);
+		if (budget === "server_busy") {
+			send(ws, SOCKET_EVENTS.GAME.ERROR, { code: 503, message: GAME_MESSAGES.SERVER_OVERLOADED });
+			return;
+		}
+		if (budget === "rate_limited") {
+			send(ws, SOCKET_EVENTS.GAME.ERROR, { code: 429, message: GAME_MESSAGES.TOO_MANY_MESSAGES });
+			return;
+		}
+		if (budget === "disconnect") {
+			ws.close(1008, "rate limited");
 			return;
 		}
 
-		switch (message.type) {
-			case MESSAGE_TYPES.JOIN_QUEUE:
-				queueService.joinQueue(playerId, message);
+		let parsed: { event: string; data: unknown };
+		try {
+			parsed = JSON.parse(raw.toString()) as { event: string; data: unknown };
+		} catch {
+			logSecurityEvent("malformed_frame", { ip, details: "JSON parse error" });
+			send(ws, SOCKET_EVENTS.GAME.ERROR, { code: 400, message: GAME_MESSAGES.INVALID_JSON });
+			return;
+		}
+
+		dispatch(ws, parsed.event, parsed.data, ip);
+	});
+
+	ws.on("close", () => connectionService.disconnect(ws));
+}
+
+function dispatch(ws: AuthenticatedWebSocket, event: string, data: unknown, ip: string): void {
+	try {
+		switch (event) {
+			case SOCKET_EVENTS.GAME.JOIN_QUEUE:
+				queueService.joinQueue(ws.user, validateJoinQueue(data));
 				break;
-			case MESSAGE_TYPES.LEAVE_QUEUE:
-				queueService.leaveQueue(playerId);
+			case SOCKET_EVENTS.GAME.LEAVE_QUEUE:
+				queueService.leaveQueue(ws.user.id);
 				break;
-			case MESSAGE_TYPES.MAKE_MOVE:
-				gameService.makeMove(playerId, message);
+			case SOCKET_EVENTS.GAME.MAKE_MOVE:
+				gameService.makeMove(ws.user.id, validateMakeMove(data));
 				break;
-			case MESSAGE_TYPES.LEAVE_GAME:
-				gameService.leaveGame(playerId);
+			case SOCKET_EVENTS.GAME.LEAVE_GAME:
+				gameService.leaveGame(ws.user.id);
 				break;
-			case MESSAGE_TYPES.CREATE_ROOM:
-				roomService.createPrivateRoom(playerId, message);
+			case SOCKET_EVENTS.GAME.CREATE_ROOM:
+				roomService.createPrivateRoom(ws.user, validateCreateRoom(data));
 				break;
-			case MESSAGE_TYPES.JOIN_ROOM_BY_CODE:
-				roomService.joinPrivateRoom(playerId, message);
+			case SOCKET_EVENTS.GAME.JOIN_ROOM_BY_CODE:
+				roomService.joinPrivateRoom(ws.user, validateJoinRoomByCode(data));
 				break;
+			default:
+				send(ws, SOCKET_EVENTS.GAME.ERROR, { code: 400, message: `Unknown event: ${event}` });
 		}
 	} catch (error) {
 		if (error instanceof ApiError) {
-			if (error.code === ERROR_CODES.VALIDATION_FAILED) {
+			if (error.code === 400 && error.errors.length) {
 				logSecurityEvent("malformed_frame", { ip, details: "schema validation failed", errors: error.errors });
 			}
-			send(socket, {
-				type: MESSAGE_TYPES.ERROR,
+			send(ws, SOCKET_EVENTS.GAME.ERROR, {
 				code: error.code,
 				message: error.message,
 				...(error.errors.length ? { errors: error.errors } : {}),
@@ -107,13 +91,9 @@ function dispatch(socket: WebSocket, playerId: string, raw: WebSocket.RawData, i
 			return;
 		}
 
-		logger.error("unhandled error in websocket dispatch", {
+		log.error("unhandled error in websocket dispatch", {
 			error: error instanceof Error ? error.message : String(error),
 		});
-		send(socket, {
-			type: MESSAGE_TYPES.ERROR,
-			code: ERROR_CODES.INTERNAL_ERROR,
-			message: SERVER_MESSAGES.INTERNAL_ERROR,
-		});
+		send(ws, SOCKET_EVENTS.GAME.ERROR, { code: 500, message: GLOBAL_ERROR_MESSAGES.SERVER_ERROR });
 	}
 }

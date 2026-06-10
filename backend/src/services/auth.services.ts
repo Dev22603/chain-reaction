@@ -1,36 +1,56 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID } from "crypto";
 import bcrypt from "bcrypt";
-import { ERROR_CODES } from "../constants/app.constants.js";
-import { SERVER_MESSAGES } from "../constants/app.messages.js";
-import { playersRepository } from "../repositories/players.repositories.js";
-import type { LoginInput, SignupInput, UpdateProfileInput } from "../schemas/auth.schemas.js";
-import type { AuthResult, PublicPlayer } from "../types/auth.js";
-import { ApiError } from "../utils/api_error.js";
-import { signAccessToken } from "../utils/jwt.js";
+import jwt from "jsonwebtoken";
+import { config } from "../constants/config";
+import { AUTH_FEEDBACK_MESSAGES } from "../constants/app.messages";
+import { getLogger } from "../lib/logger";
+import { playerRepository } from "../repositories/player.repositories";
+import { validateLogin, validateSignup, validateUpdateProfile } from "../schemas/auth.schemas";
+import { ApiError } from "../utils/api_error";
+
+const logger = getLogger("auth.service");
 
 const PASSWORD_SALT_ROUNDS = 12;
+// Compared against when the email is unknown, so login takes the same time
+// whether or not the account exists (prevents user enumeration via timing).
 const DUMMY_HASH = "$2b$12$4lpQHVrnzc9xN9kLolJIMu3rGeYx60oB1JYyZqEdzvqVTpPRiVQHC";
 
+export interface PublicPlayer {
+	id: string;
+	displayName: string;
+	email: string | null;
+}
+
+export interface AuthResult {
+	player: PublicPlayer;
+	accessToken: string;
+}
+
 export const authService = {
-	async signup(input: SignupInput): Promise<AuthResult> {
-		const existing = await playersRepository.findByEmail(input.email);
+	async signup(data: unknown): Promise<AuthResult> {
+		const input = validateSignup(data);
+
+		const existing = await playerRepository.findByEmail(input.email);
 		if (existing) {
-			throw new ApiError(ERROR_CODES.EMAIL_TAKEN, SERVER_MESSAGES.EMAIL_TAKEN, [], 409);
+			throw new ApiError(409, AUTH_FEEDBACK_MESSAGES.EMAIL_TAKEN);
 		}
 
 		const passwordHash = await bcrypt.hash(input.password, PASSWORD_SALT_ROUNDS);
-		const player = await playersRepository.createAccount({
+		const player = await playerRepository.createAccount({
 			id: randomUUID(),
 			displayName: input.displayName,
 			email: input.email,
 			passwordHash,
 		});
 
+		logger.info("Player signed up", { playerId: player.id });
 		return buildAuthResult(toPublicPlayer(player));
 	},
 
-	async login(input: LoginInput): Promise<AuthResult> {
-		const player = await playersRepository.findByEmail(input.email);
+	async login(data: unknown): Promise<AuthResult> {
+		const input = validateLogin(data);
+
+		const player = await playerRepository.findByEmail(input.email);
 		const passwordHash = player?.passwordHash ?? DUMMY_HASH;
 
 		const validPassword = await bcrypt.compare(input.password, passwordHash);
@@ -38,25 +58,29 @@ export const authService = {
 			throwInvalidCredentials();
 		}
 
+		logger.info("Player logged in", { playerId: player.id });
 		return buildAuthResult(toPublicPlayer(player));
 	},
 
 	async getMe(playerId: string): Promise<PublicPlayer> {
-		const player = await playersRepository.findById(playerId);
+		const player = await playerRepository.findById(playerId);
 		if (!player?.email) {
-			throw new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.NOT_AUTHENTICATED, [], 401);
+			throw new ApiError(401, AUTH_FEEDBACK_MESSAGES.NOT_AUTHENTICATED);
 		}
 
 		return toPublicPlayer(player);
 	},
 
-	async updateProfile(playerId: string, input: UpdateProfileInput): Promise<PublicPlayer> {
-		const existing = await playersRepository.findById(playerId);
+	async updateProfile(playerId: string, data: unknown): Promise<PublicPlayer> {
+		const input = validateUpdateProfile(data);
+
+		const existing = await playerRepository.findById(playerId);
 		if (!existing?.email) {
-			throw new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.NOT_AUTHENTICATED, [], 401);
+			throw new ApiError(401, AUTH_FEEDBACK_MESSAGES.NOT_AUTHENTICATED);
 		}
 
-		const updated = await playersRepository.updateDisplayName(playerId, input.displayName);
+		const updated = await playerRepository.updateDisplayName(playerId, input.displayName);
+		logger.info("Player display name updated", { playerId });
 		return toPublicPlayer(updated);
 	},
 };
@@ -68,9 +92,11 @@ function buildAuthResult(player: PublicPlayer): AuthResult {
 
 	return {
 		player,
-		accessToken: signAccessToken({
-			sub: player.id,
-			email: player.email,
+		accessToken: jwt.sign({ id: player.id, name: player.displayName, email: player.email }, config.JWT_SECRET, {
+			algorithm: "HS256",
+			expiresIn: config.JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"],
+			issuer: config.JWT_ISSUER,
+			audience: config.JWT_AUDIENCE,
 		}),
 	};
 }
@@ -84,5 +110,5 @@ function toPublicPlayer(player: { id: string; displayName: string; email: string
 }
 
 function throwInvalidCredentials(): never {
-	throw new ApiError(ERROR_CODES.INVALID_CREDENTIALS, SERVER_MESSAGES.INVALID_CREDENTIALS, [], 401);
+	throw new ApiError(401, AUTH_FEEDBACK_MESSAGES.INVALID_CREDENTIALS);
 }

@@ -1,20 +1,20 @@
-import { createServer } from "node:http";
-import { app } from "./app.js";
-import { config } from "./constants/config.js";
-import { getLogger } from "./lib/logger.js";
-import { attachWebSocketServer } from "./sockets/index.js";
-import { startRoomReaper, stopRoomReaper } from "./services/room.services.js";
-import { prisma } from "./lib/prisma.js";
-import { pendingReconnects } from "./state/connection.state.js";
+import { createServer } from "http";
+import { app } from "./app";
+import { config } from "./constants/config";
+import logger from "./lib/logger";
+import { prisma } from "./lib/prisma";
+import { createWSS, getWSS } from "./lib/realtime";
+import { connectionService } from "./services/connection.services";
+import { startRoomReaper, stopRoomReaper } from "./services/room.services";
+import { registerSocketGateways } from "./sockets/index";
 
-const logger = getLogger("index");
-const server = createServer(app);
-
-const wss = attachWebSocketServer(server);
+const httpServer = createServer(app);
+createWSS();
+registerSocketGateways(httpServer);
 startRoomReaper();
 
-server.listen(config.PORT, () => {
-	logger.info("server listening", { port: config.PORT });
+httpServer.listen(config.PORT, () => {
+	logger.info(`Server is running on http://localhost:${config.PORT}`);
 });
 
 // --- Graceful Shutdown & Crash Handling ---
@@ -29,16 +29,14 @@ async function gracefulShutdown(signal: string) {
 	isShuttingDown = true;
 	logger.info(`Received ${signal}, starting graceful shutdown`);
 
-	// Force exit fallback timer (5 seconds)
 	const forceExitTimeout = setTimeout(() => {
 		logger.error("Graceful shutdown timed out, force exiting process");
 		process.exit(1);
 	}, 5000);
 	forceExitTimeout.unref();
 
-	// Stop accepting new HTTP connections
 	logger.info("Closing HTTP server");
-	server.close((err) => {
+	httpServer.close((err) => {
 		if (err) {
 			logger.error("Error closing HTTP server", { error: err.message });
 		} else {
@@ -46,8 +44,8 @@ async function gracefulShutdown(signal: string) {
 		}
 	});
 
-	// Close all active WebSocket connections (1001 going-away) and close WebSocket server
 	logger.info("Closing active WebSocket connections");
+	const wss = getWSS();
 	for (const client of wss.clients) {
 		try {
 			client.close(1001, "Server going away");
@@ -57,17 +55,11 @@ async function gracefulShutdown(signal: string) {
 	}
 	wss.close();
 
-	// Stop periodic room reaper
 	stopRoomReaper();
 
-	// Clear all pending player reconnection grace-period timers
 	logger.info("Clearing pending reconnect timers");
-	for (const reconnect of pendingReconnects.values()) {
-		clearTimeout(reconnect.timeoutHandle);
-	}
-	pendingReconnects.clear();
+	connectionService.clearAllPendingReconnects();
 
-	// Disconnect database client
 	logger.info("Disconnecting from database");
 	try {
 		await prisma.$disconnect();
@@ -78,7 +70,6 @@ async function gracefulShutdown(signal: string) {
 		});
 	}
 
-	// Cancel force exit timeout and exit cleanly
 	clearTimeout(forceExitTimeout);
 	logger.info("Graceful shutdown completed successfully");
 	process.exit(0);
@@ -87,13 +78,11 @@ async function gracefulShutdown(signal: string) {
 process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
 process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 
-// Register global uncaught crash handlers
 process.on("uncaughtException", (error) => {
 	logger.error("uncaughtException crash", {
 		error: error instanceof Error ? error.message : String(error),
 		stack: error instanceof Error ? error.stack : undefined,
 	});
-	// Wait a short delay for logs to flush before exiting
 	setTimeout(() => process.exit(1), 500).unref();
 });
 
@@ -102,6 +91,5 @@ process.on("unhandledRejection", (reason) => {
 		error: reason instanceof Error ? reason.message : String(reason),
 		stack: reason instanceof Error ? reason.stack : undefined,
 	});
-	// Wait a short delay for logs to flush before exiting
 	setTimeout(() => process.exit(1), 500).unref();
 });

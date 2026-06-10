@@ -1,142 +1,100 @@
-import { randomUUID } from "node:crypto";
-import type { IncomingMessage } from "node:http";
-import type WebSocket from "ws";
-import { MESSAGE_TYPES, RECONNECT_GRACE_MS } from "../constants/app.constants.js";
-import { emitToPlayer } from "../lib/events.js";
-import { getLogger } from "../lib/logger.js";
-import { playersRepository } from "../repositories/players.repositories.js";
-import { connections, pendingReconnects, players } from "../state/connection.state.js";
-import { playerRooms } from "../state/game.state.js";
-import type { ConnectionIdentity } from "../types/connection.js";
-import { verifyAccessToken } from "../utils/jwt.js";
-import { logSecurityEvent } from "../utils/securityLogger.js";
-import { gameService } from "./game.services.js";
-import { queueService } from "./queue.services.js";
+import { RECONNECT_GRACE_MS } from "../constants/app.constants";
+import { SOCKET_EVENTS } from "../constants/socket.events";
+import { getLogger } from "../lib/logger";
+import { getPlayerSocket, registerPlayerSocket, sendToPlayer, unregisterPlayerSocket } from "../lib/realtime";
+import type { AuthenticatedWebSocket } from "../types/socket";
+import { gameService } from "./game.services";
+import { queueService } from "./queue.services";
+import { roomService } from "./room.services";
 
 const logger = getLogger("connection.service");
 
+interface PendingReconnect {
+	roomId: string;
+	expiresAt: number;
+	timeoutHandle: ReturnType<typeof setTimeout>;
+}
+
+// Reconnect grace windows for authenticated players, owned by this service
+const pendingReconnects = new Map<string, PendingReconnect>();
+
 export const connectionService = {
-	async connect(socket: WebSocket, request: IncomingMessage, ip: string): Promise<ConnectionIdentity> {
-		const identity = await resolveIdentity(request, ip);
-		if (!identity.isGuest && resumePendingReconnect(socket, identity)) {
-			return identity;
+	connect(ws: AuthenticatedWebSocket): void {
+		const user = ws.user;
+		if (!user.isGuest && resumePendingReconnect(ws)) {
+			return;
 		}
 
-		players.set(identity.playerId, socket);
-		connections.set(identity.playerId, identity);
+		registerPlayerSocket(user.id, ws);
 
-		emitToPlayer(identity.playerId, {
-			type: MESSAGE_TYPES.CONNECTED,
-			playerId: identity.playerId,
-			displayName: identity.displayName,
-			isGuest: identity.isGuest,
+		sendToPlayer(user.id, SOCKET_EVENTS.GAME.CONNECTED, {
+			playerId: user.id,
+			displayName: user.name,
+			isGuest: user.isGuest,
 		});
 
-		logger.info("player connected", {
-			playerId: identity.playerId,
-			isGuest: identity.isGuest,
-			ip,
-		});
-
-		return identity;
+		logger.info("player connected", { playerId: user.id, isGuest: user.isGuest });
 	},
 
-	disconnect(socket: WebSocket, identity: ConnectionIdentity): void {
-		if (players.get(identity.playerId) !== socket) {
+	disconnect(ws: AuthenticatedWebSocket): void {
+		const user = ws.user;
+		if (getPlayerSocket(user.id) !== ws) {
 			return;
 		}
 
-		queueService.leaveQueue(identity.playerId);
+		queueService.leaveQueue(user.id);
 
-		const roomId = playerRooms.get(identity.playerId);
-		if (identity.isGuest || !roomId) {
-			gameService.leaveGame(identity.playerId);
-			players.delete(identity.playerId);
-			connections.delete(identity.playerId);
-			logger.info("player disconnected", { playerId: identity.playerId, isGuest: identity.isGuest });
+		const room = roomService.getRoomForPlayer(user.id);
+		if (user.isGuest || !room) {
+			gameService.leaveGame(user.id);
+			unregisterPlayerSocket(user.id, ws);
+			logger.info("player disconnected", { playerId: user.id, isGuest: user.isGuest });
 			return;
 		}
 
-		players.delete(identity.playerId);
-		connections.delete(identity.playerId);
+		unregisterPlayerSocket(user.id, ws);
 
 		const expiresAt = Date.now() + RECONNECT_GRACE_MS;
 		const timeoutHandle = setTimeout(() => {
-			pendingReconnects.delete(identity.playerId);
-			gameService.graceExpireLeaveGame(identity.playerId);
-			logger.info("grace window expired, player eliminated", { playerId: identity.playerId, roomId });
+			pendingReconnects.delete(user.id);
+			gameService.graceExpireLeaveGame(user.id);
+			logger.info("grace window expired, player eliminated", { playerId: user.id, roomId: room.id });
 		}, RECONNECT_GRACE_MS);
 
-		pendingReconnects.set(identity.playerId, { roomId, expiresAt, timeoutHandle });
+		pendingReconnects.set(user.id, { roomId: room.id, expiresAt, timeoutHandle });
 		logger.info("player disconnected mid-game, grace window started", {
-			playerId: identity.playerId,
-			roomId,
+			playerId: user.id,
+			roomId: room.id,
 			expiresAt: new Date(expiresAt).toISOString(),
 		});
 	},
+
+	clearAllPendingReconnects(): void {
+		for (const pending of pendingReconnects.values()) {
+			clearTimeout(pending.timeoutHandle);
+		}
+		pendingReconnects.clear();
+	},
 };
 
-function resumePendingReconnect(socket: WebSocket, identity: ConnectionIdentity): boolean {
-	const pending = pendingReconnects.get(identity.playerId);
+function resumePendingReconnect(ws: AuthenticatedWebSocket): boolean {
+	const user = ws.user;
+	const pending = pendingReconnects.get(user.id);
 	if (!pending) {
 		return false;
 	}
 
 	clearTimeout(pending.timeoutHandle);
-	pendingReconnects.delete(identity.playerId);
-	players.set(identity.playerId, socket);
-	connections.set(identity.playerId, identity);
+	pendingReconnects.delete(user.id);
 
-	if (playerRooms.has(identity.playerId)) {
-		gameService.sendGameStateToPlayer(identity.playerId);
-		logger.info("player reconnected within grace window", { playerId: identity.playerId, roomId: pending.roomId });
-	} else {
-		logger.info("player reconnected but room ended during grace window", { playerId: identity.playerId });
+	if (!roomService.isInRoom(user.id)) {
+		// Room ended during the grace window — fall through to a fresh connect
+		logger.info("player reconnected but room ended during grace window", { playerId: user.id });
+		return false;
 	}
 
+	registerPlayerSocket(user.id, ws);
+	gameService.sendGameStateToPlayer(user.id);
+	logger.info("player reconnected within grace window", { playerId: user.id, roomId: pending.roomId });
 	return true;
-}
-
-async function resolveIdentity(request: IncomingMessage, ip: string): Promise<ConnectionIdentity> {
-	const token = getTokenFromRequest(request);
-	if (!token) {
-		return buildGuestIdentity();
-	}
-
-	try {
-		const payload = verifyAccessToken(token);
-		const player = await playersRepository.findById(payload.sub);
-		if (!player?.email) {
-			return buildGuestIdentity();
-		}
-
-		return {
-			playerId: player.id,
-			displayName: player.displayName,
-			email: player.email,
-			isGuest: false,
-		};
-	} catch (error) {
-		logSecurityEvent("auth_failure", { ip, details: "WS token validation failed" });
-		logger.warn("websocket auth failed", {
-			error: error instanceof Error ? error.message : String(error),
-		});
-		return buildGuestIdentity();
-	}
-}
-
-function getTokenFromRequest(request: IncomingMessage): string | null {
-	// TODO(frontend): move WS token off the URL query string (F-04)
-	const url = new URL(request.url ?? "/", "http://localhost");
-	return url.searchParams.get("token")?.trim() || null;
-}
-
-function buildGuestIdentity(): ConnectionIdentity {
-	const playerId = randomUUID();
-	return {
-		playerId,
-		displayName: `Guest ${playerId.slice(0, 8)}`,
-		email: null,
-		isGuest: true,
-	};
 }

@@ -35,7 +35,7 @@ export function useAuth() {
         }
       } catch (err) {
         if (active) {
-          if (err instanceof ApiClientError && err.code === "auth_token_expired") {
+          if (err instanceof ApiClientError && err.status === 401) {
             logout();
           } else {
             clearStoredAccessToken();

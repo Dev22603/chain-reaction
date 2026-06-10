@@ -1,11 +1,13 @@
-export interface ApiResponse<T> {
-	success: true;
+class ApiResponse<T> {
+	code: number;
+	message: string;
 	data: T;
+
+	constructor(statusCode: number, message: string = "Success", data: T) {
+		this.code = statusCode;
+		this.message = message;
+		this.data = data;
+	}
 }
 
-export function apiResponse<T>(data: T): ApiResponse<T> {
-	return {
-		success: true,
-		data,
-	};
-}
+export { ApiResponse };

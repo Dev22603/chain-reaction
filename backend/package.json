@@ -2,8 +2,7 @@
 	"name": "@chain-reaction/backend",
 	"version": "0.1.0",
 	"private": true,
-	"type": "module",
-	"main": "dist/index.js",
+	"main": "dist/src/index.js",
 	"scripts": {
 		"dev": "tsx watch src/index.ts",
 		"build": "tsc",

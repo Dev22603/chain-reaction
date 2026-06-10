@@ -1,61 +1,57 @@
-import { ERROR_CODES, GAME_MODES, LIMITS, MESSAGE_TYPES } from "../constants/app.constants.js";
-import { SERVER_MESSAGES } from "../constants/app.messages.js";
-import { emitToPlayer } from "../lib/events.js";
-import { connections } from "../state/connection.state.js";
-import { playerRooms, queues, rooms } from "../state/game.state.js";
-import type { GameMode, Player } from "../types/game.js";
-import type { JoinQueueMessage } from "../types/protocol.js";
-import { ApiError } from "../utils/api_error.js";
-import { roomService } from "./room.services.js";
+import { GAME_MODES, LIMITS } from "../constants/app.constants";
+import { GAME_MESSAGES } from "../constants/app.messages";
+import { SOCKET_EVENTS } from "../constants/socket.events";
+import { sendToPlayer } from "../lib/realtime";
+import type { JoinQueueInput } from "../schemas/game.schemas";
+import type { SocketUser } from "../types/socket";
+import { ApiError } from "../utils/api_error";
+import { Player, roomService } from "./room.services";
+
+// Matchmaking buckets keyed by "mode:RxCxM", owned by this service
+const queues = new Map<string, Player[]>();
 
 export const queueService = {
-	joinQueue(playerId: string, payload: JoinQueueMessage): void {
-		if (playerRooms.has(playerId)) {
+	joinQueue(user: SocketUser, input: JoinQueueInput): void {
+		if (roomService.isInRoom(user.id)) {
 			return;
 		}
 
-		if (rooms.size >= LIMITS.MAX_ROOMS) {
-			throw new ApiError(ERROR_CODES.SERVER_BUSY, SERVER_MESSAGES.SERVER_BUSY);
+		roomService.assertCapacity();
+
+		const mode = input.mode ?? GAME_MODES.CASUAL;
+		if (mode === GAME_MODES.RANKED && user.isGuest) {
+			throw new ApiError(401, GAME_MESSAGES.RANKED_REQUIRES_AUTH);
 		}
 
-		const mode: GameMode = payload.mode ?? GAME_MODES.CASUAL;
-		const identity = connections.get(playerId);
-		const isGuest = identity?.isGuest ?? true;
+		removeFromAllQueues(user.id);
 
-		if (mode === GAME_MODES.RANKED && isGuest) {
-			throw new ApiError(ERROR_CODES.NOT_AUTHENTICATED, SERVER_MESSAGES.RANKED_REQUIRES_AUTH);
-		}
-
-		removeFromAllQueues(playerId);
-
-		const key = getQueueKey(mode, payload.gridRows, payload.gridCols, payload.maxPlayers);
+		const key = getQueueKey(mode, input.gridRows, input.gridCols, input.maxPlayers);
 		const queue = queues.get(key) ?? [];
 		if (queue.length >= LIMITS.MAX_QUEUE_SIZE) {
-			throw new ApiError(ERROR_CODES.SERVER_BUSY, "Queue is full. Please try again later.");
+			throw new ApiError(503, GAME_MESSAGES.QUEUE_FULL);
 		}
 
 		queue.push({
-			id: playerId,
-			name: identity && !identity.isGuest ? identity.displayName : payload.playerName,
-			isGuest,
+			id: user.id,
+			name: user.isGuest ? input.playerName : user.name,
+			isGuest: user.isGuest,
 			eliminated: false,
 			eliminatedTurn: null,
 		});
 		queues.set(key, queue);
 
-		emitToPlayer(playerId, {
-			type: MESSAGE_TYPES.QUEUED,
+		sendToPlayer(user.id, SOCKET_EVENTS.GAME.QUEUED, {
 			mode,
 			position: queue.length,
-			maxPlayers: payload.maxPlayers,
+			maxPlayers: input.maxPlayers,
 		});
 
-		if (queue.length >= payload.maxPlayers) {
-			const roomPlayers = queue.splice(0, payload.maxPlayers);
+		if (queue.length >= input.maxPlayers) {
+			const roomPlayers = queue.splice(0, input.maxPlayers);
 			if (queue.length === 0) {
 				queues.delete(key);
 			}
-			roomService.createMatchedRoom(roomPlayers, mode, payload.gridRows, payload.gridCols);
+			roomService.createMatchedRoom(roomPlayers, mode, input.gridRows, input.gridCols);
 		}
 	},
 
@@ -64,11 +60,11 @@ export const queueService = {
 	},
 };
 
-function getQueueKey(mode: GameMode, gridRows: number, gridCols: number, maxPlayers: number): string {
+function getQueueKey(mode: GAME_MODES, gridRows: number, gridCols: number, maxPlayers: number): string {
 	return `${mode}:${gridRows}x${gridCols}x${maxPlayers}`;
 }
 
-function getQueueMode(key: string): GameMode {
+function getQueueMode(key: string): GAME_MODES {
 	return key.startsWith(`${GAME_MODES.RANKED}:`) ? GAME_MODES.RANKED : GAME_MODES.CASUAL;
 }
 
@@ -79,6 +75,10 @@ function getQueueMaxPlayers(key: string): number {
 function removeFromAllQueues(playerId: string): void {
 	for (const [key, queue] of queues) {
 		const nextQueue = queue.filter((player: Player) => player.id !== playerId);
+		if (nextQueue.length === queue.length) {
+			continue;
+		}
+
 		if (nextQueue.length === 0) {
 			queues.delete(key);
 			continue;
@@ -86,8 +86,7 @@ function removeFromAllQueues(playerId: string): void {
 
 		queues.set(key, nextQueue);
 		nextQueue.forEach((player, index) => {
-			emitToPlayer(player.id, {
-				type: MESSAGE_TYPES.QUEUED,
+			sendToPlayer(player.id, SOCKET_EVENTS.GAME.QUEUED, {
 				mode: getQueueMode(key),
 				position: index + 1,
 				maxPlayers: getQueueMaxPlayers(key),

@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type {
-  ClientMessage,
   CreateRoomInput,
   GameState,
   GameMode,
@@ -11,7 +10,7 @@ import type {
   Phase,
   Player,
   QueuedInfo,
-  ServerMessage
+  ServerEnvelope
 } from "@/lib/types";
 import { getStoredAccessToken } from "@/lib/auth";
 
@@ -20,13 +19,7 @@ const DEFAULT_WS_URL = "ws://localhost:8080";
 export type WebSocketConnectionState = "connecting" | "open" | "closed" | "error";
 
 function buildWebSocketUrl(): string {
-  const url = new URL(process.env.NEXT_PUBLIC_WS_URL ?? DEFAULT_WS_URL);
-  const token = getStoredAccessToken();
-  if (token) {
-    url.searchParams.set("token", token);
-  }
-
-  return url.toString();
+  return new URL("/game", process.env.NEXT_PUBLIC_WS_URL ?? DEFAULT_WS_URL).toString();
 }
 
 export function useGameWebSocket() {
@@ -42,17 +35,20 @@ export function useGameWebSocket() {
   const [connectionState, setConnectionState] = useState<WebSocketConnectionState>("connecting");
   const [roomCode, setRoomCode] = useState<string | null>(null);
 
-  const sendJSON = useCallback((message: ClientMessage) => {
+  const sendJSON = useCallback((event: string, data?: unknown) => {
     const socket = socketRef.current;
     if (!socket || socket.readyState !== WebSocket.OPEN) {
       return;
     }
 
-    socket.send(JSON.stringify(message));
+    socket.send(JSON.stringify({ event, data }));
   }, []);
 
   useEffect(() => {
-    const socket = new WebSocket(buildWebSocketUrl());
+    // Authenticated clients pass the JWT as the WebSocket subprotocol;
+    // the backend echoes it during the handshake and resolves the identity.
+    const token = getStoredAccessToken();
+    const socket = token ? new WebSocket(buildWebSocketUrl(), token) : new WebSocket(buildWebSocketUrl());
     socketRef.current = socket;
     setConnectionState("connecting");
 
@@ -69,50 +65,50 @@ export function useGameWebSocket() {
     };
 
     socket.onmessage = (event) => {
-      const message = JSON.parse(event.data as string) as ServerMessage;
+      const message = JSON.parse(event.data as string) as ServerEnvelope;
 
-      switch (message.type) {
-        case "connected":
-          setPlayerId(message.playerId);
+      switch (message.event) {
+        case "game:connected":
+          setPlayerId(message.data.playerId);
           break;
-        case "queued":
+        case "game:queued":
           setQueuedInfo({
-            mode: message.mode,
-            position: message.position,
-            maxPlayers: message.maxPlayers
+            mode: message.data.mode,
+            position: message.data.position,
+            maxPlayers: message.data.maxPlayers
           });
           setLastError(null);
           setPhase("queued");
           break;
-        case "game_start":
-          setGameMode(message.mode);
+        case "game:start":
+          setGameMode(message.data.mode);
           setQueuedInfo(null);
           setWinner(null);
           setLastError(null);
           setPhase("playing");
           break;
-        case "game_state":
+        case "game:state":
           setGameState({
-            board: message.board,
-            currentTurn: message.currentTurn,
-            players: message.players
+            board: message.data.board,
+            currentTurn: message.data.currentTurn,
+            players: message.data.players
           });
           setLastError(null);
           setPhase("playing");
           break;
-        case "game_over":
-          setGameMode(message.mode);
-          setWinner(message.winner);
-          setScoreDeltas(message.score_deltas ?? null);
+        case "game:over":
+          setGameMode(message.data.mode);
+          setWinner(message.data.winner);
+          setScoreDeltas(message.data.scoreDeltas ?? null);
           setLastError(null);
           setPhase("gameover");
           break;
-        case "room_created":
-          setRoomCode(message.code);
+        case "game:room-created":
+          setRoomCode(message.data.code);
           setPhase("queued");
           break;
-        case "error":
-          setLastError({ code: message.code, message: message.message });
+        case "game:error":
+          setLastError({ code: message.data.code, message: message.data.message });
           break;
         default:
           break;
@@ -127,40 +123,40 @@ export function useGameWebSocket() {
 
   const joinQueue = useCallback(
     (input: JoinQueueInput) => {
-      sendJSON({ type: "join_queue", ...input });
+      sendJSON("game:join-queue", input);
     },
     [sendJSON]
   );
 
   const createRoom = useCallback(
     (input: CreateRoomInput) => {
-      sendJSON({ type: "create_room", ...input });
+      sendJSON("game:create-room", input);
     },
     [sendJSON]
   );
 
   const joinRoomByCode = useCallback(
     (code: string, playerName: string) => {
-      sendJSON({ type: "join_room_by_code", code, playerName });
+      sendJSON("game:join-room-by-code", { code, playerName });
     },
     [sendJSON]
   );
 
   const leaveQueue = useCallback(() => {
-    sendJSON({ type: "leave_queue" });
+    sendJSON("game:leave-queue");
     setQueuedInfo(null);
     setPhase("lobby");
   }, [sendJSON]);
 
   const makeMove = useCallback(
     (row: number, col: number) => {
-      sendJSON({ type: "make_move", row, col });
+      sendJSON("game:make-move", { row, col });
     },
     [sendJSON]
   );
 
   const leaveGame = useCallback(() => {
-    sendJSON({ type: "leave_game" });
+    sendJSON("game:leave-game");
     setGameState(null);
     setGameMode(null);
     setPhase("lobby");
