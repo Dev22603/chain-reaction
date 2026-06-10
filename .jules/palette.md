@@ -1,0 +1,3 @@
+## 2024-06-10 - Programmatic Association of Form Inputs
+**Learning:** For accessible forms, relying solely on visual hints or implicit grouping can cause screen readers to miss context. Using `aria-describedby` robustly links inputs to their contextual hints or errors, ensuring screen readers announce the extra information when the input is focused.
+**Action:** When creating reusable input components (like the `Input` component), automatically generate unique IDs using `useId()` and conditionally apply `aria-describedby` when hint text or error text is present, keeping it simple and foolproof for developers using the component.
