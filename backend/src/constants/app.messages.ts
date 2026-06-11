@@ -11,6 +11,7 @@ const AUTH_VALIDATION_ERRORS = {
 	DISPLAY_NAME_MAX: "displayName must be 30 characters or less",
 	DISPLAY_NAME_NO_DIGITS: "displayName cannot contain numbers",
 	DISPLAY_NAME_INVALID_CHARS: "displayName can only contain letters, spaces, hyphens, and underscores",
+	ACCESS_TOKEN_REQUIRED: "accessToken is required",
 };
 
 const AUTH_FEEDBACK_MESSAGES = {
@@ -22,6 +23,8 @@ const AUTH_FEEDBACK_MESSAGES = {
 	INVALID_CREDENTIALS: "Invalid email or password.",
 	NOT_AUTHENTICATED: "Authentication is required.",
 	TOKEN_EXPIRED: "Access token has expired.",
+	GOOGLE_LOGIN_FAILED: "Google sign-in could not be verified.",
+	GOOGLE_LOGIN_UNAVAILABLE: "Google sign-in is not available right now.",
 };
 
 const PLAYER_FEEDBACK_MESSAGES = {

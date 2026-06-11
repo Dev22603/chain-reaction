@@ -152,6 +152,13 @@ export const authApi = {
     });
   },
 
+  googleLogin(accessToken: string) {
+    return apiRequest<AuthResult>("/auth/google", {
+      method: "POST",
+      body: JSON.stringify({ accessToken })
+    });
+  },
+
   me() {
     return apiRequest<{ player: PublicPlayer }>("/auth/me", {
       auth: true

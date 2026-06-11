@@ -41,11 +41,25 @@ npm run build
 npm run lint
 ```
 
-When you have a local Postgres database available, copy `backend/.env.example` to `backend/.env`, set `DATABASE_URL`, then run:
+All durable data is stored in Supabase Postgres. Create a free project at [supabase.com](https://supabase.com), then copy `backend/.env.example` to `backend/.env` and fill in `DATABASE_URL` (transaction pooler) and `DIRECT_URL` (session pooler) from the dashboard's Connect panel. Apply the schema with:
 
 ```bash
 npm run db:migrate -w backend
 ```
+
+See [docs/DATABASE.md](./docs/DATABASE.md) for the Supabase connection model.
+
+## Google Sign-In (optional)
+
+Google login runs through Supabase Auth: the frontend completes the OAuth dance with Supabase, then exchanges the Supabase token at `POST /api/auth/google` for the backend's own JWT. Accounts are linked by email, so a Google sign-in with the same email as an email/password signup lands in the same account. To enable it:
+
+1. In Google Cloud Console, create an OAuth client (Web application) and add `https://[PROJECT-REF].supabase.co/auth/v1/callback` as an authorized redirect URI.
+2. In Supabase Dashboard, go to Authentication, then Sign In / Providers, enable **Google**, and paste the Google client ID and secret.
+3. Still in Authentication, under URL Configuration, add `http://localhost:3000/auth/callback` (and your production URL) to **Redirect URLs**.
+4. Disable the **Email** provider in Supabase (the backend handles email/password itself; leaving it on would let anyone mint Supabase tokens, which the backend rejects but does not need).
+5. Set `SUPABASE_URL` + `SUPABASE_ANON_KEY` in `backend/.env` and `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `frontend/.env.local` (values from Supabase Dashboard, Settings, API).
+
+Leaving these env vars unset simply disables the Google button; email/password auth works regardless.
 
 ## Key Docs
 

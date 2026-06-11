@@ -35,9 +35,14 @@ const updateProfileSchema = z.object({
 	displayName: displayNameField,
 });
 
+const googleLoginSchema = z.object({
+	accessToken: z.string().min(1, AUTH_VALIDATION_ERRORS.ACCESS_TOKEN_REQUIRED),
+});
+
 export type SignupInput = z.infer<typeof signupSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+export type GoogleLoginInput = z.infer<typeof googleLoginSchema>;
 
 // Validator functions (called in services)
 export function validateSignup(data: unknown): SignupInput {
@@ -70,6 +75,18 @@ export function validateUpdateProfile(data: unknown): UpdateProfileInput {
 		throw new ApiError(
 			400,
 			"Profile update validation failed",
+			result.error.issues.map((issue) => issue.message),
+		);
+	}
+	return result.data;
+}
+
+export function validateGoogleLogin(data: unknown): GoogleLoginInput {
+	const result = googleLoginSchema.safeParse(data);
+	if (!result.success) {
+		throw new ApiError(
+			400,
+			"Google login validation failed",
 			result.error.issues.map((issue) => issue.message),
 		);
 	}
