@@ -16,19 +16,26 @@ export function createBoard(rows: number, cols: number): Board {
 	return Array.from({ length: rows }, () => Array.from({ length: cols }, (): Cell => ({ owner: null, count: 0 })));
 }
 
+// Optimizations:
+// 1. Avoid intermediate array allocations and higher-order functions (e.g. .filter) in hot loops
+// 2. Use primitives and direct array mutations for better GC efficiency
 export function getNeighbors(row: number, col: number, rows: number, cols: number): Array<[number, number]> {
-	const candidates: Array<[number, number]> = [
-		[row - 1, col],
-		[row + 1, col],
-		[row, col - 1],
-		[row, col + 1],
-	];
-
-	return candidates.filter(([nextRow, nextCol]) => nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols);
+	const neighbors: Array<[number, number]> = [];
+	if (row > 0) neighbors.push([row - 1, col]);
+	if (row < rows - 1) neighbors.push([row + 1, col]);
+	if (col > 0) neighbors.push([row, col - 1]);
+	if (col < cols - 1) neighbors.push([row, col + 1]);
+	return neighbors;
 }
 
+// Optimization: Arithmetic calculation of mass prevents unnecessary array allocation
 export function getCriticalMass(row: number, col: number, rows: number, cols: number): number {
-	return getNeighbors(row, col, rows, cols).length;
+	let mass = 0;
+	if (row > 0) mass += 1;
+	if (row < rows - 1) mass += 1;
+	if (col > 0) mass += 1;
+	if (col < cols - 1) mass += 1;
+	return mass;
 }
 
 export function applyMove(board: Board, row: number, col: number, playerIndex: PlayerIndex, rows: number, cols: number): Board {
@@ -59,7 +66,10 @@ export function applyMove(board: Board, row: number, col: number, playerIndex: P
 			break;
 		}
 
-		for (const [unstableRow, unstableCol] of unstableCells) {
+		// Optimization: Use classic for loop over for...of iterator overhead in hot path
+		for (let i = 0; i < unstableCells.length; i++) {
+			const unstableRow = unstableCells[i][0];
+			const unstableCol = unstableCells[i][1];
 			const cell = board[unstableRow]?.[unstableCol];
 			if (!cell || cell.count < getCriticalMass(unstableRow, unstableCol, rows, cols)) {
 				continue;
@@ -76,7 +86,11 @@ export function applyMove(board: Board, row: number, col: number, playerIndex: P
 				cell.owner = null;
 			}
 
-			for (const [neighborRow, neighborCol] of getNeighbors(unstableRow, unstableCol, rows, cols)) {
+			const neighbors = getNeighbors(unstableRow, unstableCol, rows, cols);
+			// Optimization: Use classic for loop over for...of iterator overhead
+			for (let j = 0; j < neighbors.length; j++) {
+				const neighborRow = neighbors[j][0];
+				const neighborCol = neighbors[j][1];
 				const neighbor = board[neighborRow]?.[neighborCol];
 				if (!neighbor) {
 					continue;
