@@ -1,4 +1,4 @@
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, UserPlus } from "lucide-react";
 import { useEffect, useRef, useState, useCallback } from "react";
 
 interface BoardCodePopoverProps {
@@ -48,15 +48,16 @@ export function BoardCodePopover({ code }: BoardCodePopoverProps) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
+        aria-label={open ? "Hide invite code" : "Show invite code"}
+        title="Invite a player"
         className={
-          "inline-flex items-center gap-1.5 rounded-lg border-2 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-colors " +
+          "inline-flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors " +
           (open
             ? "border-secondary bg-surface text-secondary-deep"
             : "border-white/70 bg-surface/90 text-fg-soft hover:border-secondary hover:text-secondary-deep")
         }
       >
-        <Copy size={11} aria-hidden="true" />
-        <span>{open ? "Hide code" : "Show code"}</span>
+        <UserPlus size={14} aria-hidden="true" />
       </button>
 
       {open ? (
