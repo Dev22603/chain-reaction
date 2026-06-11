@@ -10,15 +10,15 @@ const buttonStyles = cva(
     variants: {
       variant: {
         primary:
-          "bg-reactor text-bg shadow-reactor hover:bg-reactor-glow hover:shadow-[0_0_0_1px_rgba(255,138,76,0.6),0_0_36px_rgba(255,138,76,0.6)]",
+          "rounded-2xl border-[3px] border-white/90 bg-gradient-to-b from-primary-glow to-primary text-white [--btn-depth:var(--color-primary-deep)] game-btn-shadow",
         ghost:
-          "bg-surface/60 text-fg-soft border border-line hover:border-cherenkov hover:text-cherenkov hover:shadow-cherenkov backdrop-blur",
+          "rounded-full border-2 border-line bg-surface text-fg-soft hover:border-secondary hover:text-secondary-deep",
         danger:
-          "bg-surface/60 text-p1 border border-p1/50 hover:bg-p1/10 hover:shadow-[0_0_24px_rgba(255,59,107,0.35)]",
+          "rounded-full border-2 border-danger/50 bg-surface text-danger hover:bg-danger/10",
         segment:
-          "bg-bg-soft text-fg-soft border border-line hover:border-line-2 hover:text-fg",
+          "rounded-full border-2 border-line bg-surface text-fg-soft hover:border-line-2 hover:text-fg",
         segmentActive:
-          "bg-cherenkov/15 text-cherenkov border border-cherenkov shadow-cherenkov"
+          "rounded-full border-2 border-secondary bg-secondary/10 text-secondary-deep"
       },
       size: {
         sm: "min-h-9 px-3 py-2 text-[10px] sm:text-[11px]",

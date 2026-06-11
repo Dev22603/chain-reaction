@@ -1,17 +1,24 @@
 import { PLAYER_FEEDBACK_MESSAGES } from "../constants/app.messages";
+import { levelProgress } from "../constants/xp.constants";
 import { matchRepository, MatchHistoryEntry } from "../repositories/match.repositories";
 import { playerRepository, PlayerProfile } from "../repositories/player.repositories";
 import { validateListQuery } from "../schemas/player.schemas";
 import { ApiError } from "../utils/api_error";
 
+export interface PlayerProfileWithLevel extends PlayerProfile {
+	level: number;
+	xpIntoLevel: number;
+	xpForNextLevel: number;
+}
+
 export const playerService = {
-	async getProfile(playerId: string): Promise<PlayerProfile> {
+	async getProfile(playerId: string): Promise<PlayerProfileWithLevel> {
 		const profile = await playerRepository.getProfile(playerId);
 		if (!profile) {
 			throw new ApiError(404, PLAYER_FEEDBACK_MESSAGES.PLAYER_NOT_FOUND);
 		}
 
-		return profile;
+		return { ...profile, ...levelProgress(profile.totalXp) };
 	},
 
 	async listMatches(playerId: string, query: unknown): Promise<MatchHistoryEntry[]> {

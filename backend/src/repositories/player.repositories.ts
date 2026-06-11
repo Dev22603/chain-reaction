@@ -3,14 +3,21 @@ import { getLogger } from "../lib/logger";
 
 const logger = getLogger("player.repository");
 
-export interface PlayerProfile {
-	playerId: string;
-	displayName: string;
-	score: number;
+export interface PlayerModeStats {
+	boardPreset: string;
+	maxPlayers: number;
+	xp: number;
 	wins: number;
 	losses: number;
 	gamesPlayed: number;
 	forfeits: number;
+}
+
+export interface PlayerProfile {
+	playerId: string;
+	displayName: string;
+	totalXp: number;
+	modeStats: PlayerModeStats[];
 	createdAt: string;
 }
 
@@ -53,7 +60,11 @@ export const playerRepository = {
 		try {
 			const player = await prisma.player.findUnique({
 				where: { id },
-				include: { score: true },
+				include: {
+					modeStats: {
+						orderBy: [{ boardPreset: "asc" }, { maxPlayers: "asc" }],
+					},
+				},
 			});
 
 			if (!player) {
@@ -63,11 +74,16 @@ export const playerRepository = {
 			return {
 				playerId: player.id,
 				displayName: player.displayName,
-				score: player.score?.score ?? 0,
-				wins: player.score?.wins ?? 0,
-				losses: player.score?.losses ?? 0,
-				gamesPlayed: player.score?.gamesPlayed ?? 0,
-				forfeits: player.score?.forfeits ?? 0,
+				totalXp: player.totalXp,
+				modeStats: player.modeStats.map((stat) => ({
+					boardPreset: stat.boardPreset,
+					maxPlayers: stat.maxPlayers,
+					xp: stat.xp,
+					wins: stat.wins,
+					losses: stat.losses,
+					gamesPlayed: stat.gamesPlayed,
+					forfeits: stat.forfeits,
+				})),
 				createdAt: player.createdAt.toISOString(),
 			};
 		} catch (error) {

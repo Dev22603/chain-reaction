@@ -4,7 +4,6 @@ export interface Cell {
 }
 
 export type Board = Cell[][];
-export type GameMode = "casual" | "ranked";
 
 export interface Player {
   id: string;
@@ -23,9 +22,10 @@ export interface GameState {
 }
 
 export interface QueuedInfo {
-  mode: GameMode;
   position: number;
   maxPlayers: number;
+  gridRows?: number;
+  gridCols?: number;
 }
 
 export interface LastError {
@@ -34,7 +34,6 @@ export interface LastError {
 }
 
 export interface JoinQueueInput {
-  mode?: GameMode;
   gridRows: number;
   gridCols: number;
   maxPlayers: number;
@@ -55,12 +54,12 @@ export type ServerEnvelope =
   | { event: "game:queued"; data: QueuedInfo }
   | {
       event: "game:start";
-      data: { roomId: string; mode: GameMode; players: Player[]; gridRows: number; gridCols: number };
+      data: { roomId: string; players: Player[]; gridRows: number; gridCols: number };
     }
   | { event: "game:state"; data: GameState }
   | {
       event: "game:over";
-      data: { mode: GameMode; winner: Pick<Player, "id" | "name">; scoreDeltas?: Record<string, number> };
+      data: { winner: Pick<Player, "id" | "name">; xpDeltas?: Record<string, number> };
     }
   | { event: "game:room-created"; data: { roomId: string; code: string } }
   | { event: "game:error"; data: { code: number; message: string; errors?: string[] } };

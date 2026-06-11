@@ -15,7 +15,7 @@ The following P0/P1 tasks are implemented and verified in the codebase.
 - **T08: HTTP Edge Hygiene** — Integrated `helmet` for security headers and configured CORS with allowlist support.
 
 ### Game Integrity
-- **T06: Game & Leaderboard Integrity** — Enforced ranked-game requirements (auth required, ≥2 players). Implemented room state machine (`lobby` -> `active` -> `finished`) to prevent scoring exploits.
+- **T06: Game & Leaderboard Integrity** — XP only persists for authenticated players, with an anti-farm velocity cap. Implemented room state machine (`lobby` -> `active` -> `finished`) to prevent scoring exploits.
 - **T09: Auth Hygiene** — Fixed login timing attacks (dummy hashes for missing users), implemented JWT hardening (HS256 pinning), and added password length limits.
 
 ### Observability

@@ -22,6 +22,10 @@ export interface PublicPlayer {
   id: string;
   displayName: string;
   email: string | null;
+  totalXp: number;
+  level: number;
+  xpIntoLevel: number;
+  xpForNextLevel: number;
 }
 
 export interface AuthResult {
@@ -32,7 +36,24 @@ export interface AuthResult {
 export interface LeaderboardEntry {
   playerId: string;
   displayName: string;
-  score: number;
+  totalXp: number;
+  level: number;
+}
+
+export interface ModeLeaderboardEntry {
+  playerId: string;
+  displayName: string;
+  xp: number;
+  wins: number;
+  losses: number;
+  gamesPlayed: number;
+  forfeits: number;
+}
+
+export interface PlayerModeStats {
+  boardPreset: string;
+  maxPlayers: number;
+  xp: number;
   wins: number;
   losses: number;
   gamesPlayed: number;
@@ -42,11 +63,11 @@ export interface LeaderboardEntry {
 export interface PlayerProfile {
   playerId: string;
   displayName: string;
-  score: number;
-  wins: number;
-  losses: number;
-  gamesPlayed: number;
-  forfeits: number;
+  totalXp: number;
+  level: number;
+  xpIntoLevel: number;
+  xpForNextLevel: number;
+  modeStats: PlayerModeStats[];
   createdAt: string;
 }
 
@@ -60,7 +81,6 @@ export interface MatchHistoryPlayer {
 
 export interface MatchHistoryEntry {
   matchId: string;
-  mode: "casual" | "ranked";
   gridRows: number;
   gridCols: number;
   maxPlayers: number;
@@ -150,6 +170,12 @@ export const authApi = {
 export const leaderboardApi = {
   list(limit = 20) {
     return apiRequest<{ leaderboard: LeaderboardEntry[] }>(`/leaderboard?limit=${limit}`);
+  },
+
+  mode(size: string, players: number, limit = 20) {
+    return apiRequest<{ leaderboard: ModeLeaderboardEntry[] }>(
+      `/leaderboard/mode?size=${size}&players=${players}&limit=${limit}`
+    );
   }
 };
 

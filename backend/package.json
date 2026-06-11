@@ -15,8 +15,7 @@
 		"db:reset": "prisma migrate reset",
 		"db:studio": "prisma studio",
 		"format": "prettier --write .",
-		"format:check": "prettier --check .",
-		"recompute-scores": "tsx scripts/recompute-scores.ts"
+		"format:check": "prettier --check ."
 	},
 	"dependencies": {
 		"@prisma/adapter-pg": "^7.6.0",

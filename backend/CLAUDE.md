@@ -41,7 +41,9 @@ npm run db:migrate     # prisma migrate dev
 npm run db:studio      # prisma studio
 ```
 
-WS protocol smoke tests (server must be running): `npx tsx scripts/ws-smoke.ts [token]` and `npx tsx scripts/ws-ranked-smoke.ts <tokenA> <tokenB>`.
+WS protocol smoke test (server must be running): `npx tsx scripts/ws-smoke.ts [token]`.
+
+Scoring: every finished game on a preset board grants XP to signed-in players (winner = 10 × opponents × sizeFactor, loser = 2 × sizeFactor; see `src/constants/xp.constants.ts` and `presets.constants.ts`). Stats live in `player_mode_stats` (per board preset × player count) plus `players.total_xp` for the overall leaderboard.
 
 Env: see `.env.example` (`DATABASE_URL`, `JWT_SECRET`, `ALLOWED_ORIGINS`, `PORT`).
 

@@ -1,4 +1,4 @@
-// WS protocol smoke test (guest flow + casual game). Run with the server up:
+// WS protocol smoke test (guest flow + quick match). Run with the server up:
 //   npx tsx scripts/ws-smoke.ts [token]
 import WebSocket from "ws";
 
@@ -85,25 +85,25 @@ async function main(): Promise<void> {
 		JSON.stringify(unknown.data),
 	);
 
-	// 4. Guest tries ranked queue -> 401
-	a.sendEvent("game:join-queue", { mode: "ranked", gridRows: 3, gridCols: 3, maxPlayers: 2, playerName: "GuestA" });
-	const ranked = await a.next();
+	// 4. Non-preset board -> validation error
+	a.sendEvent("game:join-queue", { gridRows: 3, gridCols: 3, maxPlayers: 2, playerName: "GuestA" });
+	const nonPreset = await a.next();
 	log(
-		"guest ranked queue -> game:error 401",
-		ranked.event === "game:error" && ranked.data.code === 401,
-		JSON.stringify(ranked.data),
+		"non-preset board -> game:error 400",
+		nonPreset.event === "game:error" && nonPreset.data.code === 400,
+		JSON.stringify(nonPreset.data),
 	);
 
-	// 5. Two guests queue casual 3x3x2 -> game starts
+	// 5. Two guests queue micro 4x5x2 -> game starts
 	const b = await connect("B");
 	const bConnected = await b.next();
 	log("second guest connected", bConnected.event === "game:connected");
 
-	a.sendEvent("game:join-queue", { gridRows: 3, gridCols: 3, maxPlayers: 2, playerName: "GuestA" });
+	a.sendEvent("game:join-queue", { gridRows: 4, gridCols: 5, maxPlayers: 2, playerName: "GuestA" });
 	const aQueued = await a.next();
 	log("queued frame", aQueued.event === "game:queued" && aQueued.data.position === 1, JSON.stringify(aQueued.data));
 
-	b.sendEvent("game:join-queue", { gridRows: 3, gridCols: 3, maxPlayers: 2, playerName: "GuestB" });
+	b.sendEvent("game:join-queue", { gridRows: 4, gridCols: 5, maxPlayers: 2, playerName: "GuestB" });
 	const bQueued = await b.next();
 	log("second queued frame", bQueued.event === "game:queued" && bQueued.data.position === 2, JSON.stringify(bQueued.data));
 

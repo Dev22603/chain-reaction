@@ -1,4 +1,4 @@
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, UserPlus } from "lucide-react";
 import { useEffect, useRef, useState, useCallback } from "react";
 
 interface BoardCodePopoverProps {
@@ -48,20 +48,21 @@ export function BoardCodePopover({ code }: BoardCodePopoverProps) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
+        aria-label={open ? "Hide invite code" : "Show invite code"}
+        title="Invite a player"
         className={
-          "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-widest backdrop-blur-sm transition-colors " +
+          "inline-flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors " +
           (open
-            ? "border-cherenkov/50 bg-cherenkov/12 text-cherenkov"
-            : "border-white/10 bg-surface/50 text-fg-muted hover:border-cherenkov/40 hover:text-cherenkov")
+            ? "border-secondary bg-surface text-secondary-deep"
+            : "border-white/70 bg-surface/90 text-fg-soft hover:border-secondary hover:text-secondary-deep")
         }
       >
-        <Copy size={11} aria-hidden="true" />
-        <span>{open ? "Hide code" : "Show code"}</span>
+        <UserPlus size={14} aria-hidden="true" />
       </button>
 
       {open ? (
         <div className="board-code-popover-content">
-          <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.3em] text-fg-muted">
+          <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.3em] text-fg-muted">
             Invite code
           </p>
           <div className="board-code-popover-tiles mb-3">
@@ -75,10 +76,10 @@ export function BoardCodePopover({ code }: BoardCodePopoverProps) {
             type="button"
             onClick={handleCopy}
             className={
-              "flex w-full items-center justify-center gap-1.5 rounded-lg border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] transition-colors " +
+              "flex w-full items-center justify-center gap-1.5 rounded-lg border-2 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] transition-colors " +
               (copied
-                ? "border-radium/40 bg-radium/8 text-radium"
-                : "border-cherenkov/35 bg-cherenkov/8 text-cherenkov hover:bg-cherenkov/16")
+                ? "border-success/50 bg-success/10 text-success"
+                : "border-secondary/50 bg-secondary/10 text-secondary-deep hover:bg-secondary/20")
             }
           >
             {copied ? <Check size={11} strokeWidth={3} /> : <Copy size={11} />}

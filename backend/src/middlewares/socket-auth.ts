@@ -13,7 +13,7 @@ const logger = getLogger("socket-auth.middleware");
  * Resolves the identity for a WebSocket upgrade request.
  * The JWT rides the Sec-WebSocket-Protocol header (new WebSocket(url, token)).
  * No token → guest. Invalid/expired token → security-log + guest fallback
- * (connections are never rejected for auth reasons; ranked play re-checks).
+ * (connections are never rejected for auth reasons; guests simply earn no XP).
  */
 export async function parseUserFromRequest(req: IncomingMessage, ip: string): Promise<SocketUser> {
 	const token = getTokenFromRequest(req);

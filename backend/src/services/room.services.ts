@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { GAME_MODES, LIMITS, ROOM_IDLE_TTL_MS } from "../constants/app.constants";
+import { DEFAULT_ROOM, LIMITS, ROOM_IDLE_TTL_MS } from "../constants/app.constants";
 import { GAME_MESSAGES } from "../constants/app.messages";
 import { SOCKET_EVENTS } from "../constants/socket.events";
 import { Board, PlayerIndex, createBoard } from "../game/game.logic";
@@ -22,7 +22,6 @@ export interface Player {
 
 export interface Room {
 	id: string;
-	mode: GAME_MODES;
 	isPrivate: boolean;
 	inviteCode?: string;
 	players: Player[];
@@ -58,12 +57,11 @@ export const roomService = {
 		}
 	},
 
-	createMatchedRoom(roomPlayers: Player[], mode: GAME_MODES, gridRows: number, gridCols: number): void {
+	createMatchedRoom(roomPlayers: Player[], gridRows: number, gridCols: number): void {
 		this.assertCapacity();
 
 		const room: Room = {
 			id: randomUUID(),
-			mode,
 			isPrivate: false,
 			players: roomPlayers.map((player) => ({ ...player, eliminated: false })),
 			gridRows,
@@ -93,38 +91,7 @@ export const roomService = {
 		this.assertCapacity();
 
 		const code = generateInviteCode();
-		const player: Player = {
-			id: user.id,
-			name: user.isGuest ? input.playerName : user.name,
-			isGuest: user.isGuest,
-			eliminated: false,
-			eliminatedTurn: null,
-		};
-		const room: Room = {
-			id: randomUUID(),
-			mode: GAME_MODES.CASUAL,
-			isPrivate: true,
-			inviteCode: code,
-			players: [player],
-			gridRows: input.gridRows,
-			gridCols: input.gridCols,
-			maxPlayers: input.maxPlayers,
-			board: createBoard(input.gridRows, input.gridCols),
-			currentTurn: 0,
-			turnCount: 0,
-			startedAt: new Date(),
-			status: "lobby",
-			forfeitedPlayerIds: new Set(),
-		};
-
-		rooms.set(room.id, room);
-		roomCodes.set(code, room.id);
-		playerRooms.set(user.id, room.id);
-
-		logger.info("private room created", { roomId: room.id, code, playerId: user.id });
-
-		sendToPlayer(user.id, SOCKET_EVENTS.GAME.ROOM_CREATED, { roomId: room.id, code });
-		emitGameState(room);
+		buildPrivateRoom(user, input.playerName, code, input.gridRows, input.gridCols, input.maxPlayers);
 	},
 
 	joinPrivateRoom(user: SocketUser, input: JoinRoomByCodeInput): void {
@@ -134,7 +101,18 @@ export const roomService = {
 
 		const roomId = roomCodes.get(input.code);
 		if (!roomId) {
-			throw new ApiError(400, GAME_MESSAGES.INVALID_INVITE_CODE);
+			// Unknown code: instead of rejecting, open a fresh room under that code
+			// so friends can rendezvous on any code they agree on.
+			this.assertCapacity();
+			buildPrivateRoom(
+				user,
+				input.playerName,
+				input.code,
+				DEFAULT_ROOM.GRID_ROWS,
+				DEFAULT_ROOM.GRID_COLS,
+				DEFAULT_ROOM.MAX_PLAYERS,
+			);
+			return;
 		}
 
 		const room = rooms.get(roomId);
@@ -215,6 +193,47 @@ export function stopRoomReaper(): void {
 	logger.info("stopped periodic room reaper");
 }
 
+function buildPrivateRoom(
+	user: SocketUser,
+	playerName: string,
+	code: string,
+	gridRows: number,
+	gridCols: number,
+	maxPlayers: number,
+): void {
+	const player: Player = {
+		id: user.id,
+		name: user.isGuest ? playerName : user.name,
+		isGuest: user.isGuest,
+		eliminated: false,
+		eliminatedTurn: null,
+	};
+	const room: Room = {
+		id: randomUUID(),
+		isPrivate: true,
+		inviteCode: code,
+		players: [player],
+		gridRows,
+		gridCols,
+		maxPlayers,
+		board: createBoard(gridRows, gridCols),
+		currentTurn: 0,
+		turnCount: 0,
+		startedAt: new Date(),
+		status: "lobby",
+		forfeitedPlayerIds: new Set(),
+	};
+
+	rooms.set(room.id, room);
+	roomCodes.set(code, room.id);
+	playerRooms.set(user.id, room.id);
+
+	logger.info("private room created", { roomId: room.id, code, playerId: user.id });
+
+	sendToPlayer(user.id, SOCKET_EVENTS.GAME.ROOM_CREATED, { roomId: room.id, code });
+	emitGameState(room);
+}
+
 function generateInviteCode(): string {
 	let code: string;
 	do {
@@ -229,7 +248,6 @@ function emitGameStarted(room: Room): void {
 		SOCKET_EVENTS.GAME.START,
 		{
 			roomId: room.id,
-			mode: room.mode,
 			players: room.players,
 			gridRows: room.gridRows,
 			gridCols: room.gridCols,

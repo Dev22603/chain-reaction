@@ -6,7 +6,7 @@ You're adding a new subsystem, changing how frontend and backend talk at a struc
 
 ## System overview
 
-Three pieces. One backend process. Postgres is used for account identity, match history, and ranked scoring.
+Three pieces. One backend process. Postgres is used for account identity, match history, and XP stats (per board-preset x player-count, plus total XP per player).
 
 ```
 ┌──────────────┐    WebSocket (JSON)    ┌────────────────────────────────┐
@@ -85,7 +85,7 @@ State lives in the `useGameWebSocket` hook:
 - `phase: 'lobby' | 'queued' | 'playing' | 'gameover'`
 - `playerId: string | null`
 - `gameState: GameState | null` (see `frontend/src/lib/types.ts`)
-- `queuedInfo: { mode, position, maxPlayers } | null`
+- `queuedInfo: { position, maxPlayers, gridRows, gridCols } | null`
 - `winner: Player | null`
 
 ## In-memory state (backend)
@@ -95,17 +95,17 @@ Module-level Maps in `backend/src/state/memory.ts`:
 ```ts
 export const players     = new Map<string, WebSocket>();          // playerId -> socket
 export const connections = new Map<string, ConnectionIdentity>(); // playerId -> auth/guest identity
-export const queues      = new Map<string, Player[]>();           // "mode:RxCxN" -> bucket
+export const queues      = new Map<string, Player[]>();           // "RxCxN" -> bucket
 export const rooms       = new Map<string, Room>();               // roomId -> room
 export const playerRooms = new Map<string, string>();             // playerId -> roomId
 ```
 
-A `Room` (defined in `types/game.ts`) holds `{ id, mode, players: Player[], gridRows, gridCols, maxPlayers, board, currentTurn, turnCount, startedAt, forfeitedPlayerIds }`. Rooms are deleted when a game ends. Players carry `isGuest`, `eliminated`, and `eliminatedTurn` for the duration.
+A `Room` (defined in `types/game.ts`) holds `{ id, players: Player[], gridRows, gridCols, maxPlayers, board, currentTurn, turnCount, startedAt, forfeitedPlayerIds }`. Rooms are deleted when a game ends. Players carry `isGuest`, `eliminated`, and `eliminatedTurn` for the duration.
 
 ## Lifecycle: connection to cleanup
 
 1. Client opens WS. `realtime/websocket.ts` verifies an optional JWT, otherwise creates a guest identity, then sends `{ type: 'connected', playerId, displayName, isGuest }`.
-2. Client sends `join_queue` with `mode`. `queue.handlers.ts` rejects guest ranked joins, buckets by mode/grid/player count, sends `queued`, and creates a room when the bucket fills.
+2. Client sends `join_queue`. The queue service buckets by grid size and player count, sends `queued`, and creates a room when the bucket fills.
 3. Clients alternate `make_move`. `game.handlers.ts` validates, runs `applyMove`, broadcasts `game_state`.
 4. When only one player remains alive, server sends `game_over`, attempts persistence asynchronously, and deletes the room.
 5. On disconnect: `realtime/websocket.ts` runs leave-queue + leave-game cleanup, then `players.delete`.
@@ -121,4 +121,4 @@ Currently not automated. When enabled:
 
 ## Deferred product work
 
-Reconnection, spectators, private rooms, per-mode Elo, 5+ player games, and mobile-specific polish are deferred until the auth, persistence, and simple scoring foundation is stable.
+Reconnection, spectators, per-mode Elo, and mobile-specific polish are deferred until the auth, persistence, and XP foundation is stable.

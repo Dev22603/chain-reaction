@@ -23,32 +23,32 @@ export function ToastStack({ disconnected, error, notice, compact = false }: Toa
       {disconnected ? (
         <div
           role="status"
-          className={`flex items-start gap-3 border border-p1/50 bg-p1/5 ${paddingClass} text-p1`}
+          className={`flex items-start gap-3 rounded-xl border-2 border-danger/60 bg-surface ${paddingClass} text-danger shadow-panel`}
         >
           <WifiOff size={wifiIconSize} aria-hidden="true" className="mt-0.5 shrink-0" />
-          <span className="font-mono leading-relaxed">
+          <span className="font-semibold leading-relaxed">
             {compact
-              ? "Reactor offline — reconnecting. Gameplay paused until the link is back."
-              : "Reactor offline — reconnecting to the backend. Gameplay paused until the link is back."}
+              ? "Connection lost. Reconnecting…"
+              : "Connection lost. Reconnecting, the game will resume in a moment."}
           </span>
         </div>
       ) : null}
       {error ? (
         <div
           role="alert"
-          className={`flex items-start gap-3 border border-p1/50 bg-p1/5 ${paddingClass} text-p1 [animation:panel-rise_0.4s_ease-out_both]`}
+          className={`flex items-start gap-3 rounded-xl border-2 border-danger/60 bg-surface ${paddingClass} text-danger shadow-panel [animation:panel-rise_0.4s_ease-out_both]`}
         >
           <AlertTriangle size={alertIconSize} aria-hidden="true" className="mt-0.5 shrink-0" />
-          <span className="font-mono leading-relaxed">{error.message}</span>
+          <span className="font-semibold leading-relaxed">{error.message}</span>
         </div>
       ) : null}
       {notice ? (
         <div
           role="status"
-          className={`flex items-start gap-3 border border-cherenkov/40 bg-cherenkov/5 ${paddingClass} text-cherenkov [animation:panel-rise_0.4s_ease-out_both]`}
+          className={`flex items-start gap-3 rounded-xl border-2 border-secondary/60 bg-surface ${paddingClass} text-secondary-deep shadow-panel [animation:panel-rise_0.4s_ease-out_both]`}
         >
           <Sparkles size={sparklesIconSize} aria-hidden="true" className="mt-0.5 shrink-0" />
-          <span className="font-mono leading-relaxed">{notice}</span>
+          <span className="font-semibold leading-relaxed">{notice}</span>
         </div>
       ) : null}
     </div>

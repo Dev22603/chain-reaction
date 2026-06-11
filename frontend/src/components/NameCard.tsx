@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Check, Pencil, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -51,7 +51,7 @@ export function NameCard({ displayName, canEdit, onSave, onInteract }: NameCardP
       return;
     }
     if (!isValidDisplayName(trimmed)) {
-      setError("Letters only — no numbers.");
+      setError("Letters only, no numbers.");
       return;
     }
     onInteract?.();
@@ -70,11 +70,11 @@ export function NameCard({ displayName, canEdit, onSave, onInteract }: NameCardP
 
   return (
     <div className="grid gap-1">
-      <span className="font-display text-[10px] tracking-[0.22em] text-fg-muted">
-        {canEdit ? "SIGNED IN" : "GUEST"}
+      <span className="font-display text-[10px] tracking-[0.22em] text-white/85 drop-shadow-[0_1px_0_rgba(24,73,128,0.5)]">
+        {canEdit ? "YOUR NAME" : "GUEST"}
       </span>
       {editing ? (
-        <div className="flex items-center gap-1.5 rounded-2xl border-2 border-cherenkov/60 bg-surface px-2 py-1.5">
+        <div className="flex items-center gap-1.5 rounded-2xl border-2 border-secondary/60 bg-surface px-2 py-1.5">
           <input
             ref={inputRef}
             value={draft}
@@ -94,7 +94,7 @@ export function NameCard({ displayName, canEdit, onSave, onInteract }: NameCardP
             onClick={() => void commit()}
             disabled={saving}
             aria-label="Save name"
-            className="grid h-7 w-7 place-items-center rounded-lg bg-cherenkov text-white transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
+            className="grid h-7 w-7 place-items-center rounded-lg bg-secondary text-white transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
           >
             <Check size={14} strokeWidth={3} aria-hidden="true" />
           </button>
@@ -113,11 +113,11 @@ export function NameCard({ displayName, canEdit, onSave, onInteract }: NameCardP
           type="button"
           onClick={startEdit}
           disabled={!canEdit}
-          aria-label={canEdit ? `Edit name — currently ${displayName}` : `Guest name ${displayName}`}
+          aria-label={canEdit ? `Edit name (currently ${displayName})` : `Guest name ${displayName}`}
           className={
             "group flex items-center gap-2 rounded-2xl border-2 px-3 py-1.5 font-body text-sm font-semibold text-fg transition-colors " +
             (canEdit
-              ? "border-cherenkov/50 bg-surface hover:border-cherenkov hover:bg-bg-soft cursor-pointer"
+              ? "border-secondary/50 bg-surface hover:border-secondary hover:bg-surface-2 cursor-pointer"
               : "border-line bg-surface cursor-default")
           }
         >
@@ -125,7 +125,7 @@ export function NameCard({ displayName, canEdit, onSave, onInteract }: NameCardP
           {canEdit ? (
             <span
               aria-hidden="true"
-              className="grid h-6 w-6 place-items-center rounded-md bg-cherenkov/15 text-cherenkov transition-colors group-hover:bg-cherenkov/25"
+              className="grid h-6 w-6 place-items-center rounded-md bg-secondary/15 text-secondary transition-colors group-hover:bg-secondary/25"
             >
               <Pencil size={11} strokeWidth={2.5} />
             </span>
@@ -133,7 +133,7 @@ export function NameCard({ displayName, canEdit, onSave, onInteract }: NameCardP
         </button>
       )}
       {error ? (
-        <span role="alert" className="font-body text-[11px] text-p1">
+        <span role="alert" className="font-body text-[11px] text-danger">
           {error}
         </span>
       ) : null}
