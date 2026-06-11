@@ -52,7 +52,7 @@ export function AuthPanel({ mode }: AuthPanelProps) {
       <Card className="w-full p-8 [animation:panel-rise_0.5s_ease-out_both] sm:p-10">
         <CardCorners />
         <header className="mb-8 grid gap-3">
-          <CardEyebrow>{isSignup ? "// create operator" : "// operator access"}</CardEyebrow>
+          <CardEyebrow>{isSignup ? "Create account" : "Welcome back"}</CardEyebrow>
           <CardTitle className="text-3xl sm:text-4xl">
             {isSignup ? "Sign Up" : "Login"}
           </CardTitle>
@@ -93,7 +93,7 @@ export function AuthPanel({ mode }: AuthPanelProps) {
           />
 
           {error ? (
-            <div role="alert" className="border border-p1/50 bg-p1/5 px-4 py-3 text-sm text-p1">
+            <div role="alert" className="rounded-xl border-2 border-danger/50 bg-danger/5 px-4 py-3 text-sm font-semibold text-danger">
               {error}
             </div>
           ) : null}
@@ -104,13 +104,13 @@ export function AuthPanel({ mode }: AuthPanelProps) {
           </Button>
         </form>
 
-        <div className="mt-6 grid gap-3 border-t border-line pt-5 text-center font-mono text-xs text-fg-muted">
+        <div className="mt-6 grid gap-3 border-t border-line pt-5 text-center text-xs font-semibold text-fg-muted">
           {isSignup ? (
-            <Link href="/login" className="text-cherenkov hover:text-fg">
+            <Link href="/login" className="text-secondary-deep hover:text-fg">
               Already have an account?
             </Link>
           ) : (
-            <Link href="/signup" className="text-cherenkov hover:text-fg">
+            <Link href="/signup" className="text-secondary-deep hover:text-fg">
               Create an account
             </Link>
           )}

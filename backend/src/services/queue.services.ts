@@ -1,4 +1,4 @@
-import { GAME_MODES, LIMITS } from "../constants/app.constants";
+import { LIMITS } from "../constants/app.constants";
 import { GAME_MESSAGES } from "../constants/app.messages";
 import { SOCKET_EVENTS } from "../constants/socket.events";
 import { sendToPlayer } from "../lib/realtime";
@@ -7,7 +7,7 @@ import type { SocketUser } from "../types/socket";
 import { ApiError } from "../utils/api_error";
 import { Player, roomService } from "./room.services";
 
-// Matchmaking buckets keyed by "mode:RxCxM", owned by this service
+// Matchmaking buckets keyed by "RxCxM", one queue per board-size and player-count combination
 const queues = new Map<string, Player[]>();
 
 export const queueService = {
@@ -18,14 +18,9 @@ export const queueService = {
 
 		roomService.assertCapacity();
 
-		const mode = input.mode ?? GAME_MODES.CASUAL;
-		if (mode === GAME_MODES.RANKED && user.isGuest) {
-			throw new ApiError(401, GAME_MESSAGES.RANKED_REQUIRES_AUTH);
-		}
-
 		removeFromAllQueues(user.id);
 
-		const key = getQueueKey(mode, input.gridRows, input.gridCols, input.maxPlayers);
+		const key = getQueueKey(input.gridRows, input.gridCols, input.maxPlayers);
 		const queue = queues.get(key) ?? [];
 		if (queue.length >= LIMITS.MAX_QUEUE_SIZE) {
 			throw new ApiError(503, GAME_MESSAGES.QUEUE_FULL);
@@ -41,9 +36,10 @@ export const queueService = {
 		queues.set(key, queue);
 
 		sendToPlayer(user.id, SOCKET_EVENTS.GAME.QUEUED, {
-			mode,
 			position: queue.length,
 			maxPlayers: input.maxPlayers,
+			gridRows: input.gridRows,
+			gridCols: input.gridCols,
 		});
 
 		if (queue.length >= input.maxPlayers) {
@@ -51,7 +47,7 @@ export const queueService = {
 			if (queue.length === 0) {
 				queues.delete(key);
 			}
-			roomService.createMatchedRoom(roomPlayers, mode, input.gridRows, input.gridCols);
+			roomService.createMatchedRoom(roomPlayers, input.gridRows, input.gridCols);
 		}
 	},
 
@@ -60,16 +56,13 @@ export const queueService = {
 	},
 };
 
-function getQueueKey(mode: GAME_MODES, gridRows: number, gridCols: number, maxPlayers: number): string {
-	return `${mode}:${gridRows}x${gridCols}x${maxPlayers}`;
+function getQueueKey(gridRows: number, gridCols: number, maxPlayers: number): string {
+	return `${gridRows}x${gridCols}x${maxPlayers}`;
 }
 
-function getQueueMode(key: string): GAME_MODES {
-	return key.startsWith(`${GAME_MODES.RANKED}:`) ? GAME_MODES.RANKED : GAME_MODES.CASUAL;
-}
-
-function getQueueMaxPlayers(key: string): number {
-	return Number(key.split("x")[2]);
+function parseQueueKey(key: string): { gridRows: number; gridCols: number; maxPlayers: number } {
+	const [gridRows, gridCols, maxPlayers] = key.split("x").map(Number);
+	return { gridRows, gridCols, maxPlayers };
 }
 
 function removeFromAllQueues(playerId: string): void {
@@ -85,11 +78,13 @@ function removeFromAllQueues(playerId: string): void {
 		}
 
 		queues.set(key, nextQueue);
+		const { gridRows, gridCols, maxPlayers } = parseQueueKey(key);
 		nextQueue.forEach((player, index) => {
 			sendToPlayer(player.id, SOCKET_EVENTS.GAME.QUEUED, {
-				mode: getQueueMode(key),
 				position: index + 1,
-				maxPlayers: getQueueMaxPlayers(key),
+				maxPlayers,
+				gridRows,
+				gridCols,
 			});
 		});
 	}

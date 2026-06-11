@@ -4,30 +4,30 @@ import Link from "next/link";
 import { RotateCcw, Trophy } from "lucide-react";
 import { useMemo, type CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardCorners, CardEyebrow } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { PLAYER_COLORS } from "@/lib/colors";
-import type { GameMode, Player } from "@/lib/types";
+import type { Player } from "@/lib/types";
 
 interface GameOverProps {
   winner: Pick<Player, "id" | "name"> | null;
-  mode: GameMode | null;
   winnerIndex?: number | null;
   players?: Player[] | null;
-  scoreDeltas?: Record<string, number> | null;
+  xpDeltas?: Record<string, number> | null;
+  isAuthenticated?: boolean;
   onPlayAgain: () => void;
   onRematch?: () => void;
 }
 
 export function GameOver({
   winner,
-  mode,
   winnerIndex = null,
   players = null,
-  scoreDeltas = null,
+  xpDeltas = null,
+  isAuthenticated = false,
   onPlayAgain,
   onRematch,
 }: GameOverProps) {
-  const color = winnerIndex === null ? "#ff5b2e" : PLAYER_COLORS[winnerIndex] ?? "#ff5b2e";
+  const color = winnerIndex === null ? "#FF8A00" : PLAYER_COLORS[winnerIndex] ?? "#FF8A00";
   const confetti = useMemo(
     () =>
       Array.from({ length: 22 }, (_, i) => ({
@@ -36,7 +36,7 @@ export function GameOver({
         delay: Math.random() * 1.2,
         duration: 1.4 + Math.random() * 0.8,
         size: 5 + Math.random() * 6,
-        color: PLAYER_COLORS[i % PLAYER_COLORS.length] ?? "#ff5b2e"
+        color: PLAYER_COLORS[i % PLAYER_COLORS.length] ?? "#FF8A00"
       })),
     []
   );
@@ -45,12 +45,8 @@ export function GameOver({
     <Card
       className="mx-auto mt-[10vh] grid w-[min(520px,100%)] gap-8 overflow-hidden p-10 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]"
       aria-labelledby="gameover-title"
-      style={{
-        borderColor: `${color}66`,
-        boxShadow: `0 0 60px color-mix(in srgb, ${color} 15%, transparent)`
-      }}
+      style={{ borderColor: color }}
     >
-      <CardCorners />
       {confetti.map((piece) => (
         <span
           key={piece.id}
@@ -68,75 +64,67 @@ export function GameOver({
       ))}
 
       <div className="grid gap-3 text-center">
-        <CardEyebrow>// containment breached</CardEyebrow>
-        <span className="mx-auto border border-line bg-bg-soft px-3 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-fg-muted">
-          {mode ?? "casual"} result
-        </span>
         {winner ? (
           <span
             className="mx-auto block h-14 w-14 rounded-full"
             style={{
               background: `radial-gradient(circle at 30% 30%, color-mix(in srgb, ${color} 70%, white) 0%, ${color} 55%, color-mix(in srgb, ${color} 65%, black) 100%)`,
-              boxShadow: `0 0 30px ${color}, 0 0 60px color-mix(in srgb, ${color} 40%, transparent)`,
+              boxShadow: "0 6px 14px rgba(20,60,110,0.35)",
               animation: "orb-critical 0.7s ease-in-out infinite"
             }}
           />
         ) : null}
         <h1
           id="gameover-title"
-          className="font-display text-4xl uppercase tracking-[0.06em] text-fg [animation:win-burst_0.8s_cubic-bezier(0.2,1.4,0.4,1)_both] sm:text-5xl"
+          className="font-display text-4xl text-fg [animation:win-burst_0.8s_cubic-bezier(0.2,1.4,0.4,1)_both] sm:text-5xl"
         >
           {winner ? (
             <>
-              <span className="block text-fg-soft text-xs tracking-[0.4em]">winner</span>
+              <span className="block text-xs uppercase tracking-[0.4em] text-fg-muted">Winner</span>
               <span className="block" style={{ color }}>
                 {winner.name}
               </span>
             </>
           ) : (
-            "Stalemate"
+            "It's a draw"
           )}
         </h1>
       </div>
 
-      <div className="border border-line bg-bg-soft px-4 py-3 text-center font-mono text-xs leading-relaxed text-fg-muted">
-        {mode === "ranked"
-          ? "Ranked result saved. Leaderboard points update after persistence completes."
-          : "Casual result complete. Leaderboard points are unchanged."}
-      </div>
-
-      {players && players.length > 0 && scoreDeltas ? (
-        <ul className="grid gap-1">
+      {players && players.length > 0 && xpDeltas ? (
+        <ul className="grid gap-1.5">
           {players.map((player, index) => {
-            const delta = scoreDeltas[player.id];
+            const delta = xpDeltas[player.id];
             const isWinner = player.id === winner?.id;
-            const entryColor = PLAYER_COLORS[index] ?? "#ff5b2e";
+            const entryColor = PLAYER_COLORS[index] ?? "#FF8A00";
             return (
               <li
                 key={player.id}
-                className="flex items-center justify-between border border-line bg-bg-soft px-4 py-2 font-mono text-xs"
+                className="flex items-center justify-between rounded-xl border-2 border-line bg-surface-2 px-4 py-2 text-sm font-semibold"
               >
                 <span className="flex items-center gap-2">
                   <span
-                    className="inline-block h-2 w-2 rounded-full"
+                    className="inline-block h-2.5 w-2.5 rounded-full"
                     style={{ background: entryColor }}
                     aria-hidden="true"
                   />
                   <span className="text-fg-soft">{player.name}</span>
                 </span>
                 {delta !== undefined ? (
-                  <span
-                    className={
-                      isWinner ? "font-display text-cherenkov" : "font-display text-fg-muted"
-                    }
-                  >
-                    {`+${delta}`}
+                  <span className={isWinner ? "font-display text-primary" : "font-display text-fg-muted"}>
+                    +{delta} XP
                   </span>
                 ) : null}
               </li>
             );
           })}
         </ul>
+      ) : null}
+
+      {!isAuthenticated ? (
+        <p className="rounded-xl border-2 border-line bg-surface-2 px-4 py-3 text-center text-xs font-semibold text-fg-muted">
+          Sign in to earn XP and climb the leaderboard.
+        </p>
       ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -157,7 +145,7 @@ export function GameOver({
       </div>
       <Link
         href="/leaderboard"
-        className="flex items-center justify-center gap-2 font-body text-xs font-semibold text-fg-muted transition-colors hover:text-cherenkov"
+        className="flex items-center justify-center gap-2 text-xs font-semibold text-fg-muted transition-colors hover:text-secondary-deep"
       >
         <Trophy size={12} aria-hidden="true" strokeWidth={2.5} />
         View leaderboard

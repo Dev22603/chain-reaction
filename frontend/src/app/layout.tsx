@@ -1,17 +1,17 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Bungee, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Lilita_One, Nunito, JetBrains_Mono } from "next/font/google";
 import { TopBar } from "@/components/TopBar";
 
-const display = Bungee({
+const display = Lilita_One({
   weight: ["400"],
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap"
 });
 
-const body = Plus_Jakarta_Sans({
+const body = Nunito({
   weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin"],
   variable: "--font-body",
@@ -26,7 +26,7 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Chain Reaction",
-  description: "Pop. Bounce. Take over the board. Play free with friends — no signup needed."
+  description: "Free multiplayer strategy game. Play with friends, no signup needed."
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

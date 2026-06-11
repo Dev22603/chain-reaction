@@ -1,5 +1,6 @@
 import * as z from "zod/v4";
-import { GAME_MODES, LIMITS } from "../constants/app.constants";
+import { LIMITS } from "../constants/app.constants";
+import { presetForGrid } from "../constants/presets.constants";
 import { GAME_MESSAGES, QUEUE_VALIDATION_ERRORS } from "../constants/app.messages";
 import { ApiError } from "../utils/api_error";
 
@@ -22,40 +23,51 @@ const gridColsField = z
 	.min(LIMITS.GRID_MIN, QUEUE_VALIDATION_ERRORS.GRID_COLS_RANGE)
 	.max(LIMITS.GRID_MAX, QUEUE_VALIDATION_ERRORS.GRID_COLS_RANGE);
 
-const gameModeField = z.enum([GAME_MODES.CASUAL, GAME_MODES.RANKED]);
+const maxPlayersField = z
+	.number()
+	.int()
+	.min(LIMITS.PLAYERS_MIN, QUEUE_VALIDATION_ERRORS.MAX_PLAYERS_RANGE)
+	.max(LIMITS.PLAYERS_MAX, QUEUE_VALIDATION_ERRORS.MAX_PLAYERS_RANGE);
+
+// Every game (queued or private) is played on a preset board so it maps to a leaderboard bucket.
+const presetGridCheck = (data: { gridRows: number; gridCols: number }, ctx: z.RefinementCtx) => {
+	if (!presetForGrid(data.gridRows, data.gridCols)) {
+		ctx.addIssue({ code: "custom", message: QUEUE_VALIDATION_ERRORS.BOARD_NOT_PRESET });
+	}
+};
 
 // Schemas (one per client → server event; the {event, data} envelope carries the event name)
-const joinQueueSchema = z.object({
-	mode: gameModeField.optional().default(GAME_MODES.CASUAL),
-	gridRows: gridRowsField,
-	gridCols: gridColsField,
-	maxPlayers: z
-		.number()
-		.int()
-		.min(LIMITS.PLAYERS_MIN, QUEUE_VALIDATION_ERRORS.MAX_PLAYERS_RANGE)
-		.max(LIMITS.PLAYERS_MAX, QUEUE_VALIDATION_ERRORS.MAX_PLAYERS_RANGE),
-	playerName: playerNameField,
-});
+const joinQueueSchema = z
+	.object({
+		gridRows: gridRowsField,
+		gridCols: gridColsField,
+		maxPlayers: maxPlayersField,
+		playerName: playerNameField,
+	})
+	.superRefine(presetGridCheck);
 
 const makeMoveSchema = z.object({
 	row: z.number().int(),
 	col: z.number().int(),
 });
 
-const createRoomSchema = z.object({
-	playerName: playerNameField,
-	gridRows: gridRowsField,
-	gridCols: gridColsField,
-	maxPlayers: z
-		.number()
-		.int()
-		.min(LIMITS.PLAYERS_MIN, QUEUE_VALIDATION_ERRORS.MAX_PLAYERS_RANGE)
-		.max(LIMITS.PRIVATE_ROOM_PLAYERS_MAX, QUEUE_VALIDATION_ERRORS.MAX_PLAYERS_RANGE),
-});
+const createRoomSchema = z
+	.object({
+		playerName: playerNameField,
+		gridRows: gridRowsField,
+		gridCols: gridColsField,
+		maxPlayers: maxPlayersField,
+	})
+	.superRefine(presetGridCheck);
 
 const joinRoomByCodeSchema = z.object({
 	playerName: playerNameField,
-	code: z.string().trim().length(6, QUEUE_VALIDATION_ERRORS.INVITE_CODE_LENGTH).toUpperCase(),
+	code: z
+		.string()
+		.trim()
+		.length(6, QUEUE_VALIDATION_ERRORS.INVITE_CODE_LENGTH)
+		.toUpperCase()
+		.regex(/^[A-Z0-9]{6}$/, QUEUE_VALIDATION_ERRORS.INVITE_CODE_FORMAT),
 });
 
 export type JoinQueueInput = z.infer<typeof joinQueueSchema>;

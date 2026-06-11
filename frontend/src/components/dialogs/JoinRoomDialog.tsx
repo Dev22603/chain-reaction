@@ -97,25 +97,25 @@ export function JoinRoomDialog({ open, onClose, onConfirm, onInteract }: JoinRoo
       onClose={onClose}
       titleId="join-room-title"
       width="md"
-      accent="cherenkov"
+      accent="secondary"
     >
       <div className="grid min-w-0 gap-4 p-4 sm:gap-6 sm:p-8">
         <header className="grid min-w-0 gap-1.5">
           <div className="flex min-w-0 items-center justify-between gap-2">
-            <h2 id="join-room-title" className="font-display whitespace-nowrap text-[1.4rem] leading-none tracking-tight text-white game-text-shadow sm:text-[2.5rem]">
-              JOIN <span className="text-cherenkov">ROOM</span>
+            <h2 id="join-room-title" className="whitespace-nowrap font-display text-[1.4rem] leading-none text-fg sm:text-[2.5rem]">
+              JOIN <span className="text-secondary">ROOM</span>
             </h2>
             <button
               type="button"
               onClick={onClose}
-              className="grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 border-line text-fg-muted transition-colors hover:border-cherenkov hover:text-cherenkov sm:h-9 sm:w-9"
+              className="grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 border-line text-fg-muted transition-colors hover:border-secondary hover:text-secondary-deep sm:h-9 sm:w-9"
               aria-label="Close dialog"
             >
               <X size={12} aria-hidden="true" />
             </button>
           </div>
-          <p className="font-body text-[12px] leading-snug text-fg-soft sm:text-sm">
-            Enter the 6-character code your host shared.
+          <p className="text-[12px] font-semibold leading-snug text-fg-soft sm:text-sm">
+            Enter a friend&apos;s code to join them. New code? We&apos;ll start a fresh room with it.
           </p>
         </header>
 
@@ -142,15 +142,15 @@ export function JoinRoomDialog({ open, onClose, onConfirm, onInteract }: JoinRoo
                 aria-label={`Code position ${idx + 1}`}
                 size={1}
                 className={
-                  "h-12 w-full min-w-0 flex-1 rounded-lg border-2 bg-bg p-0 text-center font-display text-2xl uppercase leading-none text-white transition-all focus:outline-none sm:h-20 sm:w-14 sm:flex-none sm:rounded-xl sm:text-5xl " +
+                  "h-12 w-full min-w-0 flex-1 rounded-lg border-2 bg-surface-2 p-0 text-center font-display text-2xl uppercase leading-none text-fg transition-all focus:outline-none sm:h-20 sm:w-14 sm:flex-none sm:rounded-xl sm:text-5xl " +
                   (char
-                    ? "border-cherenkov bg-cherenkov/10 shadow-cherenkov"
-                    : "border-line hover:border-line-2 focus:border-cherenkov")
+                    ? "border-secondary bg-secondary/10"
+                    : "border-line hover:border-line-2 focus:border-secondary")
                 }
               />
             ))}
           </div>
-          <p className="text-center font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted sm:text-[10px]">
+          <p className="text-center text-[9px] font-bold uppercase tracking-[0.18em] text-fg-muted sm:text-[10px]">
             Paste a code or type to advance
           </p>
         </div>
@@ -159,7 +159,7 @@ export function JoinRoomDialog({ open, onClose, onConfirm, onInteract }: JoinRoo
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border-2 border-line bg-surface/60 px-3.5 py-2 font-display text-xs text-fg-soft transition-colors hover:border-fg-muted hover:text-fg sm:px-5 sm:py-3 sm:text-sm"
+            className="rounded-full border-2 border-line bg-surface px-3.5 py-2 font-display text-xs text-fg-soft transition-colors hover:border-fg-muted hover:text-fg sm:px-5 sm:py-3 sm:text-sm"
           >
             Cancel
           </button>
@@ -167,7 +167,7 @@ export function JoinRoomDialog({ open, onClose, onConfirm, onInteract }: JoinRoo
             type="button"
             onClick={handleConfirm}
             disabled={!complete}
-            className="game-btn-shadow inline-flex min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl bg-gradient-to-b from-cherenkov to-[#1ba0c4] px-3 py-2.5 font-display text-sm text-white game-text-shadow disabled:opacity-40 sm:rounded-2xl sm:px-6 sm:py-3.5 sm:text-lg sm:min-w-[200px]"
+            className="game-btn-shadow inline-flex min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border-[3px] border-white/90 bg-gradient-to-b from-[#57b0ff] to-secondary px-3 py-2.5 font-display text-sm text-white [--btn-depth:var(--color-secondary-deep)] disabled:opacity-40 sm:min-w-[200px] sm:rounded-2xl sm:px-6 sm:py-3.5 sm:text-lg"
           >
             Enter room
             <ArrowRight size={14} strokeWidth={3} aria-hidden="true" />

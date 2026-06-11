@@ -5,22 +5,24 @@ import { GameBoard } from "@/components/GameBoard";
 import { GameOver } from "@/components/GameOver";
 import { LandingHub } from "@/components/LandingHub";
 import { QueueScreen } from "@/components/QueueScreen";
-import { Card, CardCorners } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { useGameWebSocket } from "@/hooks/useGameWebSocket";
 import { useAuth } from "@/hooks/useAuth";
 import type { CreateRoomConfig } from "@/components/dialogs/CreateRoomDialog";
+import type { PlayConfig } from "@/components/dialogs/PlayDialog";
 import { useSounds } from "@/hooks/useSounds";
 import { loadOrCreateGuestName, saveGuestName } from "@/lib/guestName";
 import { LobbyNav } from "@/components/LobbyNav";
+import { DevCredit } from "@/components/DevCredit";
 import { ToastStack } from "@/components/ToastStack";
 
-const DEFAULT_GRID = { rows: 6, cols: 9 };
+const CONNECTING_NOTICE = "Still connecting, try again in a moment.";
 
 export default function Home() {
   const game = useGameWebSocket();
   const auth = useAuth();
   const sounds = useSounds();
-  const [guestName, setGuestName] = useState<string>("Operator");
+  const [guestName, setGuestName] = useState<string>("Player");
   const [softNotice, setSoftNotice] = useState<string | null>(null);
   const noticeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -50,23 +52,22 @@ export default function Home() {
     noticeTimeout.current = setTimeout(() => setSoftNotice(null), 5200);
   }
 
-  const onPlay = (playerCount: number) => {
+  const onPlay = (config: PlayConfig) => {
     if (game.connectionState !== "open") {
-      flashNotice("Connecting to the reactor… try again in a moment.");
+      flashNotice(CONNECTING_NOTICE);
       return;
     }
     game.joinQueue({
-      mode: "casual",
-      gridRows: DEFAULT_GRID.rows,
-      gridCols: DEFAULT_GRID.cols,
-      maxPlayers: playerCount,
+      gridRows: config.gridRows,
+      gridCols: config.gridCols,
+      maxPlayers: config.players,
       playerName
     });
   };
 
   const onCreateRoom = (config: CreateRoomConfig) => {
     if (game.connectionState !== "open") {
-      flashNotice("Connecting to the reactor… try again in a moment.");
+      flashNotice(CONNECTING_NOTICE);
       return;
     }
     game.createRoom({
@@ -79,7 +80,7 @@ export default function Home() {
 
   const onJoinRoom = (code: string) => {
     if (game.connectionState !== "open") {
-      flashNotice("Connecting to the reactor… try again in a moment.");
+      flashNotice(CONNECTING_NOTICE);
       return;
     }
     game.joinRoomByCode(code, playerName);
@@ -89,11 +90,10 @@ export default function Home() {
   const onRematch = () => {
     if (!game.gameState) return;
     const rows = game.gameState.board.length;
-    const cols = game.gameState.board[0]?.length ?? DEFAULT_GRID.cols;
+    const cols = game.gameState.board[0]?.length ?? 9;
     const maxPlayers = game.gameState.players.length;
-    const mode = game.gameMode ?? "casual";
     game.reset();
-    game.joinQueue({ mode, gridRows: rows, gridCols: cols, maxPlayers, playerName });
+    game.joinQueue({ gridRows: rows, gridCols: cols, maxPlayers, playerName });
   };
   const disconnected = game.connectionState !== "open" && game.connectionState !== "connecting";
 
@@ -111,9 +111,9 @@ export default function Home() {
 
   return (
     <>
-      {/* ── Full-screen game overlay (covers TopBar) ── */}
+      {/* Full-screen game overlay (covers TopBar) */}
       {isPlaying && game.gameState ? (
-        <div className="fixed inset-0 z-50 bg-surface">
+        <div className="fixed inset-0 z-50 bg-bg">
           <GameBoard
             gameState={game.gameState}
             playerId={game.playerId}
@@ -133,25 +133,25 @@ export default function Home() {
       ) : null}
 
       {isPlaying && !game.gameState ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-surface">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-bg">
           <Card className="grid w-[min(420px,90vw)] gap-4 p-10 text-center [animation:panel-rise_0.5s_ease-out_both]">
-            <CardCorners />
-            <h1 className="font-display text-4xl tracking-tight text-fg">
+            <h1 className="font-display text-4xl text-fg">
               Starting game
-              <span className="ml-1 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-cherenkov">
-                _
+              <span className="ml-1 inline-block animate-[blink-cursor_1s_steps(1)_infinite] text-secondary">
+                …
               </span>
             </h1>
           </Card>
         </div>
       ) : null}
 
-      {/* ── No-scroll lobby shell ── */}
+      {/* No-scroll lobby shell */}
       {isLobby ? (
         <div className="fixed inset-0 z-10 grid h-[100svh] w-full grid-rows-[auto_1fr_auto] overflow-hidden px-3 pb-3 pt-3 sm:px-6 sm:pt-4">
           <LobbyNav
             playerName={playerName}
             isAuthenticated={auth.isAuthenticated}
+            player={auth.player}
             onSaveName={handleNameSave}
             onLogout={auth.logout}
             onInteract={() => sounds.play("click")}
@@ -168,16 +168,21 @@ export default function Home() {
             />
           </div>
 
-          <ToastStack
-            disconnected={disconnected}
-            error={game.lastError}
-            notice={softNotice}
-            compact={true}
-          />
+          <div className="flex items-end justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <ToastStack
+                disconnected={disconnected}
+                error={game.lastError}
+                notice={softNotice}
+                compact={true}
+              />
+            </div>
+            <DevCredit />
+          </div>
         </div>
       ) : null}
 
-      {/* ── Standard scrollable layout (queue / gameover) ── */}
+      {/* Standard scrollable layout (queue / gameover) */}
       {!isLobby && !isPlaying ? (
         <main className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col gap-3 px-4 pb-3 sm:px-8 lg:px-10">
           <ToastStack
@@ -194,10 +199,10 @@ export default function Home() {
           {game.phase === "gameover" ? (
             <GameOver
               winner={game.winner}
-              mode={game.gameMode}
               winnerIndex={game.gameState?.players.findIndex((p) => p.id === game.winner?.id) ?? null}
               players={game.gameState?.players ?? null}
-              scoreDeltas={game.scoreDeltas}
+              xpDeltas={game.xpDeltas}
+              isAuthenticated={auth.isAuthenticated}
               onPlayAgain={game.reset}
               onRematch={onRematch}
             />

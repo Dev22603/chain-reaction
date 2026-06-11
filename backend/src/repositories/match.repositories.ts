@@ -1,4 +1,3 @@
-import { GAME_MODES } from "../constants/app.constants";
 import { prisma } from "../lib/prisma";
 import { getLogger } from "../lib/logger";
 
@@ -14,7 +13,6 @@ export interface PersistedParticipant {
 
 export interface RecordFinishedMatchInput {
 	id: string;
-	mode: GAME_MODES;
 	gridRows: number;
 	gridCols: number;
 	maxPlayers: number;
@@ -35,7 +33,6 @@ export interface MatchHistoryPlayer {
 
 export interface MatchHistoryEntry {
 	matchId: string;
-	mode: GAME_MODES;
 	gridRows: number;
 	gridCols: number;
 	maxPlayers: number;
@@ -62,7 +59,6 @@ export const matchRepository = {
 				await tx.match.create({
 					data: {
 						id: input.id,
-						mode: input.mode,
 						gridRows: input.gridRows,
 						gridCols: input.gridCols,
 						maxPlayers: input.maxPlayers,
@@ -108,7 +104,6 @@ export const matchRepository = {
 
 			return rows.map((match) => ({
 				matchId: match.id,
-				mode: match.mode as GAME_MODES,
 				gridRows: match.gridRows,
 				gridCols: match.gridCols,
 				maxPlayers: match.maxPlayers,

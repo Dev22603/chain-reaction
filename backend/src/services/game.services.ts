@@ -113,14 +113,13 @@ function eliminateAndEmit(playerId: string): void {
 
 function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>): void {
 	room.status = "finished";
-	const scoreDeltas = matchService.computeScoreDeltas(room, winner.id);
+	const xpDeltas = matchService.computeXpDeltas(room, winner.id);
 	sendToPlayers(
 		room.players.map((player) => player.id),
 		SOCKET_EVENTS.GAME.OVER,
 		{
-			mode: room.mode,
 			winner: { id: winner.id, name: winner.name },
-			...(Object.keys(scoreDeltas).length > 0 && { scoreDeltas }),
+			...(Object.keys(xpDeltas).length > 0 && { xpDeltas }),
 		},
 	);
 
@@ -128,7 +127,7 @@ function endGame(room: Room, winner: NonNullable<ReturnType<typeof getWinner>>):
 	const roomSnapshot = matchService.snapshot(room);
 	roomService.destroyRoom(room);
 
-	void matchService.persistFinishedMatch(roomSnapshot, winner.id).catch((error: unknown) => {
+	void matchService.persistFinishedMatch(roomSnapshot, winner.id, xpDeltas).catch((error: unknown) => {
 		logger.error("finished match persistence failed", {
 			roomId: roomSnapshot.id,
 			error: error instanceof Error ? error.message : String(error),

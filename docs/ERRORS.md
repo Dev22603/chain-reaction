@@ -31,7 +31,7 @@ The default is **drop silently**. We send `error` only when the client genuinely
 ### Send `error`:
 
 - **Validation failure on a user-initiated action.** The user typed something invalid (lobby form, etc.). They need to know.
-- **Authorization failure.** The user tried something they're not allowed to do, such as joining ranked queue as a guest.
+- **Authorization failure.** The user tried something they're not allowed to do with their current identity.
 - **Internal error** during a user-initiated action. Generic `internal_error` so the UI can show "something went wrong".
 
 ### Drop silently (no `error` frame):
@@ -46,7 +46,7 @@ The default is **drop silently**. We send `error` only when the client genuinely
 | Code                  | When                                                                         | Notes                                       |
 |-----------------------|------------------------------------------------------------------------------|---------------------------------------------|
 | `validation_failed`   | Zod schema rejected the payload                                              | Populate `errors` with issue messages       |
-| `not_authenticated`   | No token / expired / guest tried ranked                                      | Frontend should prompt login                |
+| `not_authenticated`   | No token / expired token on an authenticated-only action                     | Frontend should prompt login                |
 | `not_authorized`      | Token is fine but action is forbidden                                        |                                             |
 | `player_not_found`    | Requested player profile does not exist                                      | Show a not-found state                      |
 | `room_not_found`      | Player references a room that no longer exists                               | Usually a race after `game_over`            |

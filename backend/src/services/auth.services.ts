@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { config } from "../constants/config";
 import { AUTH_FEEDBACK_MESSAGES } from "../constants/app.messages";
+import { levelProgress } from "../constants/xp.constants";
 import { getLogger } from "../lib/logger";
 import { playerRepository } from "../repositories/player.repositories";
 import { validateLogin, validateSignup, validateUpdateProfile } from "../schemas/auth.schemas";
@@ -19,6 +20,10 @@ export interface PublicPlayer {
 	id: string;
 	displayName: string;
 	email: string | null;
+	totalXp: number;
+	level: number;
+	xpIntoLevel: number;
+	xpForNextLevel: number;
 }
 
 export interface AuthResult {
@@ -101,11 +106,13 @@ function buildAuthResult(player: PublicPlayer): AuthResult {
 	};
 }
 
-function toPublicPlayer(player: { id: string; displayName: string; email: string | null }): PublicPlayer {
+function toPublicPlayer(player: { id: string; displayName: string; email: string | null; totalXp: number }): PublicPlayer {
 	return {
 		id: player.id,
 		displayName: player.displayName,
 		email: player.email,
+		totalXp: player.totalXp,
+		...levelProgress(player.totalXp),
 	};
 }
 

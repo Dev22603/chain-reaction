@@ -8,23 +8,24 @@ datasource db {
 }
 
 model Player {
-  id           String        @id @db.Uuid
-  displayName  String        @map("display_name")
-  email        String?       @unique
-  passwordHash String?       @map("password_hash")
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
-  score        PlayerScore?
-  wonMatches   Match[]       @relation("MatchWinner")
+  id           String           @id @db.Uuid
+  displayName  String           @map("display_name")
+  email        String?          @unique
+  passwordHash String?          @map("password_hash")
+  totalXp      Int              @default(0) @map("total_xp")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+  modeStats    PlayerModeStat[]
+  wonMatches   Match[]          @relation("MatchWinner")
   matchPlayers MatchPlayer[]
 
   @@index([displayName], map: "idx_players_display_name")
+  @@index([totalXp(sort: Desc)], map: "idx_players_total_xp")
   @@map("players")
 }
 
 model Match {
   id           String        @id @db.Uuid
-  mode         String        @default("casual")
   gridRows     Int           @map("grid_rows") @db.SmallInt
   gridCols     Int           @map("grid_cols") @db.SmallInt
   maxPlayers   Int           @map("max_players") @db.SmallInt
@@ -36,7 +37,6 @@ model Match {
   participants MatchPlayer[]
 
   @@index([endedAt(sort: Desc)], map: "idx_matches_ended_at")
-  @@index([mode, endedAt(sort: Desc)], map: "idx_matches_mode_ended_at")
   @@index([winnerId], map: "idx_matches_winner")
   @@map("matches")
 }
@@ -55,9 +55,11 @@ model MatchPlayer {
   @@map("match_players")
 }
 
-model PlayerScore {
-  playerId    String   @id @map("player_id") @db.Uuid
-  score       Int      @default(0)
+model PlayerModeStat {
+  playerId    String   @map("player_id") @db.Uuid
+  boardPreset String   @map("board_preset")
+  maxPlayers  Int      @map("max_players") @db.SmallInt
+  xp          Int      @default(0)
   wins        Int      @default(0)
   losses      Int      @default(0)
   gamesPlayed Int      @default(0) @map("games_played")
@@ -65,6 +67,7 @@ model PlayerScore {
   updatedAt   DateTime @updatedAt @map("updated_at")
   player      Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
-  @@index([score(sort: Desc), wins(sort: Desc), gamesPlayed], map: "idx_player_scores_leaderboard")
-  @@map("player_scores")
+  @@id([playerId, boardPreset, maxPlayers])
+  @@index([boardPreset, maxPlayers, xp(sort: Desc), wins(sort: Desc)], map: "idx_mode_stats_leaderboard")
+  @@map("player_mode_stats")
 }

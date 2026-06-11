@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   CreateRoomInput,
   GameState,
-  GameMode,
   JoinQueueInput,
   LastError,
   Phase,
@@ -27,10 +26,9 @@ export function useGameWebSocket() {
   const [phase, setPhase] = useState<Phase>("lobby");
   const [playerId, setPlayerId] = useState<string | null>(null);
   const [gameState, setGameState] = useState<GameState | null>(null);
-  const [gameMode, setGameMode] = useState<GameMode | null>(null);
   const [queuedInfo, setQueuedInfo] = useState<QueuedInfo | null>(null);
   const [winner, setWinner] = useState<Pick<Player, "id" | "name"> | null>(null);
-  const [scoreDeltas, setScoreDeltas] = useState<Record<string, number> | null>(null);
+  const [xpDeltas, setXpDeltas] = useState<Record<string, number> | null>(null);
   const [lastError, setLastError] = useState<LastError | null>(null);
   const [connectionState, setConnectionState] = useState<WebSocketConnectionState>("connecting");
   const [roomCode, setRoomCode] = useState<string | null>(null);
@@ -73,15 +71,15 @@ export function useGameWebSocket() {
           break;
         case "game:queued":
           setQueuedInfo({
-            mode: message.data.mode,
             position: message.data.position,
-            maxPlayers: message.data.maxPlayers
+            maxPlayers: message.data.maxPlayers,
+            gridRows: message.data.gridRows,
+            gridCols: message.data.gridCols
           });
           setLastError(null);
           setPhase("queued");
           break;
         case "game:start":
-          setGameMode(message.data.mode);
           setQueuedInfo(null);
           setWinner(null);
           setLastError(null);
@@ -97,9 +95,8 @@ export function useGameWebSocket() {
           setPhase("playing");
           break;
         case "game:over":
-          setGameMode(message.data.mode);
           setWinner(message.data.winner);
-          setScoreDeltas(message.data.scoreDeltas ?? null);
+          setXpDeltas(message.data.xpDeltas ?? null);
           setLastError(null);
           setPhase("gameover");
           break;
@@ -158,17 +155,15 @@ export function useGameWebSocket() {
   const leaveGame = useCallback(() => {
     sendJSON("game:leave-game");
     setGameState(null);
-    setGameMode(null);
     setPhase("lobby");
   }, [sendJSON]);
 
   const reset = useCallback(() => {
     setGameState(null);
-    setGameMode(null);
     setQueuedInfo(null);
     setRoomCode(null);
     setWinner(null);
-    setScoreDeltas(null);
+    setXpDeltas(null);
     setLastError(null);
     setPhase("lobby");
   }, []);
@@ -177,11 +172,10 @@ export function useGameWebSocket() {
     phase,
     playerId,
     gameState,
-    gameMode,
     queuedInfo,
     roomCode,
     winner,
-    scoreDeltas,
+    xpDeltas,
     lastError,
     connectionState,
     joinQueue,

@@ -46,88 +46,101 @@ function envelope(gain: GainNode, now: number, attack: number, decay: number, pe
   gain.gain.exponentialRampToValueAtTime(0.0001, now + attack + decay);
 }
 
+// All sounds aim for a soft, bouncy arcade feel: sine/triangle voices,
+// short envelopes, no harsh square or sawtooth buzz.
+
 function placeSound(ctx: AudioContext, master: GainNode, intensity: number) {
   const now = ctx.currentTime;
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
-  const filter = ctx.createBiquadFilter();
-  filter.type = "lowpass";
-  filter.frequency.value = 1800;
 
-  osc.type = "triangle";
-  osc.frequency.setValueAtTime(560 + intensity * 80, now);
-  osc.frequency.exponentialRampToValueAtTime(180, now + 0.15);
-  envelope(gain, now, 0.005, 0.18, 0.35);
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(400 + intensity * 60, now);
+  osc.frequency.exponentialRampToValueAtTime(800 + intensity * 120, now + 0.06);
+  envelope(gain, now, 0.004, 0.08, 0.35);
 
-  osc.connect(filter).connect(gain).connect(master);
+  osc.connect(gain).connect(master);
   osc.start(now);
-  osc.stop(now + 0.25);
+  osc.stop(now + 0.12);
 }
 
 function explodeSound(ctx: AudioContext, master: GainNode, intensity: number) {
   const now = ctx.currentTime;
 
-  const lowOsc = ctx.createOscillator();
-  const lowGain = ctx.createGain();
-  lowOsc.type = "sawtooth";
-  lowOsc.frequency.setValueAtTime(180, now);
-  lowOsc.frequency.exponentialRampToValueAtTime(40, now + 0.35);
-  envelope(lowGain, now, 0.005, 0.4, 0.55 + intensity * 0.1);
-  lowOsc.connect(lowGain).connect(master);
-  lowOsc.start(now);
-  lowOsc.stop(now + 0.5);
+  // Bubble pop body: quick sine drop
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(600 + intensity * 80, now);
+  osc.frequency.exponentialRampToValueAtTime(150, now + 0.18);
+  envelope(gain, now, 0.004, 0.22, 0.45 + intensity * 0.08);
+  osc.connect(gain).connect(master);
+  osc.start(now);
+  osc.stop(now + 0.3);
 
-  const buffer = ctx.createBuffer(1, ctx.sampleRate * 0.45, ctx.sampleRate);
+  // Soft, lowpassed pop of air
+  const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.12), ctx.sampleRate);
   const data = buffer.getChannelData(0);
   for (let i = 0; i < data.length; i += 1) {
     const t = i / data.length;
-    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 2.5);
+    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 3);
   }
   const noise = ctx.createBufferSource();
   noise.buffer = buffer;
   const noiseFilter = ctx.createBiquadFilter();
-  noiseFilter.type = "highpass";
-  noiseFilter.frequency.value = 1200;
+  noiseFilter.type = "lowpass";
+  noiseFilter.frequency.value = 900;
   const noiseGain = ctx.createGain();
-  envelope(noiseGain, now, 0.003, 0.35, 0.4);
+  envelope(noiseGain, now, 0.002, 0.1, 0.22);
   noise.connect(noiseFilter).connect(noiseGain).connect(master);
   noise.start(now);
-  noise.stop(now + 0.5);
+  noise.stop(now + 0.15);
 }
 
 function chainSound(ctx: AudioContext, master: GainNode, intensity: number) {
   const now = ctx.currentTime;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  const filter = ctx.createBiquadFilter();
-  filter.type = "bandpass";
-  filter.Q.value = 6;
+  // Ascending pentatonic plinks; bigger chains climb further up the scale
+  const scale = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51];
+  const start = Math.min(Math.floor(intensity), scale.length - 3);
+  const notes = scale.slice(start, start + 3);
 
-  osc.type = "square";
-  osc.frequency.setValueAtTime(220, now);
-  osc.frequency.exponentialRampToValueAtTime(880 + intensity * 220, now + 0.4);
-  filter.frequency.setValueAtTime(400, now);
-  filter.frequency.exponentialRampToValueAtTime(2400, now + 0.4);
-  envelope(gain, now, 0.01, 0.45, 0.18);
-
-  osc.connect(filter).connect(gain).connect(master);
-  osc.start(now);
-  osc.stop(now + 0.5);
-}
-
-function winSound(ctx: AudioContext, master: GainNode) {
-  const now = ctx.currentTime;
-  const notes = [440, 554.37, 659.25, 880];
   notes.forEach((freq, idx) => {
-    const t = now + idx * 0.12;
+    const t = now + idx * 0.07;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = "triangle";
     osc.frequency.setValueAtTime(freq, t);
-    envelope(gain, t, 0.01, 0.45, 0.32);
+    envelope(gain, t, 0.004, 0.12, 0.22);
     osc.connect(gain).connect(master);
     osc.start(t);
-    osc.stop(t + 0.5);
+    osc.stop(t + 0.18);
+  });
+}
+
+function winSound(ctx: AudioContext, master: GainNode) {
+  const now = ctx.currentTime;
+  // Bright C major arpeggio with a sparkle layer one octave up
+  const notes = [523.25, 659.25, 783.99, 1046.5];
+  notes.forEach((freq, idx) => {
+    const t = now + idx * 0.13;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(freq, t);
+    envelope(gain, t, 0.01, 0.4, 0.3);
+    osc.connect(gain).connect(master);
+    osc.start(t);
+    osc.stop(t + 0.45);
+
+    const sparkle = ctx.createOscillator();
+    const sparkleGain = ctx.createGain();
+    sparkle.type = "sine";
+    sparkle.frequency.setValueAtTime(freq * 2, t + 0.03);
+    envelope(sparkleGain, t + 0.03, 0.008, 0.2, 0.12);
+    sparkle.connect(sparkleGain).connect(master);
+    sparkle.start(t + 0.03);
+    sparkle.stop(t + 0.28);
   });
 }
 
@@ -135,38 +148,42 @@ function clickSound(ctx: AudioContext, master: GainNode) {
   const now = ctx.currentTime;
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
-  osc.type = "square";
-  osc.frequency.setValueAtTime(1400, now);
-  osc.frequency.exponentialRampToValueAtTime(700, now + 0.04);
-  envelope(gain, now, 0.001, 0.05, 0.12);
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(900, now);
+  envelope(gain, now, 0.001, 0.03, 0.16);
   osc.connect(gain).connect(master);
   osc.start(now);
-  osc.stop(now + 0.06);
+  osc.stop(now + 0.04);
 }
 
 function turnSound(ctx: AudioContext, master: GainNode) {
   const now = ctx.currentTime;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = "sine";
-  osc.frequency.setValueAtTime(880, now);
-  envelope(gain, now, 0.005, 0.12, 0.18);
-  osc.connect(gain).connect(master);
-  osc.start(now);
-  osc.stop(now + 0.15);
+  // Friendly two-note ding-dong
+  [660, 880].forEach((freq, idx) => {
+    const t = now + idx * 0.11;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, t);
+    envelope(gain, t, 0.005, 0.14, 0.16);
+    osc.connect(gain).connect(master);
+    osc.start(t);
+    osc.stop(t + 0.18);
+  });
 }
 
 function errorSound(ctx: AudioContext, master: GainNode) {
   const now = ctx.currentTime;
+  // Gentle cartoon "womp", no buzz
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
-  osc.type = "square";
-  osc.frequency.setValueAtTime(220, now);
-  osc.frequency.linearRampToValueAtTime(110, now + 0.18);
-  envelope(gain, now, 0.005, 0.22, 0.28);
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(300, now);
+  osc.frequency.linearRampToValueAtTime(200, now + 0.2);
+  envelope(gain, now, 0.008, 0.24, 0.24);
   osc.connect(gain).connect(master);
   osc.start(now);
-  osc.stop(now + 0.25);
+  osc.stop(now + 0.28);
 }
 
 export function createSoundEngine(): SoundEngine {

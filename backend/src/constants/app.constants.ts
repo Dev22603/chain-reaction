@@ -11,8 +11,8 @@ const LIMITS = {
 	GRID_MIN: 3,
 	GRID_MAX: 20,
 	PLAYERS_MIN: 2,
-	PLAYERS_MAX: 4,
-	PRIVATE_ROOM_PLAYERS_MAX: 8,
+	// Single knob for how many players a game can hold (queue and private rooms alike).
+	PLAYERS_MAX: 20,
 	LIST_DEFAULT: 20,
 	LIST_MAX: 100,
 	SAFETY_BREAK: 2000,
@@ -22,14 +22,12 @@ const LIMITS = {
 	MAX_QUEUE_SIZE: 50,
 } as const;
 
-enum GAME_MODES {
-	CASUAL = "casual",
-	RANKED = "ranked",
-}
-
-const SCORING_POINTS = {
-	WIN: 3,
-	LOSS: 1,
+// Settings used when joining with a code that doesn't exist yet (room is created on the fly).
+// MAX_PLAYERS must stay 2: rooms auto-start when full and have no host "start" button.
+const DEFAULT_ROOM = {
+	GRID_ROWS: 6,
+	GRID_COLS: 9,
+	MAX_PLAYERS: 2,
 } as const;
 
 const RECONNECT_GRACE_MS = 30_000;
@@ -42,14 +40,14 @@ const WS_MAX_PAYLOAD_BYTES = 16 * 1024; // 16 KB
 const WS_PING_INTERVAL_MS = 30_000;
 const WS_IDLE_TIMEOUT_MS = 600_000; // 10 minutes
 
-const RANKED_VELOCITY_LIMIT = 10;
-const RANKED_VELOCITY_WINDOW_MS = 600_000; // 10 minutes
+// Anti-farm cap: matches finished above this rate stop granting XP for a while.
+const XP_VELOCITY_LIMIT = 10;
+const XP_VELOCITY_WINDOW_MS = 600_000; // 10 minutes
 
 export {
 	REGEX,
 	LIMITS,
-	GAME_MODES,
-	SCORING_POINTS,
+	DEFAULT_ROOM,
 	RECONNECT_GRACE_MS,
 	ROOM_IDLE_TTL_MS,
 	WS_RATE_LIMIT_WINDOW_MS,
@@ -58,6 +56,6 @@ export {
 	WS_MAX_PAYLOAD_BYTES,
 	WS_PING_INTERVAL_MS,
 	WS_IDLE_TIMEOUT_MS,
-	RANKED_VELOCITY_LIMIT,
-	RANKED_VELOCITY_WINDOW_MS,
+	XP_VELOCITY_LIMIT,
+	XP_VELOCITY_WINDOW_MS,
 };

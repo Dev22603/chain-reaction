@@ -2,42 +2,42 @@
 @import "./dialogs.css";
 
 @theme {
-  --color-bg: #0a0420;
-  --color-bg-soft: #140832;
-  --color-bg-deep: #050214;
-  --color-surface: #1a0d44;
-  --color-surface-2: #221157;
-  --color-line: #2e1a6f;
-  --color-line-2: #3d23a0;
-  --color-fg: #ffffff;
-  --color-fg-soft: #d4c9ff;
-  --color-fg-muted: #8a7eb8;
+  /* Light, playful palette: medium blue checkered backdrop, white cards. */
+  --color-bg: #4e91d8;
+  --color-bg-soft: #5c9de0;
+  --color-bg-deep: #3a7bc4;
+  --color-surface: #ffffff;
+  --color-surface-2: #eaf4ff;
+  --color-line: #c4dcf2;
+  --color-line-2: #9cc4e8;
+  --color-fg: #1e3a5f;
+  --color-fg-soft: #3e6285;
+  --color-fg-muted: #6e8fae;
+  --color-fg-inverse: #ffffff;
 
-  --color-reactor: #ff6b1f;
-  --color-reactor-glow: #ffa039;
-  --color-cherenkov: #2ad8ff;
-  --color-radium: #b6ff3c;
-  --color-plasma: #ff3da7;
-  --color-uranium: #ffd23f;
+  /* Accents */
+  --color-primary: #ff8a00;
+  --color-primary-glow: #ffb24d;
+  --color-primary-deep: #e96d00;
+  --color-secondary: #2f9bff;
+  --color-secondary-deep: #1877d2;
+  --color-accent: #ffc72e;
+  --color-accent-deep: #e0a400;
+  --color-success: #2eb872;
+  --color-danger: #e64980;
 
-  --color-p1: #ff3b6b;
-  --color-p2: #2ad8ff;
-  --color-p3: #ffd23f;
-  --color-p4: #5cff9b;
+  --color-p1: #e6194b;
+  --color-p2: #4363d8;
+  --color-p3: #3cb44b;
+  --color-p4: #ffb000;
 
-  --color-paper: #f1ead0;
-  --color-paper-dim: #c9c0a0;
-  --color-hazard: #ffd23f;
-  --color-hazard-dim: #5a4b15;
-
-  --font-display: "Bungee", "Bebas Neue", "Impact", system-ui, sans-serif;
-  --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Lilita One", "Bungee", "Impact", system-ui, sans-serif;
+  --font-body: "Nunito", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
 
-  --shadow-reactor: 0 0 0 1px rgba(255, 107, 31, 0.4), 0 0 24px rgba(255, 107, 31, 0.4), 0 0 60px rgba(255, 107, 31, 0.25);
-  --shadow-cherenkov: 0 0 0 1px rgba(42, 216, 255, 0.4), 0 0 24px rgba(42, 216, 255, 0.35);
-  --shadow-panel: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  --shadow-pop: 0 6px 0 rgba(24, 73, 128, 0.28), 0 12px 28px rgba(20, 60, 110, 0.3);
+  --shadow-panel: 0 10px 0 rgba(24, 73, 128, 0.18), 0 24px 48px rgba(20, 60, 110, 0.28);
 }
 
 * {
@@ -61,11 +61,15 @@ html {
 body {
   position: relative;
   min-height: 100vh;
-  background:
-    radial-gradient(800px 600px at 15% 20%, rgba(255, 107, 31, 0.18), transparent 60%),
-    radial-gradient(900px 700px at 85% 80%, rgba(42, 216, 255, 0.16), transparent 60%),
-    radial-gradient(700px 500px at 50% 100%, rgba(255, 61, 167, 0.12), transparent 60%),
-    linear-gradient(180deg, #0a0420 0%, #140832 50%, #0a0420 100%);
+  background-color: var(--color-bg);
+  /* Big soft checkerboard, Smash Karts style */
+  background-image: conic-gradient(
+    rgba(255, 255, 255, 0.07) 90deg,
+    transparent 90deg 180deg,
+    rgba(255, 255, 255, 0.07) 180deg 270deg,
+    transparent 270deg
+  );
+  background-size: 124px 124px;
   overflow-x: hidden;
 }
 
@@ -74,11 +78,7 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background-image:
-    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 32px 32px;
-  background-position: -1px -1px;
-  mask-image: radial-gradient(ellipse at center, black 35%, transparent 80%);
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(18, 56, 102, 0.35) 100%);
   z-index: 0;
 }
 
@@ -102,7 +102,7 @@ body::before {
   }
 
   :focus-visible {
-    outline: 3px solid var(--color-uranium);
+    outline: 3px solid var(--color-accent);
     outline-offset: 3px;
     border-radius: 4px;
   }
@@ -176,8 +176,8 @@ body::before {
   border-radius: 50%;
   background: currentColor;
   box-shadow:
-    0 0 12px currentColor,
-    0 0 28px currentColor,
+    0 2px 4px rgba(20, 60, 110, 0.35),
+    0 0 8px color-mix(in srgb, currentColor 45%, transparent),
     inset 0 0 9px rgba(255, 255, 255, 0.82);
   will-change: color, box-shadow;
 }
@@ -307,53 +307,116 @@ body::before {
   100% { transform: scale(1); opacity: 1; }
 }
 
-.hazard-stripes {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--color-hazard) 0,
-    var(--color-hazard) 12px,
-    var(--color-bg) 12px,
-    var(--color-bg) 24px
-  );
+/* ─── Game logo (stacked cartoon wordmark) ──────────────────────────── */
+
+.game-logo-line {
+  display: block;
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+  -webkit-text-stroke: 2px #16314f;
+  text-shadow:
+    0 5px 0 #16314f,
+    0 9px 18px rgba(16, 45, 80, 0.45);
 }
 
-.paper-grain {
-  background-image:
-    radial-gradient(rgba(241, 234, 208, 0.06) 1px, transparent 1px),
-    radial-gradient(rgba(241, 234, 208, 0.04) 1px, transparent 1px);
-  background-size: 22px 22px, 7px 7px;
-  background-position: 0 0, 3px 4px;
+.game-logo-top {
+  font-size: clamp(2.2rem, 6.5vw, 4.6rem);
+  color: #3fa9ff;
+  transform: rotate(-2deg);
+}
+
+.game-logo-bottom {
+  font-size: clamp(2.6rem, 8vw, 5.6rem);
+  color: var(--color-primary);
+  transform: rotate(-2deg) translateY(-4px);
 }
 
 /* Chunky 3D game-style button effect */
 .game-btn-shadow {
   box-shadow:
-    0 6px 0 0 rgba(0, 0, 0, 0.45),
-    0 10px 24px 0 rgba(0, 0, 0, 0.35),
-    inset 0 2px 0 0 rgba(255, 255, 255, 0.35);
+    0 6px 0 0 var(--btn-depth, rgba(24, 73, 128, 0.3)),
+    0 10px 22px 0 rgba(20, 60, 110, 0.3),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.4);
   transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
 }
 
 .game-btn-shadow:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 8px 0 0 rgba(0, 0, 0, 0.45),
-    0 14px 30px 0 rgba(0, 0, 0, 0.4),
-    inset 0 2px 0 0 rgba(255, 255, 255, 0.4);
+    0 8px 0 0 var(--btn-depth, rgba(24, 73, 128, 0.3)),
+    0 14px 28px 0 rgba(20, 60, 110, 0.35),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.45);
 }
 
 .game-btn-shadow:active {
   transform: translateY(4px);
   box-shadow:
-    0 2px 0 0 rgba(0, 0, 0, 0.4),
-    0 4px 12px 0 rgba(0, 0, 0, 0.3),
-    inset 0 2px 0 0 rgba(255, 255, 255, 0.25);
+    0 2px 0 0 var(--btn-depth, rgba(24, 73, 128, 0.3)),
+    0 4px 12px 0 rgba(20, 60, 110, 0.25),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.3);
 }
 
 .game-text-shadow {
   text-shadow:
-    0 4px 0 rgba(0, 0, 0, 0.4),
-    0 8px 24px rgba(0, 0, 0, 0.35);
+    0 3px 0 rgba(24, 73, 128, 0.35),
+    0 8px 20px rgba(20, 60, 110, 0.3);
+}
+
+/* ─── Smash-Karts-style building blocks ─────────────────────────────── */
+
+.btn-primary {
+  --btn-depth: var(--color-primary-deep);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  background: linear-gradient(180deg, var(--color-primary-glow), var(--color-primary));
+  color: #fff;
+  font-family: var(--font-display);
+}
+
+.btn-secondary {
+  --btn-depth: var(--color-secondary-deep);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  background: linear-gradient(180deg, #57b0ff, var(--color-secondary));
+  color: #fff;
+  font-family: var(--font-display);
+}
+
+.btn-accent {
+  --btn-depth: var(--color-accent-deep);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  background: linear-gradient(180deg, #ffd95e, var(--color-accent));
+  color: #7a4d00;
+  font-family: var(--font-display);
+}
+
+.panel-card {
+  background: var(--color-surface);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  border-radius: 22px;
+  box-shadow: var(--shadow-panel);
+  color: var(--color-fg);
+}
+
+.panel-card-blue {
+  background: linear-gradient(180deg, #5ea8ec, #3f8bd6);
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  border-radius: 22px;
+  box-shadow: var(--shadow-panel);
+  color: #fff;
 }
 
 /* ─── Full-viewport game shell ───────────────────────────────────────── */
@@ -362,7 +425,7 @@ body::before {
   height: 100svh;
   width: 100%;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
   padding: clamp(6px, 1.2svh, 14px) clamp(8px, 1.8vw, 18px);
   gap: clamp(5px, 0.9svh, 10px);
   overflow: hidden;
@@ -391,12 +454,13 @@ body::before {
   place-items: center;
   width: clamp(38px, 7.5vw, 56px);
   height: clamp(46px, 9vw, 68px);
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--color-surface);
-  border: 2px solid color-mix(in srgb, var(--color-cherenkov) 50%, var(--color-line));
+  border: 3px solid var(--color-secondary);
+  box-shadow: 0 4px 0 rgba(24, 73, 128, 0.2);
   font-family: var(--font-display);
   font-size: clamp(20px, 4vw, 32px);
-  color: var(--color-cherenkov);
+  color: var(--color-secondary-deep);
   animation: invite-tile-in 0.35s cubic-bezier(0.2, 0.8, 0.4, 1) both;
 }
 
@@ -413,8 +477,9 @@ body::before {
   left: 0;
   min-width: 210px;
   background: var(--color-surface);
-  border: 1.5px solid color-mix(in srgb, var(--color-cherenkov) 45%, var(--color-line));
+  border: 2px solid var(--color-line-2);
   border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(20, 60, 110, 0.3);
   padding: 14px;
   animation: dialog-rise 0.15s ease-out both;
   z-index: 100;
@@ -431,11 +496,11 @@ body::before {
   place-items: center;
   height: 36px;
   border-radius: 6px;
-  background: color-mix(in srgb, var(--color-cherenkov) 8%, var(--color-surface));
-  border: 1.5px solid color-mix(in srgb, var(--color-cherenkov) 40%, var(--color-line));
+  background: var(--color-surface-2);
+  border: 2px solid var(--color-secondary);
   font-family: var(--font-display);
   font-size: 16px;
-  color: var(--color-cherenkov);
+  color: var(--color-secondary-deep);
 }
 
 .board-code-slot {
@@ -445,5 +510,5 @@ body::before {
   transition: background 0.3s;
 }
 .board-code-slot.on {
-  background: var(--color-cherenkov);
+  background: var(--color-secondary);
 }

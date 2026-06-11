@@ -19,7 +19,6 @@ The WebSocket message contract between client and server.
 ```json
 {
   "type": "join_queue",
-  "mode": "casual",
   "gridRows": 6,
   "gridCols": 9,
   "maxPlayers": 2,
@@ -27,11 +26,10 @@ The WebSocket message contract between client and server.
 }
 ```
 
-- `mode`: `"casual"` or `"ranked"`. Missing mode defaults to `"casual"` server-side.
-- `gridRows`, `gridCols`: integers 3 to 20.
-- `maxPlayers`: integer 2 to 4.
+- `gridRows`, `gridCols`: must match one of the board presets (Micro 4x5, Classic 6x9, Standard 8x12, Mega 12x16).
+- `maxPlayers`: integer 2 to 20. Each (board x players) combination has its own queue bucket.
 - `playerName`: non-empty string, trimmed server-side.
-- Server responds with `queued`, then `game_start` once the bucket fills. Ranked queue requires an authenticated WebSocket identity.
+- Server responds with `queued`, then `game_start` once the bucket fills. Guests can queue; they just earn no XP.
 
 ### `leave_queue`
 
@@ -72,7 +70,7 @@ Sent once on connection. If a valid JWT is supplied on the WebSocket URL, `playe
 ### `queued`
 
 ```json
-{ "type": "queued", "mode": "casual", "position": 2, "maxPlayers": 2 }
+{ "type": "queued", "position": 2, "maxPlayers": 2, "gridRows": 6, "gridCols": 9 }
 ```
 
 Acknowledgement of `join_queue`. `position` is 1-indexed within the bucket.
@@ -83,7 +81,6 @@ Acknowledgement of `join_queue`. `position` is 1-indexed within the bucket.
 {
   "type": "game_start",
   "roomId": "a1b2...",
-  "mode": "casual",
   "players": [
     { "id": "b3c1...", "name": "Alice", "isGuest": false, "eliminated": false, "eliminatedTurn": null },
     { "id": "d4e5...", "name": "Bob",   "isGuest": true,  "eliminated": false, "eliminatedTurn": null }
@@ -119,10 +116,12 @@ The `players` array order defines player index (0, 1, ...), which determines col
 ```json
 {
   "type": "game_over",
-  "mode": "casual",
-  "winner": { "id": "b3c1...", "name": "Alice" }
+  "winner": { "id": "b3c1...", "name": "Alice" },
+  "xpDeltas": { "b3c1...": 20, "d4e5...": 4 }
 }
 ```
+
+`xpDeltas` is present when at least one signed-in player earned XP (winner = 10 x opponents x board sizeFactor, losers = 2 x sizeFactor).
 
 Sent once. Room is deleted immediately after broadcast; no more frames arrive for that `roomId`.
 
@@ -147,7 +146,7 @@ Sent once. Room is deleted immediately after broadcast; no more frames arrive fo
 | Code | When | Notes |
 |------|------|-------|
 | `validation_failed` | Zod schema rejected the payload | Populate `errors` with issue messages |
-| `not_authenticated` | No token / expired / guest tried ranked | Frontend should prompt login |
+| `not_authenticated` | No token / expired token on an authenticated-only action | Frontend should prompt login |
 | `not_authorized` | Token fine but action is forbidden | |
 | `room_not_found` | Player references a room that no longer exists | Usually a race after `game_over` |
 | `not_in_game` | `make_move` or `leave_game` when the player has no `playerRooms` entry | Send only if the client clearly thinks it's playing |
@@ -164,7 +163,7 @@ The default is **drop silently**. Send `error` only when the client genuinely ne
 ### Send `error`
 
 - Validation failure on a user-initiated action (lobby form). The user typed something invalid.
-- Authorization failure, such as a guest trying to join ranked queue.
+- Authorization failure on an authenticated-only action.
 - Internal error during a user-initiated action. Generic `internal_error` so the UI can show "something went wrong".
 
 ### Drop silently

@@ -1,8 +1,8 @@
 const STORAGE_KEY = "cr.guest.name";
 
 const ADJECTIVES = [
-  "Brave", "Bright", "Swift", "Cosmic", "Atomic", "Lucky", "Wild", "Mighty",
-  "Silent", "Quantum", "Solar", "Lunar", "Plasma", "Neon", "Stellar", "Cobalt",
+  "Brave", "Bright", "Swift", "Sunny", "Turbo", "Lucky", "Wild", "Mighty",
+  "Silent", "Zippy", "Solar", "Lunar", "Peppy", "Neon", "Stellar", "Cobalt",
   "Crimson", "Golden", "Frosty", "Electric", "Mystic", "Radiant", "Nimble", "Iron",
   "Vivid", "Dapper", "Bold", "Clever", "Rapid", "Glacial"
 ];

@@ -5,24 +5,26 @@ Use **Window A** (Normal) and **Window B** (Incognito) to verify the full game l
 ## 1. Authentication & Persistence
 *   **A: Signup/Login:** Create an account in Window A. Verify you land on the dashboard.
 *   **A: Refresh:** Refresh the page; verify you stay logged in (JWT check).
-*   **B: Guest Access:** Open the app in Window B. Enter a name and join as a Guest. Verify you can see the Casual queue but not the Leaderboard rankings.
+*   **B: Guest Access:** Open the app in Window B. Enter a name and join as a Guest. Verify the level badge shows "Sign in to earn XP" and play is still possible.
 
-## 2. Matchmaking (The "Ranked" Gate)
-*   **B (Guest): Ranked Attempt:** Try to join the **Ranked** queue.
-    *   *Expected:* You should receive an error message (or be blocked) stating "Ranked matches require a logged-in account."
-*   **A (User) + B (Guest): Casual Match:** Both windows join the **Casual** queue (same board size).
+## 2. Matchmaking (Quick Match)
+*   **A (User) + B (Guest): Quick Match:** Both windows press **Play** and pick the same board size and player count.
     *   *Expected:* Match starts. Play a few moves. Verify both see the same board state.
+*   **Queue isolation:** Put a third window in a different size or player count.
+    *   *Expected:* It must NOT match with the first two.
 *   **A (User): Forfeit:** Close Window A.
     *   *Expected:* Window B should immediately see a "Victory" message as the opponent disconnected.
 
 ## 3. Game Mechanics & Integrity
-*   **A + B (Two Users): Ranked Match:** Login to a different account in Window B (or create one). Both join **Ranked**.
+*   **A + B (Two Users): XP Match:** Login to a different account in Window B (or create one). Both join the same quick match.
 *   **Chain Reaction:** Trigger a 4-way explosion.
     *   *Expected:* Visual colors change correctly, and the explosion cascades to neighbors.
 *   **Turn Enforcement:** Try to move in Window B when it is Window A's turn.
     *   *Expected:* The move is ignored or a "Not your turn" message appears.
-*   **Win/Score Verification:** Window A wins the match.
-    *   *Expected:* Window A's score increases on the Leaderboard. Window B's score decreases or stays same.
+*   **Win/XP Verification:** Window A wins a Classic 1v1.
+    *   *Expected:* Game-over screen shows +20 XP for the winner and +4 XP for the loser; the overall and Classic/2-player leaderboards update.
+*   **Join create-on-miss:** In Window B, use **Join** with a made-up code (e.g. ZZZZZZ).
+    *   *Expected:* No error. A new room is created with that code (Classic board, 2 players); Window A joining the same code starts the game.
 
 ## 4. Hardening & Edge Cases (The New Stuff)
 *   **Rate Limit (Spam):** In the game, try to click the board 20 times in 1 second.

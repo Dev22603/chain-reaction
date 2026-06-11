@@ -36,16 +36,16 @@ const QUEUE_VALIDATION_ERRORS = {
 	PLAYER_NAME_MAX: "playerName must be 100 characters or less",
 	GRID_ROWS_RANGE: "gridRows must be between 3 and 20",
 	GRID_COLS_RANGE: "gridCols must be between 3 and 20",
-	MAX_PLAYERS_RANGE: "maxPlayers must be between 2 and 4",
+	MAX_PLAYERS_RANGE: "maxPlayers must be between 2 and 20",
+	BOARD_NOT_PRESET: "Board size must be one of the presets.",
 	INVITE_CODE_LENGTH: "code must be exactly 6 characters",
+	INVITE_CODE_FORMAT: "code must use letters and digits only",
 };
 
 const GAME_MESSAGES = {
 	VALIDATION_FAILED: "Validation failed.",
-	RANKED_REQUIRES_AUTH: "Login is required to join ranked queue.",
 	SERVER_BUSY: "Server is at capacity. Please try again later.",
 	QUEUE_FULL: "Queue is full. Please try again later.",
-	INVALID_INVITE_CODE: "Invalid invite code.",
 	ROOM_GONE: "Room no longer exists.",
 	ROOM_FULL: "Room is full.",
 	MATCH_NOT_SAVED: "Match result could not be saved. Leaderboard may not reflect this game.",
