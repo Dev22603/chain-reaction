@@ -62,7 +62,21 @@ body {
   position: relative;
   min-height: 100vh;
   background-color: var(--color-bg);
-  /* Big soft checkerboard, Smash Karts style */
+  overflow-x: hidden;
+}
+
+/* Big soft checkerboard, Smash Karts style. Lives on a fixed layer one tile
+   wider than the viewport so it can drift left-to-right and loop seamlessly
+   (the pattern repeats every 124px). */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: -124px;
+  right: 0;
+  pointer-events: none;
+  z-index: 0;
   background-image: conic-gradient(
     rgba(255, 255, 255, 0.07) 90deg,
     transparent 90deg 180deg,
@@ -70,16 +84,32 @@ body {
     transparent 270deg
   );
   background-size: 124px 124px;
-  overflow-x: hidden;
+  animation: grid-drift 10s linear infinite;
+  will-change: transform;
 }
 
-body::before {
+body::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   background: radial-gradient(ellipse at center, transparent 45%, rgba(18, 56, 102, 0.35) 100%);
   z-index: 0;
+}
+
+@keyframes grid-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(124px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
 }
 
 @layer base {
@@ -307,28 +337,59 @@ body::before {
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* ─── Game logo (stacked cartoon wordmark) ──────────────────────────── */
+/* ─── Game logo (stacked cartoon wordmark, Smash-Karts-style) ───────── */
 
-.game-logo-line {
-  display: block;
+/* Each word is rendered letter-by-letter so the line can arch like the
+   SMASH KARTS wordmark. The letter span itself draws the thick dark
+   outline + 3D extrusion; its ::after pseudo re-draws the same glyph on
+   top with a gradient fill (background-clip: text). The fill cannot live
+   on the span itself: an element's background paints below any negative
+   z-index pseudo, so the outline would cover the gradient. */
+
+.game-logo-word {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   font-family: var(--font-display);
-  letter-spacing: 0.02em;
-  -webkit-text-stroke: 2px #16314f;
-  text-shadow:
-    0 5px 0 #16314f,
-    0 9px 18px rgba(16, 45, 80, 0.45);
+  line-height: 1;
 }
 
 .game-logo-top {
-  font-size: clamp(2.2rem, 6.5vw, 4.6rem);
-  color: #3fa9ff;
-  transform: rotate(-2deg);
+  font-size: clamp(2.2rem, 6.5vw, 4.4rem);
 }
 
 .game-logo-bottom {
-  font-size: clamp(2.6rem, 8vw, 5.6rem);
-  color: var(--color-primary);
-  transform: rotate(-2deg) translateY(-4px);
+  font-size: clamp(2.5rem, 7.6vw, 5.4rem);
+  margin-top: clamp(2px, 0.8vw, 8px);
+}
+
+.logo-letter {
+  position: relative;
+  display: inline-block;
+  color: #14304e;
+  -webkit-text-stroke: 0.16em #14304e;
+  text-shadow:
+    0 0.1em 0 #14304e,
+    0 0.18em 0.3em rgba(10, 40, 75, 0.5);
+}
+
+.logo-letter::after {
+  content: attr(data-ch);
+  position: absolute;
+  inset: 0;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.game-logo-top .logo-letter::after {
+  background-image: linear-gradient(180deg, #ffffff 0%, #d6edff 40%, #7cc6ff 100%);
+}
+
+.game-logo-bottom .logo-letter::after {
+  background-image: linear-gradient(180deg, #ffe45e 0%, #ffb01f 55%, #ff8400 100%);
 }
 
 /* Chunky 3D game-style button effect */
@@ -401,6 +462,44 @@ body::before {
   background: linear-gradient(180deg, #ffd95e, var(--color-accent));
   color: #7a4d00;
   font-family: var(--font-display);
+}
+
+/* Big gold PLAY button, ref-accurate: yellow-gold gradient, white border,
+   orange play-triangle chip on the left, outlined white label. */
+.btn-play {
+  --btn-depth: #d97c00;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border-radius: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  background: linear-gradient(180deg, #ffd95e 0%, #ffc72e 45%, #ffaa00 100%);
+  color: #fff;
+  font-family: var(--font-display);
+}
+
+.btn-play-chip {
+  display: grid;
+  place-items: center;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 0.45em;
+  background: linear-gradient(180deg, #ff9d2e, #f57f00);
+  box-shadow:
+    0 2px 0 rgba(178, 86, 0, 0.55),
+    inset 0 2px 0 rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+
+.btn-play-label {
+  letter-spacing: 0.04em;
+  text-shadow:
+    -2px -2px 0 rgba(178, 86, 0, 0.55),
+    2px -2px 0 rgba(178, 86, 0, 0.55),
+    -2px 2px 0 rgba(178, 86, 0, 0.55),
+    2px 2px 0 rgba(178, 86, 0, 0.55),
+    0 4px 0 rgba(178, 86, 0, 0.55);
 }
 
 .panel-card {

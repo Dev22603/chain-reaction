@@ -13,8 +13,12 @@ import type { PlayConfig } from "@/components/dialogs/PlayDialog";
 import { useSounds } from "@/hooks/useSounds";
 import { loadOrCreateGuestName, saveGuestName } from "@/lib/guestName";
 import { LobbyNav } from "@/components/LobbyNav";
+import { LobbySidebar } from "@/components/LobbySidebar";
 import { DevCredit } from "@/components/DevCredit";
 import { ToastStack } from "@/components/ToastStack";
+import { AuthDialog } from "@/components/dialogs/AuthDialog";
+import { ConfirmDialog } from "@/components/dialogs/ConfirmDialog";
+import { Volume2, VolumeX } from "lucide-react";
 
 const CONNECTING_NOTICE = "Still connecting, try again in a moment.";
 
@@ -24,6 +28,8 @@ export default function Home() {
   const sounds = useSounds();
   const [guestName, setGuestName] = useState<string>("Player");
   const [softNotice, setSoftNotice] = useState<string | null>(null);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [signOutOpen, setSignOutOpen] = useState(false);
   const noticeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -109,6 +115,29 @@ export default function Home() {
     }
   }
 
+  const openSignIn = () => {
+    sounds.play("click");
+    setAuthOpen(true);
+  };
+
+  const requestSignOut = () => {
+    sounds.play("click");
+    setSignOutOpen(true);
+  };
+
+  // The socket only carries the JWT during the handshake, so identity changes
+  // without a navigation must reconnect it.
+  const handleAuthSuccess = () => {
+    void auth.refresh();
+    game.reconnect();
+  };
+
+  const confirmSignOut = () => {
+    setSignOutOpen(false);
+    auth.logout();
+    game.reconnect();
+  };
+
   return (
     <>
       {/* Full-screen game overlay (covers TopBar) */}
@@ -147,29 +176,44 @@ export default function Home() {
 
       {/* No-scroll lobby shell */}
       {isLobby ? (
-        <div className="fixed inset-0 z-10 grid h-[100svh] w-full grid-rows-[auto_1fr_auto] overflow-hidden px-3 pb-3 pt-3 sm:px-6 sm:pt-4">
+        <div className="fixed inset-0 z-10 grid h-[100svh] w-full grid-rows-[auto_1fr_auto] gap-3 overflow-hidden px-3 pb-3 pt-3 sm:px-6 sm:pt-4">
           <LobbyNav
             playerName={playerName}
             isAuthenticated={auth.isAuthenticated}
             player={auth.player}
             onSaveName={handleNameSave}
-            onLogout={auth.logout}
+            onSignIn={openSignIn}
+            onRequestSignOut={requestSignOut}
             onInteract={() => sounds.play("click")}
           />
 
-          {/* Centered hero */}
-          <div className="relative grid place-items-center overflow-hidden">
-            <LandingHub
-              connectionReady={game.connectionState === "open"}
+          {/* Middle row: sidebar panels on the left (desktop only), hero
+              centered relative to the viewport like the ref. */}
+          <div className="relative min-h-0">
+            <LobbySidebar
+              className="absolute inset-y-0 left-0 z-20 hidden lg:flex"
+              playerName={playerName}
+              isAuthenticated={auth.isAuthenticated}
+              player={auth.player}
+              onSaveName={handleNameSave}
+              onSignIn={openSignIn}
+              onRequestSignOut={requestSignOut}
               onInteract={() => sounds.play("click")}
-              onPlay={onPlay}
-              onCreateRoom={onCreateRoom}
-              onJoinRoom={onJoinRoom}
             />
+            <div className="grid h-full place-items-center overflow-hidden">
+              <LandingHub
+                connectionReady={game.connectionState === "open"}
+                onInteract={() => sounds.play("click")}
+                onPlay={onPlay}
+                onCreateRoom={onCreateRoom}
+                onJoinRoom={onJoinRoom}
+              />
+            </div>
           </div>
 
-          <div className="flex items-end justify-between gap-3">
-            <div className="min-w-0 flex-1">
+          {/* Footer row: toasts left, links center, icon buttons right */}
+          <div className="grid grid-cols-[1fr_auto] items-end gap-3 sm:grid-cols-[1fr_auto_1fr]">
+            <div className="min-w-0">
               <ToastStack
                 disconnected={disconnected}
                 error={game.lastError}
@@ -177,7 +221,38 @@ export default function Home() {
                 compact={true}
               />
             </div>
-            <DevCredit />
+            <p className="hidden items-center gap-1.5 pb-2 text-[11px] font-bold text-white/85 [text-shadow:0_1px_0_rgba(24,73,128,0.5)] sm:flex">
+              v0.1.0
+              <span aria-hidden="true" className="text-white/50">|</span>
+              Chain Reaction
+              <span aria-hidden="true" className="text-white/50">|</span>
+              <a
+                href="https://github.com/Dev22603/chain-reaction"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-white hover:underline"
+              >
+                GitHub
+              </a>
+            </p>
+            <div className="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  sounds.resume();
+                  sounds.toggleMute();
+                }}
+                aria-label={sounds.muted ? "Unmute sounds" : "Mute sounds"}
+                className="game-btn-shadow grid h-10 w-10 shrink-0 place-items-center rounded-full border-[3px] border-white/90 bg-gradient-to-b from-[#57b0ff] to-secondary text-white [--btn-depth:var(--color-secondary-deep)]"
+              >
+                {sounds.muted ? (
+                  <VolumeX size={16} strokeWidth={2.5} aria-hidden="true" />
+                ) : (
+                  <Volume2 size={16} strokeWidth={2.5} aria-hidden="true" />
+                )}
+              </button>
+              <DevCredit />
+            </div>
           </div>
         </div>
       ) : null}
@@ -209,6 +284,21 @@ export default function Home() {
           ) : null}
         </main>
       ) : null}
+
+      <AuthDialog
+        open={authOpen}
+        onClose={() => setAuthOpen(false)}
+        onSuccess={handleAuthSuccess}
+        onInteract={() => sounds.play("click")}
+      />
+
+      <ConfirmDialog
+        open={signOutOpen}
+        title="Confirm Sign Out"
+        message="Are you sure you wish to sign out of this account?"
+        onConfirm={confirmSignOut}
+        onCancel={() => setSignOutOpen(false)}
+      />
     </>
   );
 }

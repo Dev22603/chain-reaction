@@ -16,45 +16,33 @@ export function useAuth() {
     router.refresh();
   }, [router]);
 
-  useEffect(() => {
-    let active = true;
-
-    async function loadPlayer() {
-      if (!getStoredAccessToken()) {
-        if (active) {
-          setPlayer(null);
-          setLoading(false);
-        }
-        return;
-      }
-
-      try {
-        const result = await authApi.me();
-        if (active) {
-          setPlayer(result.player);
-        }
-      } catch (err) {
-        if (active) {
-          if (err instanceof ApiClientError && err.status === 401) {
-            logout();
-          } else {
-            clearStoredAccessToken();
-            setPlayer(null);
-          }
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
+  // Re-reads the stored token and refetches the player. Called on mount and
+  // after a modal login stores a fresh token.
+  const refresh = useCallback(async () => {
+    if (!getStoredAccessToken()) {
+      setPlayer(null);
+      setLoading(false);
+      return;
     }
 
-    void loadPlayer();
-
-    return () => {
-      active = false;
-    };
+    try {
+      const result = await authApi.me();
+      setPlayer(result.player);
+    } catch (err) {
+      if (err instanceof ApiClientError && err.status === 401) {
+        logout();
+      } else {
+        clearStoredAccessToken();
+        setPlayer(null);
+      }
+    } finally {
+      setLoading(false);
+    }
   }, [logout]);
+
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
 
   const updateDisplayName = useCallback(async (displayName: string) => {
     const result = await authApi.updateDisplayName(displayName);
@@ -67,6 +55,7 @@ export function useAuth() {
     loading,
     isAuthenticated: Boolean(player),
     logout,
+    refresh,
     updateDisplayName
   };
 }

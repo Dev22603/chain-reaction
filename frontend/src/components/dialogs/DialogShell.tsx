@@ -10,6 +10,7 @@ interface DialogShellProps {
   children: React.ReactNode;
   width?: "md" | "lg";
   accent?: "primary" | "secondary";
+  variant?: "surface" | "blue";
 }
 
 export function DialogShell({
@@ -18,7 +19,8 @@ export function DialogShell({
   onClose,
   children,
   width = "md",
-  accent = "secondary"
+  accent = "secondary",
+  variant = "surface"
 }: DialogShellProps) {
   useEffect(() => {
     if (!open) return;
@@ -56,9 +58,11 @@ export function DialogShell({
 
       <div
         className={cn(
-          "relative max-h-[calc(100svh-24px)] w-full overflow-y-auto rounded-3xl border-[3px] bg-surface shadow-panel [animation:dialog-rise_0.45s_cubic-bezier(0.2,0.85,0.4,1)_both]",
+          "relative max-h-[calc(100svh-24px)] w-full overflow-y-auto rounded-3xl border-[3px] shadow-panel [animation:dialog-rise_0.45s_cubic-bezier(0.2,0.85,0.4,1)_both]",
           width === "lg" ? "max-w-[520px]" : "max-w-[440px]",
-          accent === "primary" ? "border-primary/70" : "border-secondary/70"
+          variant === "blue"
+            ? "border-[#cfe8ff] bg-gradient-to-b from-[#2f93ec] to-[#1d6fc6] text-white"
+            : cn("bg-surface", accent === "primary" ? "border-primary/70" : "border-secondary/70")
         )}
       >
         <div className="relative">

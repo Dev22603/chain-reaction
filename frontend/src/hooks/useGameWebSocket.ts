@@ -32,6 +32,7 @@ export function useGameWebSocket() {
   const [lastError, setLastError] = useState<LastError | null>(null);
   const [connectionState, setConnectionState] = useState<WebSocketConnectionState>("connecting");
   const [roomCode, setRoomCode] = useState<string | null>(null);
+  const [connectNonce, setConnectNonce] = useState(0);
 
   const sendJSON = useCallback((event: string, data?: unknown) => {
     const socket = socketRef.current;
@@ -116,6 +117,13 @@ export function useGameWebSocket() {
       socket.close();
       socketRef.current = null;
     };
+  }, [connectNonce]);
+
+  // The JWT only travels during the connection handshake, so a login or
+  // logout that happens without a page navigation (modal auth) must tear the
+  // socket down and reconnect under the new identity.
+  const reconnect = useCallback(() => {
+    setConnectNonce((nonce) => nonce + 1);
   }, []);
 
   const joinQueue = useCallback(
@@ -178,6 +186,7 @@ export function useGameWebSocket() {
     xpDeltas,
     lastError,
     connectionState,
+    reconnect,
     joinQueue,
     createRoom,
     joinRoomByCode,

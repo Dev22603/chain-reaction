@@ -17,7 +17,13 @@ export function getSupabaseClient(): SupabaseClient | null {
     auth: {
       flowType: "pkce",
       detectSessionInUrl: false,
-      autoRefreshToken: false
+      autoRefreshToken: false,
+      // supabase-js serializes auth calls behind navigator.locks, and an
+      // orphaned lock makes exchangeCodeForSession hang forever
+      // (supabase/supabase-js#1594, #2111). This app runs one short-lived
+      // auth operation at a time and drops the Supabase session right after,
+      // so skipping the cross-tab lock is safe.
+      lock: (_name, _acquireTimeout, fn) => fn()
     }
   });
 

@@ -56,7 +56,7 @@ export function LandingHub({
     <div className="relative mx-auto grid w-full max-w-[820px] place-items-center gap-6 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]">
       <GameLogo />
 
-      <div className="grid w-full max-w-[420px] gap-3">
+      <div className="grid w-full max-w-[420px] justify-items-center gap-4">
         <button
           type="button"
           onClick={() => {
@@ -65,20 +65,22 @@ export function LandingHub({
           }}
           disabled={!connectionReady}
           aria-disabled={!connectionReady}
-          className="game-btn-shadow group relative grid w-full grid-flow-col items-center justify-center gap-3 rounded-3xl border-[3px] border-white/90 bg-gradient-to-b from-primary-glow to-primary px-8 py-4 font-display text-3xl tracking-wide text-white [--btn-depth:var(--color-primary-deep)] disabled:cursor-not-allowed disabled:opacity-60 sm:py-5 sm:text-4xl [animation:button-bounce-in_0.5s_cubic-bezier(0.2,0.8,0.4,1)_0.15s_both]"
+          className="btn-play game-btn-shadow w-full px-8 py-4 text-4xl disabled:cursor-not-allowed disabled:opacity-60 sm:py-5 sm:text-5xl [animation:button-bounce-in_0.5s_cubic-bezier(0.2,0.8,0.4,1)_0.15s_both]"
         >
-          <Play size={28} strokeWidth={3} fill="currentColor" aria-hidden="true" />
-          <span className="game-text-shadow">{connectionReady ? "PLAY" : "CONNECTING…"}</span>
+          <span className="btn-play-chip text-[0.6em]" aria-hidden="true">
+            <Play size="1em" strokeWidth={0} fill="currentColor" />
+          </span>
+          <span className="btn-play-label">{connectionReady ? "PLAY" : "CONNECTING…"}</span>
         </button>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid w-full max-w-[320px] grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => {
               onInteract?.();
               setCreateOpen(true);
             }}
-            className="btn-secondary game-btn-shadow px-4 py-2.5 text-base tracking-wide sm:text-lg"
+            className="btn-secondary game-btn-shadow px-4 py-2 text-base tracking-wide sm:text-lg"
           >
             <Users size={16} strokeWidth={2.5} aria-hidden="true" />
             <span>Create</span>
@@ -90,7 +92,7 @@ export function LandingHub({
               onInteract?.();
               setJoinOpen(true);
             }}
-            className="btn-secondary game-btn-shadow px-4 py-2.5 text-base tracking-wide sm:text-lg"
+            className="btn-secondary game-btn-shadow px-4 py-2 text-base tracking-wide sm:text-lg"
           >
             <LogIn size={16} strokeWidth={2.5} aria-hidden="true" />
             <span>Join</span>
