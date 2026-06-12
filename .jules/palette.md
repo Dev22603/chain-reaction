@@ -1,0 +1,3 @@
+## 2024-03-24 - [Accessible Form Inputs]
+**Learning:** Wrapping form inputs and their hint/helper text inside a single `<label>` tag causes screen readers to incorrectly announce the hint as part of the primary accessible name. Instead, rely on programmatic association using `aria-describedby` which maps to a unique `id` on the hint text element, and ensure that the hint text is separate from the label `<label htmlFor="...">` itself by using a `<div>` wrapper.
+**Action:** Always use a distinct `<label>` for the input name, and for helper texts/hints, generate a unique `id` using `useId()` (or similar) and link it to the `<input>` via `aria-describedby`.
