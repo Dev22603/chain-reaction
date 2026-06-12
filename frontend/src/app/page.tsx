@@ -8,8 +8,7 @@ import { QueueScreen } from "@/components/QueueScreen";
 import { Card } from "@/components/ui/card";
 import { useGameWebSocket } from "@/hooks/useGameWebSocket";
 import { useAuth } from "@/hooks/useAuth";
-import type { CreateRoomConfig } from "@/components/dialogs/CreateRoomDialog";
-import type { PlayConfig } from "@/components/dialogs/PlayDialog";
+import type { MatchConfig } from "@/components/dialogs/MatchDialogParts";
 import { useSounds } from "@/hooks/useSounds";
 import { loadOrCreateGuestName, saveGuestName } from "@/lib/guestName";
 import { LobbyNav } from "@/components/LobbyNav";
@@ -64,7 +63,7 @@ export default function Home() {
     noticeTimeout.current = setTimeout(() => setSoftNotice(null), 5200);
   }
 
-  const onPlay = (config: PlayConfig) => {
+  const onPlay = (config: MatchConfig) => {
     setPlayOpen(false);
     if (game.connectionState !== "open") {
       flashNotice(CONNECTING_NOTICE);
@@ -78,7 +77,7 @@ export default function Home() {
     });
   };
 
-  const onCreateRoom = (config: CreateRoomConfig) => {
+  const onCreateRoom = (config: MatchConfig) => {
     setCreateOpen(false);
     if (game.connectionState !== "open") {
       flashNotice(CONNECTING_NOTICE);

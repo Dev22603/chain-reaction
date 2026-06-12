@@ -7,7 +7,12 @@ export const BOARD_PRESETS = [
   { key: "mega", label: "Mega", gridRows: 12, gridCols: 16, sizeFactor: 4 }
 ] as const;
 
-export type BoardPresetKey = (typeof BOARD_PRESETS)[number]["key"];
+export type BoardPreset = (typeof BOARD_PRESETS)[number];
+
+export type BoardPresetKey = BoardPreset["key"];
+
+// What the dialogs preselect: Classic 6x9.
+export const DEFAULT_BOARD_PRESET = BOARD_PRESETS[1];
 
 export function presetForGrid(gridRows: number, gridCols: number) {
   return BOARD_PRESETS.find((preset) => preset.gridRows === gridRows && preset.gridCols === gridCols) ?? null;
