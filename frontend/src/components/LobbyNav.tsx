@@ -35,7 +35,7 @@ export function LobbyNav({
         <div className="flex items-center gap-2">
           <NameCard
             displayName={playerName}
-            canEdit
+            canEdit={isAuthenticated}
             onSave={onSaveName}
             onInteract={onInteract}
           />
