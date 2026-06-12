@@ -18,6 +18,9 @@ import { DevCredit } from "@/components/DevCredit";
 import { ToastStack } from "@/components/ToastStack";
 import { AuthDialog } from "@/components/dialogs/AuthDialog";
 import { ConfirmDialog } from "@/components/dialogs/ConfirmDialog";
+import { CreateRoomDialog } from "@/components/dialogs/CreateRoomDialog";
+import { PlayDialog } from "@/components/dialogs/PlayDialog";
+import { JoinRoomDialog } from "@/components/dialogs/JoinRoomDialog";
 import { Volume2, VolumeX } from "lucide-react";
 
 const CONNECTING_NOTICE = "Still connecting, try again in a moment.";
@@ -30,6 +33,9 @@ export default function Home() {
   const [softNotice, setSoftNotice] = useState<string | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [signOutOpen, setSignOutOpen] = useState(false);
+  const [playOpen, setPlayOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [joinOpen, setJoinOpen] = useState(false);
   const noticeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -59,6 +65,7 @@ export default function Home() {
   }
 
   const onPlay = (config: PlayConfig) => {
+    setPlayOpen(false);
     if (game.connectionState !== "open") {
       flashNotice(CONNECTING_NOTICE);
       return;
@@ -72,6 +79,7 @@ export default function Home() {
   };
 
   const onCreateRoom = (config: CreateRoomConfig) => {
+    setCreateOpen(false);
     if (game.connectionState !== "open") {
       flashNotice(CONNECTING_NOTICE);
       return;
@@ -85,6 +93,7 @@ export default function Home() {
   };
 
   const onJoinRoom = (code: string) => {
+    setJoinOpen(false);
     if (game.connectionState !== "open") {
       flashNotice(CONNECTING_NOTICE);
       return;
@@ -204,9 +213,9 @@ export default function Home() {
               <LandingHub
                 connectionReady={game.connectionState === "open"}
                 onInteract={() => sounds.play("click")}
-                onPlay={onPlay}
-                onCreateRoom={onCreateRoom}
-                onJoinRoom={onJoinRoom}
+                onPlayClick={() => setPlayOpen(true)}
+                onCreateClick={() => setCreateOpen(true)}
+                onJoinClick={() => setJoinOpen(true)}
               />
             </div>
           </div>
@@ -298,6 +307,28 @@ export default function Home() {
         message="Are you sure you wish to sign out of this account?"
         onConfirm={confirmSignOut}
         onCancel={() => setSignOutOpen(false)}
+      />
+
+      <PlayDialog
+        open={playOpen}
+        onClose={() => setPlayOpen(false)}
+        onConfirm={onPlay}
+        onInteract={() => sounds.play("click")}
+      />
+
+      <CreateRoomDialog
+        open={createOpen}
+        defaultPlayers={2}
+        onClose={() => setCreateOpen(false)}
+        onConfirm={onCreateRoom}
+        onInteract={() => sounds.play("click")}
+      />
+
+      <JoinRoomDialog
+        open={joinOpen}
+        onClose={() => setJoinOpen(false)}
+        onConfirm={onJoinRoom}
+        onInteract={() => sounds.play("click")}
       />
     </>
   );

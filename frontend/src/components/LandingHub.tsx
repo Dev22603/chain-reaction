@@ -1,57 +1,23 @@
 "use client";
 
 import { Play, Users, LogIn } from "lucide-react";
-import { useCallback, useState } from "react";
 import { GameLogo } from "@/components/GameLogo";
-import { CreateRoomDialog } from "@/components/dialogs/CreateRoomDialog";
-import { JoinRoomDialog } from "@/components/dialogs/JoinRoomDialog";
-import { PlayDialog } from "@/components/dialogs/PlayDialog";
-import type { CreateRoomConfig } from "@/components/dialogs/CreateRoomDialog";
-import type { PlayConfig } from "@/components/dialogs/PlayDialog";
 
 interface LandingHubProps {
   connectionReady: boolean;
-  onPlay: (config: PlayConfig) => void;
-  onCreateRoom: (config: CreateRoomConfig) => void;
-  onJoinRoom: (code: string) => void;
+  onPlayClick: () => void;
+  onCreateClick: () => void;
+  onJoinClick: () => void;
   onInteract?: () => void;
 }
 
 export function LandingHub({
   connectionReady,
-  onPlay,
-  onCreateRoom,
-  onJoinRoom,
+  onPlayClick,
+  onCreateClick,
+  onJoinClick,
   onInteract
 }: LandingHubProps) {
-  const [playOpen, setPlayOpen] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false);
-  const [joinOpen, setJoinOpen] = useState(false);
-
-  const handlePlayConfirm = useCallback(
-    (config: PlayConfig) => {
-      setPlayOpen(false);
-      onPlay(config);
-    },
-    [onPlay]
-  );
-
-  const handleCreateConfirm = useCallback(
-    (config: CreateRoomConfig) => {
-      setCreateOpen(false);
-      onCreateRoom(config);
-    },
-    [onCreateRoom]
-  );
-
-  const handleJoinConfirm = useCallback(
-    (code: string) => {
-      setJoinOpen(false);
-      onJoinRoom(code);
-    },
-    [onJoinRoom]
-  );
-
   return (
     <div className="relative mx-auto grid w-full max-w-[820px] place-items-center gap-6 [animation:panel-rise_0.6s_cubic-bezier(0.2,0.8,0.4,1)_both]">
       <GameLogo />
@@ -61,7 +27,7 @@ export function LandingHub({
           type="button"
           onClick={() => {
             onInteract?.();
-            setPlayOpen(true);
+            onPlayClick();
           }}
           disabled={!connectionReady}
           aria-disabled={!connectionReady}
@@ -78,7 +44,7 @@ export function LandingHub({
             type="button"
             onClick={() => {
               onInteract?.();
-              setCreateOpen(true);
+              onCreateClick();
             }}
             className="btn-secondary game-btn-shadow px-4 py-2 text-base tracking-wide sm:text-lg"
           >
@@ -90,7 +56,7 @@ export function LandingHub({
             type="button"
             onClick={() => {
               onInteract?.();
-              setJoinOpen(true);
+              onJoinClick();
             }}
             className="btn-secondary game-btn-shadow px-4 py-2 text-base tracking-wide sm:text-lg"
           >
@@ -99,28 +65,6 @@ export function LandingHub({
           </button>
         </div>
       </div>
-
-      <PlayDialog
-        open={playOpen}
-        onClose={() => setPlayOpen(false)}
-        onConfirm={handlePlayConfirm}
-        onInteract={onInteract}
-      />
-
-      <CreateRoomDialog
-        open={createOpen}
-        defaultPlayers={2}
-        onClose={() => setCreateOpen(false)}
-        onConfirm={handleCreateConfirm}
-        onInteract={onInteract}
-      />
-
-      <JoinRoomDialog
-        open={joinOpen}
-        onClose={() => setJoinOpen(false)}
-        onConfirm={handleJoinConfirm}
-        onInteract={onInteract}
-      />
     </div>
   );
 }
