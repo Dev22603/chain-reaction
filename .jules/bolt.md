@@ -1,0 +1,3 @@
+## 2025-06-12 - Boundary checks vs Object Allocations in Hot Loops
+**Learning:** In highly recursive game logic (like `applyMove` for chain reactions), using array allocations and `.filter()` repeatedly to compute neighbors or critical mass causes severe garbage collection pressure and slows down the loop heavily (measured ~3x slower).
+**Action:** Replace `.filter()` and array allocations in hot paths with mathematical boundary checking (using additive math starting from 0) and direct array mutations (`.push()`). Use `for (let i=0...)` loops instead of `for...of` loops over arrays to avoid iterator object allocation.
