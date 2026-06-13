@@ -16,19 +16,28 @@ export function createBoard(rows: number, cols: number): Board {
 	return Array.from({ length: rows }, () => Array.from({ length: cols }, (): Cell => ({ owner: null, count: 0 })));
 }
 
+// ⚡ Bolt: Using direct `.push()` based on mathematical bounds avoids the
+// memory allocation overhead of creating the 4-element `candidates` array
+// and the higher-order `.filter()` function in hot simulation paths.
 export function getNeighbors(row: number, col: number, rows: number, cols: number): Array<[number, number]> {
-	const candidates: Array<[number, number]> = [
-		[row - 1, col],
-		[row + 1, col],
-		[row, col - 1],
-		[row, col + 1],
-	];
-
-	return candidates.filter(([nextRow, nextCol]) => nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols);
+	const neighbors: Array<[number, number]> = [];
+	if (row > 0) neighbors.push([row - 1, col]);
+	if (row < rows - 1) neighbors.push([row + 1, col]);
+	if (col > 0) neighbors.push([row, col - 1]);
+	if (col < cols - 1) neighbors.push([row, col + 1]);
+	return neighbors;
 }
 
+// ⚡ Bolt: Calculating mass additively (from 0) via boundary checks
+// correctly models multi-boundary touching (e.g. 1xN boards) and avoids
+// the heavy overhead of creating a neighbor array just to count its length.
 export function getCriticalMass(row: number, col: number, rows: number, cols: number): number {
-	return getNeighbors(row, col, rows, cols).length;
+	let mass = 0;
+	if (row > 0) mass += 1;
+	if (row < rows - 1) mass += 1;
+	if (col > 0) mass += 1;
+	if (col < cols - 1) mass += 1;
+	return mass;
 }
 
 export function applyMove(board: Board, row: number, col: number, playerIndex: PlayerIndex, rows: number, cols: number): Board {
@@ -59,9 +68,15 @@ export function applyMove(board: Board, row: number, col: number, playerIndex: P
 			break;
 		}
 
-		for (const [unstableRow, unstableCol] of unstableCells) {
+		// ⚡ Bolt: Using classic `for` loops rather than `for...of` in this hot loop
+		// eliminates iterator allocation overhead during complex chain reactions.
+		for (let i = 0; i < unstableCells.length; i++) {
+			const unstableRow = unstableCells[i][0];
+			const unstableCol = unstableCells[i][1];
 			const cell = board[unstableRow]?.[unstableCol];
-			if (!cell || cell.count < getCriticalMass(unstableRow, unstableCol, rows, cols)) {
+
+			const criticalMass = getCriticalMass(unstableRow, unstableCol, rows, cols);
+			if (!cell || cell.count < criticalMass) {
 				continue;
 			}
 
@@ -70,13 +85,15 @@ export function applyMove(board: Board, row: number, col: number, playerIndex: P
 				continue;
 			}
 
-			const criticalMass = getCriticalMass(unstableRow, unstableCol, rows, cols);
 			cell.count -= criticalMass;
 			if (cell.count === 0) {
 				cell.owner = null;
 			}
 
-			for (const [neighborRow, neighborCol] of getNeighbors(unstableRow, unstableCol, rows, cols)) {
+			const neighbors = getNeighbors(unstableRow, unstableCol, rows, cols);
+			for (let j = 0; j < neighbors.length; j++) {
+				const neighborRow = neighbors[j][0];
+				const neighborCol = neighbors[j][1];
 				const neighbor = board[neighborRow]?.[neighborCol];
 				if (!neighbor) {
 					continue;
