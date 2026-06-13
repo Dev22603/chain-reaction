@@ -27,3 +27,8 @@ export const PLAYER_COLORS = [
 export function playerColor(index: number): string {
   return PLAYER_COLORS[index] ?? "#1E3A5F";
 }
+
+/** playerColor for a possibly-absent seat index, with an explicit fallback. */
+export function playerColorOr(index: number | null | undefined, fallback: string): string {
+  return index === null || index === undefined ? fallback : playerColor(index);
+}

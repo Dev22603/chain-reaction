@@ -1,12 +1,10 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail, UserPlus, X } from "lucide-react";
 import { DialogShell } from "@/components/dialogs/DialogShell";
 import { GoogleIcon } from "@/components/GoogleIcon";
-import { authApi, ApiClientError } from "@/lib/api";
-import { setStoredAccessToken } from "@/lib/auth";
-import { getSupabaseClient } from "@/lib/supabase";
+import { useAuthForm, type AuthMode } from "@/hooks/useAuthForm";
 
 interface AuthDialogProps {
   open: boolean;
@@ -19,73 +17,23 @@ interface AuthDialogProps {
 // Smash-Karts-style blue sign-in modal. Same auth flows as AuthPanel, but it
 // stays on top of the current screen instead of navigating to /login.
 export function AuthDialog({ open, onClose, onSuccess, onInteract }: AuthDialogProps) {
-  const [mode, setMode] = useState<"login" | "signup">("login");
-  const [displayName, setDisplayName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
-  const isSignup = mode === "signup";
+  const [mode, setMode] = useState<AuthMode>("login");
+  const form = useAuthForm({
+    mode,
+    onSuccess: () => {
+      onSuccess();
+      onClose();
+    }
+  });
+  const { isSignup } = form;
 
   useEffect(() => {
     if (!open) {
       setMode("login");
-      setDisplayName("");
-      setEmail("");
-      setPassword("");
-      setError(null);
-      setLoading(false);
-      setGoogleLoading(false);
+      form.reset();
     }
+    // form.reset is recreated each render; keying on `open` alone is intended.
   }, [open]);
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      const result = isSignup
-        ? await authApi.signup({ displayName: displayName.trim(), email, password })
-        : await authApi.login({ email, password });
-
-      setStoredAccessToken(result.accessToken);
-      onSuccess();
-      onClose();
-    } catch (caught) {
-      if (caught instanceof ApiClientError) {
-        setError(caught.errors[0] ?? caught.message);
-      } else {
-        setError("Something went wrong.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleGoogleSignIn() {
-    onInteract?.();
-    setError(null);
-
-    const supabase = getSupabaseClient();
-    if (!supabase) {
-      setError("Google sign-in is not configured.");
-      return;
-    }
-
-    setGoogleLoading(true);
-    const { error: oauthError } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` }
-    });
-
-    // On success the browser navigates away to Google; only failures land here.
-    if (oauthError) {
-      setError(oauthError.message);
-      setGoogleLoading(false);
-    }
-  }
 
   return (
     <DialogShell open={open} onClose={onClose} titleId="auth-dialog-title" variant="blue">
@@ -108,12 +56,15 @@ export function AuthDialog({ open, onClose, onSuccess, onInteract }: AuthDialogP
 
         <button
           type="button"
-          onClick={handleGoogleSignIn}
-          disabled={googleLoading}
+          onClick={() => {
+            onInteract?.();
+            void form.handleGoogleSignIn();
+          }}
+          disabled={form.googleLoading}
           className="game-btn-shadow inline-flex w-full items-center justify-center gap-2.5 rounded-2xl border-[3px] border-white/90 bg-white px-4 py-3 font-display text-sm tracking-wide text-fg [--btn-depth:#b9cfe4] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <GoogleIcon />
-          {googleLoading ? "Redirecting…" : `Sign ${isSignup ? "up" : "in"} with Google`}
+          {form.googleLoading ? "Redirecting…" : `Sign ${isSignup ? "up" : "in"} with Google`}
         </button>
 
         <div className="flex items-center gap-3 font-display text-[10px] tracking-[0.32em] text-white/75">
@@ -122,15 +73,15 @@ export function AuthDialog({ open, onClose, onSuccess, onInteract }: AuthDialogP
           <span className="h-px flex-1 bg-white/35" aria-hidden="true" />
         </div>
 
-        <form className="grid gap-3.5" onSubmit={handleSubmit}>
+        <form className="grid gap-3.5" onSubmit={form.handleSubmit}>
           {isSignup ? (
             <Field
               label="Display Name"
               name="displayName"
-              value={displayName}
+              value={form.displayName}
               maxLength={100}
               autoComplete="nickname"
-              onChange={setDisplayName}
+              onChange={form.setDisplayName}
             />
           ) : null}
 
@@ -138,33 +89,33 @@ export function AuthDialog({ open, onClose, onSuccess, onInteract }: AuthDialogP
             label="Email"
             name="email"
             type="email"
-            value={email}
+            value={form.email}
             autoComplete="email"
-            onChange={setEmail}
+            onChange={form.setEmail}
           />
 
           <Field
             label="Password"
             name="password"
             type="password"
-            value={password}
+            value={form.password}
             minLength={8}
             autoComplete={isSignup ? "new-password" : "current-password"}
-            onChange={setPassword}
+            onChange={form.setPassword}
           />
 
-          {error ? (
+          {form.error ? (
             <div
               role="alert"
               className="rounded-xl border-2 border-[#ffb0c8] bg-[#d6336c]/35 px-4 py-3 text-sm font-bold text-white"
             >
-              {error}
+              {form.error}
             </div>
           ) : null}
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={form.loading}
             className="btn-primary game-btn-shadow w-full px-4 py-3 text-base tracking-wide disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isSignup ? (
@@ -172,7 +123,7 @@ export function AuthDialog({ open, onClose, onSuccess, onInteract }: AuthDialogP
             ) : (
               <Mail size={16} strokeWidth={2.5} aria-hidden="true" />
             )}
-            {loading ? "Working…" : isSignup ? "Create Account" : "Sign in with Email"}
+            {form.loading ? "Working…" : isSignup ? "Create Account" : "Sign in with Email"}
           </button>
         </form>
 
@@ -180,7 +131,7 @@ export function AuthDialog({ open, onClose, onSuccess, onInteract }: AuthDialogP
           type="button"
           onClick={() => {
             onInteract?.();
-            setError(null);
+            form.clearError();
             setMode(isSignup ? "login" : "signup");
           }}
           className="justify-self-center text-xs font-bold text-white/85 underline-offset-2 transition-colors hover:text-white hover:underline"

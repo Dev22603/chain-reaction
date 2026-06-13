@@ -8,14 +8,35 @@ import {
   ApiClientError,
   playersApi,
   type MatchHistoryEntry,
+  type PlayerModeStats,
   type PlayerProfile
 } from "@/lib/api";
 import { Card, CardEyebrow, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { StatsTable, type StatsColumn } from "@/components/ui/stats-table";
 import { BOARD_PRESETS } from "@/lib/presets";
 
 function presetLabel(key: string): string {
   return BOARD_PRESETS.find((preset) => preset.key === key)?.label ?? key;
 }
+
+const MODE_STATS_COLUMNS: Array<StatsColumn<PlayerModeStats>> = [
+  {
+    label: "Board",
+    cellClass: "font-display text-fg",
+    render: (stat) => presetLabel(stat.boardPreset)
+  },
+  { label: "Players", render: (stat) => stat.maxPlayers },
+  {
+    label: "XP",
+    align: "right",
+    cellClass: "font-display text-primary",
+    render: (stat) => stat.xp
+  },
+  { label: "Wins", align: "right", render: (stat) => stat.wins },
+  { label: "Losses", align: "right", render: (stat) => stat.losses },
+  { label: "Games", align: "right", render: (stat) => stat.gamesPlayed }
+];
 
 export default function PlayerProfilePage() {
   const params = useParams<{ playerId: string }>();
@@ -150,35 +171,12 @@ export default function PlayerProfilePage() {
             {profile.modeStats.length === 0 ? (
               <EmptyState>No games played yet.</EmptyState>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[560px] border-collapse text-sm font-semibold">
-                  <thead>
-                    <tr className="border-b-2 border-line text-left text-[10px] uppercase tracking-[0.28em] text-fg-muted">
-                      <th className="py-3 pr-4 font-bold">Board</th>
-                      <th className="px-4 py-3 font-bold">Players</th>
-                      <th className="px-4 py-3 text-right font-bold">XP</th>
-                      <th className="px-4 py-3 text-right font-bold">Wins</th>
-                      <th className="px-4 py-3 text-right font-bold">Losses</th>
-                      <th className="py-3 pl-4 text-right font-bold">Games</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {profile.modeStats.map((stat) => (
-                      <tr
-                        key={`${stat.boardPreset}-${stat.maxPlayers}`}
-                        className="border-b border-line text-fg-soft"
-                      >
-                        <td className="py-4 pr-4 font-display text-fg">{presetLabel(stat.boardPreset)}</td>
-                        <td className="px-4 py-4">{stat.maxPlayers}</td>
-                        <td className="px-4 py-4 text-right font-display text-primary">{stat.xp}</td>
-                        <td className="px-4 py-4 text-right">{stat.wins}</td>
-                        <td className="px-4 py-4 text-right">{stat.losses}</td>
-                        <td className="py-4 pl-4 text-right">{stat.gamesPlayed}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <StatsTable
+                minWidthClass="min-w-[560px]"
+                columns={MODE_STATS_COLUMNS}
+                rows={profile.modeStats}
+                rowKey={(stat) => `${stat.boardPreset}-${stat.maxPlayers}`}
+              />
             )}
           </Card>
 
@@ -225,13 +223,5 @@ export default function PlayerProfilePage() {
         </div>
       ) : null}
     </main>
-  );
-}
-
-function EmptyState({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="rounded-xl border-2 border-line bg-surface-2 px-4 py-8 text-center text-xs font-bold uppercase tracking-[0.24em] text-fg-muted">
-      {children}
-    </div>
   );
 }
