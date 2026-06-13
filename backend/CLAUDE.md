@@ -1,6 +1,8 @@
 # Chain Reaction Backend
 
-Real-time multiplayer Chain Reaction. Server-authoritative gameplay over WebSocket, REST APIs for auth/profiles/leaderboard, Postgres via Prisma. Hosted on Fly.io.
+Real-time multiplayer Chain Reaction. Server-authoritative gameplay over WebSocket, REST APIs for auth/profiles/leaderboard, Supabase Postgres via Prisma (all durable data lives in Supabase). Hosted on Fly.io.
+
+Auth issues this server's own JWT two ways: email/password (bcrypt) and Google via Supabase Auth (`POST /api/auth/google` verifies the Supabase access token through `lib/supabase.ts`, requires the `google` provider, and links to the existing player by email or creates one). Supabase Auth is used for nothing else.
 
 **Stack:** Express 5 + ws + TypeScript (CommonJS) + Prisma 7 + PostgreSQL + Zod v4 + Winston.
 
@@ -45,6 +47,6 @@ WS protocol smoke test (server must be running): `npx tsx scripts/ws-smoke.ts [t
 
 Scoring: every finished game on a preset board grants XP to signed-in players (winner = 10 × opponents × sizeFactor, loser = 2 × sizeFactor; see `src/constants/xp.constants.ts` and `presets.constants.ts`). Stats live in `player_mode_stats` (per board preset × player count) plus `players.total_xp` for the overall leaderboard.
 
-Env: see `.env.example` (`DATABASE_URL`, `JWT_SECRET`, `ALLOWED_ORIGINS`, `PORT`).
+Env: see `.env.example` (`DATABASE_URL`, `DIRECT_URL`, `JWT_SECRET`, `ALLOWED_ORIGINS`, `PORT`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`). The database is Supabase Postgres: `DATABASE_URL` is the transaction pooler (runtime, `sslmode=no-verify` for node-postgres), `DIRECT_URL` is the session pooler (Prisma CLI only). Connection details in `../docs/DATABASE.md`. The `SUPABASE_*` pair powers Google login; unset disables it (503).
 
 Product docs (gameplay, matchmaking, protocol, persistence): `../docs/`.

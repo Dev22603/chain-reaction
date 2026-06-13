@@ -6,9 +6,11 @@ import { FormEvent, useState } from "react";
 import { ChevronLeft, LogIn, UserPlus } from "lucide-react";
 import { authApi, ApiClientError } from "@/lib/api";
 import { setStoredAccessToken } from "@/lib/auth";
+import { getSupabaseClient } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Card, CardCorners, CardEyebrow, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { GoogleIcon } from "@/components/GoogleIcon";
 
 interface AuthPanelProps {
   mode: "login" | "signup";
@@ -22,6 +24,7 @@ export function AuthPanel({ mode }: AuthPanelProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,6 +47,28 @@ export function AuthPanel({ mode }: AuthPanelProps) {
       }
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleGoogleSignIn() {
+    setError(null);
+
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      setError("Google sign-in is not configured.");
+      return;
+    }
+
+    setGoogleLoading(true);
+    const { error: oauthError } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` }
+    });
+
+    // On success the browser navigates away to Google; only failures land here.
+    if (oauthError) {
+      setError(oauthError.message);
+      setGoogleLoading(false);
     }
   }
 
@@ -103,6 +128,18 @@ export function AuthPanel({ mode }: AuthPanelProps) {
             {loading ? "Working" : isSignup ? "Create Account" : "Login"}
           </Button>
         </form>
+
+        <div className="mt-5 grid gap-4">
+          <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.32em] text-fg-soft">
+            <span className="h-px flex-1 bg-line" aria-hidden="true" />
+            or
+            <span className="h-px flex-1 bg-line" aria-hidden="true" />
+          </div>
+          <Button size="lg" variant="ghost" onClick={handleGoogleSignIn} disabled={googleLoading}>
+            <GoogleIcon />
+            {googleLoading ? "Redirecting" : "Continue with Google"}
+          </Button>
+        </div>
 
         <div className="mt-6 grid gap-3 border-t border-line pt-5 text-center text-xs font-semibold text-fg-muted">
           {isSignup ? (

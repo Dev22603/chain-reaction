@@ -36,6 +36,22 @@ const login = async (req: Request, res: Response) => {
 	}
 };
 
+const googleLogin = async (req: Request, res: Response) => {
+	try {
+		const result = await authService.googleLogin(req.body);
+		res.status(200).json(new ApiResponse(200, AUTH_FEEDBACK_MESSAGES.LOGIN_SUCCESS, result));
+	} catch (error) {
+		if (error instanceof ApiError) {
+			if (error.code === 401) {
+				logSecurityEvent("auth_failure", { ip: getClientIp(req), details: "google login failed" });
+			}
+			return res.status(error.code).json(error);
+		}
+		logger.error("Unexpected error", { error: (error as Error).message });
+		res.status(500).json(new ApiError(500, GLOBAL_ERROR_MESSAGES.SERVER_ERROR));
+	}
+};
+
 const getMe = async (req: Request, res: Response) => {
 	try {
 		const player = await authService.getMe(req.user.id);
@@ -58,4 +74,4 @@ const updateMe = async (req: Request, res: Response) => {
 	}
 };
 
-export { signup, login, getMe, updateMe };
+export { signup, login, googleLogin, getMe, updateMe };

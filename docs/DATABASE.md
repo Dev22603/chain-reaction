@@ -2,7 +2,24 @@
 
 ## Status
 
-Post-M7 persistence is part of the product direction. The database is Postgres, accessed through Prisma. Live match state still stays in memory; durable writes happen after `game_over`, never per move.
+Post-M7 persistence is part of the product direction. The database is Supabase Postgres, accessed through Prisma. Live match state still stays in memory; durable writes happen after `game_over`, never per move.
+
+## Supabase Connection Model
+
+All durable data lives in a Supabase Postgres project. Two connection strings, two jobs:
+
+- `DATABASE_URL`: Supavisor **transaction pooler** (port 6543). Used by the runtime app via the `pg.Pool` in `backend/src/lib/prisma.ts`. Must end with `?sslmode=no-verify` because Supabase serves a self-signed CA, and node-postgres treats `sslmode=require` as full certificate verification (which fails), while `no-verify` enables TLS without CA verification.
+- `DIRECT_URL`: Supavisor **session pooler** (port 5432). Used only by the Prisma CLI (`db:migrate`, `db:studio`, `db:seed`) through `prisma.config.ts`, because migrations need session-mode Postgres features (advisory locks). Uses `?sslmode=require`, which Prisma understands.
+
+Both strings come from Supabase Dashboard → Connect. The direct connection (`db.<ref>.supabase.co`) is IPv6-only on the free tier, so the session pooler is the reliable choice for migrations.
+
+In production (Fly.io), set both as secrets:
+
+```bash
+fly secrets set DATABASE_URL='...' DIRECT_URL='...'
+```
+
+A plain local Postgres still works for offline development: point `DATABASE_URL` at it (no `sslmode` param) and leave `DIRECT_URL` unset, in which case `prisma.config.ts` falls back to `DATABASE_URL`.
 
 ## When To Read This
 

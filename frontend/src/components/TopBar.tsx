@@ -1,13 +1,18 @@
-﻿"use client";
+"use client";
 
 import { LogOut, Sparkles, Trophy, UserCircle2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { AuthDialog } from "@/components/dialogs/AuthDialog";
+import { ConfirmDialog } from "@/components/dialogs/ConfirmDialog";
 
 export function TopBar() {
-  const { player, loading, isAuthenticated, logout } = useAuth();
+  const { player, loading, isAuthenticated, logout, refresh } = useAuth();
   const pathname = usePathname();
+  const [authOpen, setAuthOpen] = useState(false);
+  const [signOutOpen, setSignOutOpen] = useState(false);
 
   // Landing page renders its own immersive shell with identity/auth controls.
   if (pathname === "/") return null;
@@ -51,26 +56,40 @@ export function TopBar() {
             <button
               type="button"
               className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full border-2 border-line bg-surface px-3 font-body text-sm font-semibold text-fg-soft transition-colors hover:border-primary hover:text-primary"
-              onClick={() => {
-                if (window.confirm("Sign out? You'll leave any active queue or game.")) {
-                  logout();
-                }
-              }}
+              onClick={() => setSignOutOpen(true)}
               aria-label="Sign out"
             >
               <LogOut size={14} aria-hidden="true" />
             </button>
           </>
         ) : (
-          <Link
-            href="/login"
+          <button
+            type="button"
+            onClick={() => setAuthOpen(true)}
             className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border-2 border-primary/50 bg-surface px-3.5 font-body text-sm font-semibold text-primary transition-colors hover:border-primary hover:bg-primary/10"
           >
             <Sparkles size={14} aria-hidden="true" />
             Sign in
-          </Link>
+          </button>
         )}
       </nav>
+
+      <AuthDialog
+        open={authOpen}
+        onClose={() => setAuthOpen(false)}
+        onSuccess={() => void refresh()}
+      />
+
+      <ConfirmDialog
+        open={signOutOpen}
+        title="Confirm Sign Out"
+        message="Are you sure you wish to sign out of this account?"
+        onConfirm={() => {
+          setSignOutOpen(false);
+          logout();
+        }}
+        onCancel={() => setSignOutOpen(false)}
+      />
     </header>
   );
 }

@@ -38,6 +38,21 @@ export const playerRepository = {
 		}
 	},
 
+	async createOAuthAccount(data: { id: string; displayName: string; email: string }) {
+		try {
+			return await prisma.player.create({
+				data: {
+					id: data.id,
+					displayName: data.displayName,
+					email: data.email,
+				},
+			});
+		} catch (error) {
+			logger.error("DB error — createOAuthAccount", { error: (error as Error).message });
+			throw error;
+		}
+	},
+
 	async findByEmail(email: string) {
 		try {
 			return await prisma.player.findUnique({ where: { email } });

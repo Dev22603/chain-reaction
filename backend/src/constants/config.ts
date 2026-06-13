@@ -30,4 +30,7 @@ export const config = {
 		.filter(Boolean),
 	CLIENT_IP_HEADER: process.env.CLIENT_IP_HEADER,
 	ANONYMIZE_LOGS: process.env.ANONYMIZE_LOGS === "true",
+	// Supabase Auth is used only for Google OAuth; both unset disables Google login.
+	SUPABASE_URL: process.env.SUPABASE_URL,
+	SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
 } as const;
