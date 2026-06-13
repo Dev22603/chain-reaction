@@ -2,75 +2,27 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
 import { ChevronLeft, LogIn, UserPlus } from "lucide-react";
-import { authApi, ApiClientError } from "@/lib/api";
-import { setStoredAccessToken } from "@/lib/auth";
-import { getSupabaseClient } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Card, CardCorners, CardEyebrow, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { GoogleIcon } from "@/components/GoogleIcon";
+import { useAuthForm, type AuthMode } from "@/hooks/useAuthForm";
 
 interface AuthPanelProps {
-  mode: "login" | "signup";
+  mode: AuthMode;
 }
 
 export function AuthPanel({ mode }: AuthPanelProps) {
   const router = useRouter();
-  const isSignup = mode === "signup";
-  const [displayName, setDisplayName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      const result = isSignup
-        ? await authApi.signup({ displayName: displayName.trim(), email, password })
-        : await authApi.login({ email, password });
-
-      setStoredAccessToken(result.accessToken);
+  const form = useAuthForm({
+    mode,
+    onSuccess: () => {
       router.push("/");
       router.refresh();
-    } catch (caught) {
-      if (caught instanceof ApiClientError) {
-        setError(caught.errors[0] ?? caught.message);
-      } else {
-        setError("Something went wrong.");
-      }
-    } finally {
-      setLoading(false);
     }
-  }
-
-  async function handleGoogleSignIn() {
-    setError(null);
-
-    const supabase = getSupabaseClient();
-    if (!supabase) {
-      setError("Google sign-in is not configured.");
-      return;
-    }
-
-    setGoogleLoading(true);
-    const { error: oauthError } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` }
-    });
-
-    // On success the browser navigates away to Google; only failures land here.
-    if (oauthError) {
-      setError(oauthError.message);
-      setGoogleLoading(false);
-    }
-  }
+  });
+  const { isSignup } = form;
 
   return (
     <main className="relative z-10 mx-auto grid min-h-screen w-full max-w-[560px] place-items-center px-4 py-8">
@@ -83,14 +35,14 @@ export function AuthPanel({ mode }: AuthPanelProps) {
           </CardTitle>
         </header>
 
-        <form className="grid gap-5" onSubmit={handleSubmit}>
+        <form className="grid gap-5" onSubmit={form.handleSubmit}>
           {isSignup ? (
             <Input
               name="displayName"
               label="Display Name"
-              value={displayName}
+              value={form.displayName}
               maxLength={100}
-              onChange={(event) => setDisplayName(event.target.value)}
+              onChange={(event) => form.setDisplayName(event.target.value)}
               autoComplete="nickname"
               required
             />
@@ -100,8 +52,8 @@ export function AuthPanel({ mode }: AuthPanelProps) {
             name="email"
             label="Email"
             type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            value={form.email}
+            onChange={(event) => form.setEmail(event.target.value)}
             autoComplete="email"
             required
           />
@@ -110,22 +62,22 @@ export function AuthPanel({ mode }: AuthPanelProps) {
             name="password"
             label="Password"
             type="password"
-            value={password}
+            value={form.password}
             minLength={8}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) => form.setPassword(event.target.value)}
             autoComplete={isSignup ? "new-password" : "current-password"}
             required
           />
 
-          {error ? (
+          {form.error ? (
             <div role="alert" className="rounded-xl border-2 border-danger/50 bg-danger/5 px-4 py-3 text-sm font-semibold text-danger">
-              {error}
+              {form.error}
             </div>
           ) : null}
 
-          <Button type="submit" size="lg" variant="primary" disabled={loading}>
+          <Button type="submit" size="lg" variant="primary" disabled={form.loading}>
             {isSignup ? <UserPlus size={16} aria-hidden="true" /> : <LogIn size={16} aria-hidden="true" />}
-            {loading ? "Working" : isSignup ? "Create Account" : "Login"}
+            {form.loading ? "Working" : isSignup ? "Create Account" : "Login"}
           </Button>
         </form>
 
@@ -135,9 +87,9 @@ export function AuthPanel({ mode }: AuthPanelProps) {
             or
             <span className="h-px flex-1 bg-line" aria-hidden="true" />
           </div>
-          <Button size="lg" variant="ghost" onClick={handleGoogleSignIn} disabled={googleLoading}>
+          <Button size="lg" variant="ghost" onClick={form.handleGoogleSignIn} disabled={form.googleLoading}>
             <GoogleIcon />
-            {googleLoading ? "Redirecting" : "Continue with Google"}
+            {form.googleLoading ? "Redirecting" : "Continue with Google"}
           </Button>
         </div>
 

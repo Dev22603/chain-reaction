@@ -11,6 +11,8 @@ import {
 } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardEyebrow, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { StatsTable, type StatsColumn } from "@/components/ui/stats-table";
 import { BOARD_PRESETS } from "@/lib/presets";
 import { MAX_PLAYERS, MIN_PLAYERS } from "@/lib/constants";
 
@@ -20,6 +22,60 @@ const PLAYER_OPTIONS = Array.from(
   { length: MAX_PLAYERS - MIN_PLAYERS + 1 },
   (_, i) => MIN_PLAYERS + i
 );
+
+function playerLink(playerId: string, displayName: string) {
+  return (
+    <Link href={`/players/${playerId}`} className="hover:text-secondary-deep">
+      {displayName}
+    </Link>
+  );
+}
+
+const OVERALL_COLUMNS: Array<StatsColumn<LeaderboardEntry>> = [
+  {
+    label: "Rank",
+    cellClass: "font-display text-secondary-deep",
+    render: (_, index) => index + 1
+  },
+  {
+    label: "Player",
+    cellClass: "text-fg",
+    render: (entry) => playerLink(entry.playerId, entry.displayName)
+  },
+  {
+    label: "Level",
+    align: "right",
+    render: (entry) => <LevelChip level={entry.level} />
+  },
+  {
+    label: "Total XP",
+    align: "right",
+    cellClass: "font-display text-primary",
+    render: (entry) => entry.totalXp
+  }
+];
+
+const MODE_COLUMNS: Array<StatsColumn<ModeLeaderboardEntry>> = [
+  {
+    label: "Rank",
+    cellClass: "font-display text-secondary-deep",
+    render: (_, index) => index + 1
+  },
+  {
+    label: "Player",
+    cellClass: "text-fg",
+    render: (entry) => playerLink(entry.playerId, entry.displayName)
+  },
+  {
+    label: "XP",
+    align: "right",
+    cellClass: "font-display text-primary",
+    render: (entry) => entry.xp
+  },
+  { label: "Wins", align: "right", render: (entry) => entry.wins },
+  { label: "Losses", align: "right", render: (entry) => entry.losses },
+  { label: "Games", align: "right", render: (entry) => entry.gamesPlayed }
+];
 
 export default function LeaderboardPage() {
   const [tab, setTab] = useState<Tab>("overall");
@@ -146,67 +202,21 @@ export default function LeaderboardPage() {
         ) : null}
 
         {!error && !loading && !empty && tab === "overall" ? (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[420px] border-collapse text-sm font-semibold">
-              <thead>
-                <tr className="border-b-2 border-line text-left text-[10px] uppercase tracking-[0.28em] text-fg-muted">
-                  <th className="py-3 pr-4 font-bold">Rank</th>
-                  <th className="px-4 py-3 font-bold">Player</th>
-                  <th className="px-4 py-3 text-right font-bold">Level</th>
-                  <th className="py-3 pl-4 text-right font-bold">Total XP</th>
-                </tr>
-              </thead>
-              <tbody>
-                {overall.map((entry, index) => (
-                  <tr key={entry.playerId} className="border-b border-line text-fg-soft">
-                    <td className="py-4 pr-4 font-display text-secondary-deep">{index + 1}</td>
-                    <td className="px-4 py-4 text-fg">
-                      <Link href={`/players/${entry.playerId}`} className="hover:text-secondary-deep">
-                        {entry.displayName}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-4 text-right">
-                      <LevelChip level={entry.level} />
-                    </td>
-                    <td className="py-4 pl-4 text-right font-display text-primary">{entry.totalXp}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <StatsTable
+            minWidthClass="min-w-[420px]"
+            columns={OVERALL_COLUMNS}
+            rows={overall}
+            rowKey={(entry) => entry.playerId}
+          />
         ) : null}
 
         {!error && !loading && !empty && tab === "mode" ? (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-sm font-semibold">
-              <thead>
-                <tr className="border-b-2 border-line text-left text-[10px] uppercase tracking-[0.28em] text-fg-muted">
-                  <th className="py-3 pr-4 font-bold">Rank</th>
-                  <th className="px-4 py-3 font-bold">Player</th>
-                  <th className="px-4 py-3 text-right font-bold">XP</th>
-                  <th className="px-4 py-3 text-right font-bold">Wins</th>
-                  <th className="px-4 py-3 text-right font-bold">Losses</th>
-                  <th className="py-3 pl-4 text-right font-bold">Games</th>
-                </tr>
-              </thead>
-              <tbody>
-                {modeEntries.map((entry, index) => (
-                  <tr key={entry.playerId} className="border-b border-line text-fg-soft">
-                    <td className="py-4 pr-4 font-display text-secondary-deep">{index + 1}</td>
-                    <td className="px-4 py-4 text-fg">
-                      <Link href={`/players/${entry.playerId}`} className="hover:text-secondary-deep">
-                        {entry.displayName}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-4 text-right font-display text-primary">{entry.xp}</td>
-                    <td className="px-4 py-4 text-right">{entry.wins}</td>
-                    <td className="px-4 py-4 text-right">{entry.losses}</td>
-                    <td className="py-4 pl-4 text-right">{entry.gamesPlayed}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <StatsTable
+            minWidthClass="min-w-[640px]"
+            columns={MODE_COLUMNS}
+            rows={modeEntries}
+            rowKey={(entry) => entry.playerId}
+          />
         ) : null}
       </Card>
     </main>
@@ -245,13 +255,5 @@ function LevelChip({ level }: { level: number }) {
     <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-full border-2 border-accent bg-accent/15 px-1.5 font-display text-xs text-[#7a4d00]">
       {level}
     </span>
-  );
-}
-
-function EmptyState({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="rounded-xl border-2 border-line bg-surface-2 px-4 py-8 text-center text-xs font-bold uppercase tracking-[0.24em] text-fg-muted">
-      {children}
-    </div>
   );
 }

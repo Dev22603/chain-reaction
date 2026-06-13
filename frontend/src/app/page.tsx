@@ -4,25 +4,27 @@ import { useEffect, useRef, useState } from "react";
 import { GameBoard } from "@/components/GameBoard";
 import { GameOver } from "@/components/GameOver";
 import { LandingHub } from "@/components/LandingHub";
-import { QueueScreen } from "@/components/QueueScreen";
-import { Card } from "@/components/ui/card";
-import { useGameWebSocket } from "@/hooks/useGameWebSocket";
-import { useAuth } from "@/hooks/useAuth";
-import type { MatchConfig } from "@/components/dialogs/MatchDialogParts";
-import { useSounds } from "@/hooks/useSounds";
-import { loadOrCreateGuestName, saveGuestName } from "@/lib/guestName";
+import { LobbyFooter } from "@/components/LobbyFooter";
 import { LobbyNav } from "@/components/LobbyNav";
 import { LobbySidebar } from "@/components/LobbySidebar";
-import { DevCredit } from "@/components/DevCredit";
+import { QueueScreen } from "@/components/QueueScreen";
 import { ToastStack } from "@/components/ToastStack";
+import { Card } from "@/components/ui/card";
 import { AuthDialog } from "@/components/dialogs/AuthDialog";
 import { ConfirmDialog } from "@/components/dialogs/ConfirmDialog";
 import { CreateRoomDialog } from "@/components/dialogs/CreateRoomDialog";
-import { PlayDialog } from "@/components/dialogs/PlayDialog";
 import { JoinRoomDialog } from "@/components/dialogs/JoinRoomDialog";
-import { Volume2, VolumeX } from "lucide-react";
+import { PlayDialog } from "@/components/dialogs/PlayDialog";
+import type { MatchConfig } from "@/components/dialogs/MatchDialogParts";
+import { useAuth } from "@/hooks/useAuth";
+import { useGameWebSocket } from "@/hooks/useGameWebSocket";
+import { useSounds } from "@/hooks/useSounds";
+import { loadOrCreateGuestName, saveGuestName } from "@/lib/guestName";
 
 const CONNECTING_NOTICE = "Still connecting, try again in a moment.";
+
+/** Which lobby dialog is open; at most one shows at a time. */
+type LobbyDialog = "auth" | "signOut" | "play" | "create" | "join";
 
 export default function Home() {
   const game = useGameWebSocket();
@@ -30,11 +32,7 @@ export default function Home() {
   const sounds = useSounds();
   const [guestName, setGuestName] = useState<string>("Player");
   const [softNotice, setSoftNotice] = useState<string | null>(null);
-  const [authOpen, setAuthOpen] = useState(false);
-  const [signOutOpen, setSignOutOpen] = useState(false);
-  const [playOpen, setPlayOpen] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false);
-  const [joinOpen, setJoinOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState<LobbyDialog | null>(null);
   const noticeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -56,6 +54,17 @@ export default function Home() {
   }, []);
 
   const playerName = auth.player?.displayName?.trim() || guestName;
+  const disconnected = game.connectionState !== "open" && game.connectionState !== "connecting";
+  const isPlaying = game.phase === "playing";
+  const isLobby = game.phase === "lobby";
+
+  const playClick = () => sounds.play("click");
+  const closeDialog = () => setOpenDialog(null);
+
+  const toggleMute = () => {
+    sounds.resume();
+    sounds.toggleMute();
+  };
 
   function flashNotice(message: string) {
     setSoftNotice(message);
@@ -63,12 +72,16 @@ export default function Home() {
     noticeTimeout.current = setTimeout(() => setSoftNotice(null), 5200);
   }
 
+  /** Lobby actions need an open socket; when it isn't, show a soft notice. */
+  function ensureConnected(): boolean {
+    if (game.connectionState === "open") return true;
+    flashNotice(CONNECTING_NOTICE);
+    return false;
+  }
+
   const onPlay = (config: MatchConfig) => {
-    setPlayOpen(false);
-    if (game.connectionState !== "open") {
-      flashNotice(CONNECTING_NOTICE);
-      return;
-    }
+    closeDialog();
+    if (!ensureConnected()) return;
     game.joinQueue({
       gridRows: config.gridRows,
       gridCols: config.gridCols,
@@ -78,11 +91,8 @@ export default function Home() {
   };
 
   const onCreateRoom = (config: MatchConfig) => {
-    setCreateOpen(false);
-    if (game.connectionState !== "open") {
-      flashNotice(CONNECTING_NOTICE);
-      return;
-    }
+    closeDialog();
+    if (!ensureConnected()) return;
     game.createRoom({
       playerName,
       gridRows: config.gridRows,
@@ -92,11 +102,8 @@ export default function Home() {
   };
 
   const onJoinRoom = (code: string) => {
-    setJoinOpen(false);
-    if (game.connectionState !== "open") {
-      flashNotice(CONNECTING_NOTICE);
-      return;
-    }
+    closeDialog();
+    if (!ensureConnected()) return;
     game.joinRoomByCode(code, playerName);
   };
 
@@ -109,10 +116,6 @@ export default function Home() {
     game.reset();
     game.joinQueue({ gridRows: rows, gridCols: cols, maxPlayers, playerName });
   };
-  const disconnected = game.connectionState !== "open" && game.connectionState !== "connecting";
-
-  const isPlaying = game.phase === "playing";
-  const isLobby = game.phase === "lobby";
 
   async function handleNameSave(newName: string) {
     if (auth.isAuthenticated) {
@@ -124,13 +127,13 @@ export default function Home() {
   }
 
   const openSignIn = () => {
-    sounds.play("click");
-    setAuthOpen(true);
+    playClick();
+    setOpenDialog("auth");
   };
 
   const requestSignOut = () => {
-    sounds.play("click");
-    setSignOutOpen(true);
+    playClick();
+    setOpenDialog("signOut");
   };
 
   // The socket only carries the JWT during the handshake, so identity changes
@@ -141,7 +144,7 @@ export default function Home() {
   };
 
   const confirmSignOut = () => {
-    setSignOutOpen(false);
+    closeDialog();
     auth.logout();
     game.reconnect();
   };
@@ -160,10 +163,7 @@ export default function Home() {
             onExplode={(intensity) => sounds.play("explode", { intensity })}
             onChain={(intensity) => sounds.play("chain", { intensity })}
             muted={sounds.muted}
-            onToggleMute={() => {
-              sounds.resume();
-              sounds.toggleMute();
-            }}
+            onToggleMute={toggleMute}
             roomCode={game.roomCode}
           />
         </div>
@@ -192,7 +192,7 @@ export default function Home() {
             onSaveName={handleNameSave}
             onSignIn={openSignIn}
             onRequestSignOut={requestSignOut}
-            onInteract={() => sounds.play("click")}
+            onInteract={playClick}
           />
 
           {/* Middle row: sidebar panels on the left (desktop only), hero
@@ -206,62 +206,26 @@ export default function Home() {
               onSaveName={handleNameSave}
               onSignIn={openSignIn}
               onRequestSignOut={requestSignOut}
-              onInteract={() => sounds.play("click")}
+              onInteract={playClick}
             />
             <div className="grid h-full place-items-center overflow-hidden">
               <LandingHub
                 connectionReady={game.connectionState === "open"}
-                onInteract={() => sounds.play("click")}
-                onPlayClick={() => setPlayOpen(true)}
-                onCreateClick={() => setCreateOpen(true)}
-                onJoinClick={() => setJoinOpen(true)}
+                onInteract={playClick}
+                onPlayClick={() => setOpenDialog("play")}
+                onCreateClick={() => setOpenDialog("create")}
+                onJoinClick={() => setOpenDialog("join")}
               />
             </div>
           </div>
 
-          {/* Footer row: toasts left, links center, icon buttons right */}
-          <div className="grid grid-cols-[1fr_auto] items-end gap-3 sm:grid-cols-[1fr_auto_1fr]">
-            <div className="min-w-0">
-              <ToastStack
-                disconnected={disconnected}
-                error={game.lastError}
-                notice={softNotice}
-                compact={true}
-              />
-            </div>
-            <p className="hidden items-center gap-1.5 pb-2 text-[11px] font-bold text-white/85 [text-shadow:0_1px_0_rgba(24,73,128,0.5)] sm:flex">
-              v0.1.0
-              <span aria-hidden="true" className="text-white/50">|</span>
-              Chain Reaction
-              <span aria-hidden="true" className="text-white/50">|</span>
-              <a
-                href="https://github.com/Dev22603/chain-reaction"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-colors hover:text-white hover:underline"
-              >
-                GitHub
-              </a>
-            </p>
-            <div className="flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  sounds.resume();
-                  sounds.toggleMute();
-                }}
-                aria-label={sounds.muted ? "Unmute sounds" : "Mute sounds"}
-                className="game-btn-shadow grid h-10 w-10 shrink-0 place-items-center rounded-full border-[3px] border-white/90 bg-gradient-to-b from-[#57b0ff] to-secondary text-white [--btn-depth:var(--color-secondary-deep)]"
-              >
-                {sounds.muted ? (
-                  <VolumeX size={16} strokeWidth={2.5} aria-hidden="true" />
-                ) : (
-                  <Volume2 size={16} strokeWidth={2.5} aria-hidden="true" />
-                )}
-              </button>
-              <DevCredit />
-            </div>
-          </div>
+          <LobbyFooter
+            disconnected={disconnected}
+            error={game.lastError}
+            notice={softNotice}
+            muted={sounds.muted}
+            onToggleMute={toggleMute}
+          />
         </div>
       ) : null}
 
@@ -294,40 +258,40 @@ export default function Home() {
       ) : null}
 
       <AuthDialog
-        open={authOpen}
-        onClose={() => setAuthOpen(false)}
+        open={openDialog === "auth"}
+        onClose={closeDialog}
         onSuccess={handleAuthSuccess}
-        onInteract={() => sounds.play("click")}
+        onInteract={playClick}
       />
 
       <ConfirmDialog
-        open={signOutOpen}
+        open={openDialog === "signOut"}
         title="Confirm Sign Out"
         message="Are you sure you wish to sign out of this account?"
         onConfirm={confirmSignOut}
-        onCancel={() => setSignOutOpen(false)}
+        onCancel={closeDialog}
       />
 
       <PlayDialog
-        open={playOpen}
-        onClose={() => setPlayOpen(false)}
+        open={openDialog === "play"}
+        onClose={closeDialog}
         onConfirm={onPlay}
-        onInteract={() => sounds.play("click")}
+        onInteract={playClick}
       />
 
       <CreateRoomDialog
-        open={createOpen}
+        open={openDialog === "create"}
         defaultPlayers={2}
-        onClose={() => setCreateOpen(false)}
+        onClose={closeDialog}
         onConfirm={onCreateRoom}
-        onInteract={() => sounds.play("click")}
+        onInteract={playClick}
       />
 
       <JoinRoomDialog
-        open={joinOpen}
-        onClose={() => setJoinOpen(false)}
+        open={openDialog === "join"}
+        onClose={closeDialog}
         onConfirm={onJoinRoom}
-        onInteract={() => sounds.play("click")}
+        onInteract={playClick}
       />
     </>
   );
